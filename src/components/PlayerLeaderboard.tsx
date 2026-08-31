@@ -3,7 +3,7 @@
 import Link from "next/link";
 import clsx from "clsx";
 import type { PlayerGroup } from "@/lib/team-types";
-import { fmtNum, fmtSigned, fmtMoney, fmtSignedMoney, fmtPct } from "@/lib/format";
+import { fmtNum, fmtSigned, fmtMoney, fmtSignedMoney, fmtPct, fmtSignedPct } from "@/lib/format";
 
 const COLUMNS: { label: string; format: (g: PlayerGroup) => string; positive?: (g: PlayerGroup) => boolean }[] = [
   { label: "W", format: (g) => `${g.totalWins}` },
@@ -15,7 +15,7 @@ const COLUMNS: { label: string; format: (g: PlayerGroup) => string; positive?: (
   { label: "Diff", format: (g) => fmtSigned(g.avgDiff), positive: (g) => g.avgDiff > 0 },
   { label: "Proj", format: (g) => fmtNum(g.totalProjected) },
   { label: "Pyth", format: (g) => fmtNum(g.totalPythagoreanWins) },
-  { label: "EPA", format: (g) => fmtSigned(g.avgEpa, 3), positive: (g) => g.avgEpa > 0 },
+  { label: "EPA", format: (g) => fmtSignedPct(g.avgEpa), positive: (g) => g.avgEpa > 0 },
 ];
 
 export default function PlayerLeaderboard({ groups }: { groups: PlayerGroup[] }) {

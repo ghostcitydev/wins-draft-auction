@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import clsx from "clsx";
 import type { TeamRow } from "@/lib/team-types";
-import { fmtNum, fmtSigned, fmtMoney, fmtSignedMoney, fmtPct } from "@/lib/format";
+import { fmtNum, fmtSigned, fmtMoney, fmtSignedMoney, fmtPct, fmtSignedPct } from "@/lib/format";
 
 const COLUMNS: {
   label: string;
@@ -28,7 +28,7 @@ const COLUMNS: {
   },
   {
     label: "EPA",
-    format: (r) => fmtSigned(r.epa, 3),
+    format: (r) => fmtSignedPct(r.epa),
     positive: (r) => r.epa > 0,
     placeholder: (r) => r.epaIsPlaceholder,
   },

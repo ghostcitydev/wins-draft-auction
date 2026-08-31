@@ -92,13 +92,16 @@ export async function getTeamRows(season: number): Promise<TeamRow[]> {
 
     // EPA and Pythagorean wins come from a weekly nfelo.com paste (see
     // /api/admin/team-ratings), not a computed proxy - nfelo has no public
-    // API. Before this season has a rating logged yet, fall back to last
-    // season's most recent snapshot as a clearly-flagged placeholder.
-    let rating = currentRatingsByTeam.get(team.id);
-    let ratingIsPlaceholder = false;
-    if (!rating) {
-      rating = prevRatingsByTeam.get(team.id);
-      ratingIsPlaceholder = Boolean(rating);
+    // API. EPA falls back to last season's most recent snapshot (clearly
+    // flagged as a placeholder) before this season has a rating logged.
+    // Pythagorean wins don't get that fallback - it's a real, honest 0 until
+    // the current season has actual results to compute it from.
+    const currentRating = currentRatingsByTeam.get(team.id);
+    let epaRating = currentRating;
+    let epaIsPlaceholder = false;
+    if (!epaRating) {
+      epaRating = prevRatingsByTeam.get(team.id);
+      epaIsPlaceholder = Boolean(epaRating);
     }
 
     const draftPick = draftPickByTeamId.get(team.id);
@@ -124,11 +127,11 @@ export async function getTeamRows(season: number): Promise<TeamRow[]> {
       pointsFor,
       pointsAgainst,
       diff: pointDiffPerGame(record),
-      pythagoreanWins: rating?.pythagWins ?? 0,
-      pythagoreanIsPlaceholder: ratingIsPlaceholder,
-      epa: rating?.epaPlay ?? 0,
-      epaIsPlaceholder: ratingIsPlaceholder,
-      placeholderSeason: ratingIsPlaceholder ? prevSeason : null,
+      pythagoreanWins: currentRating?.pythagWins ?? 0,
+      pythagoreanIsPlaceholder: false,
+      epa: epaRating?.epaPlay ?? 0,
+      epaIsPlaceholder,
+      placeholderSeason: epaIsPlaceholder ? prevSeason : null,
       value: null,
       vor: null,
       currentValue: null,

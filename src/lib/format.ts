@@ -24,3 +24,10 @@ export function fmtPct(n: number | null | undefined): string {
   if (n === null || n === undefined || Number.isNaN(n)) return "—";
   return `${(n * 100).toFixed(1)}%`;
 }
+
+export function fmtSignedPct(n: number | null | undefined, decimals = 1): string {
+  if (n === null || n === undefined || Number.isNaN(n)) return "—";
+  const pct = n * 100;
+  const s = pct.toFixed(decimals);
+  return pct > 0 ? `+${s}%` : `${s}%`;
+}
