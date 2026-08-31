@@ -13,8 +13,9 @@ async function main() {
     conference: string;
     division: string;
     espnLogoAbbr: string;
+    logoUrl: string;
   }>) {
-    const logoUrl = `https://a.espncdn.com/i/teamlogos/nfl/500/${t.espnLogoAbbr}.png`;
+    const logoUrl = t.logoUrl;
     const existing = await db.select().from(teams).where(eq(teams.abbr, t.abbr));
     if (existing.length) {
       await db

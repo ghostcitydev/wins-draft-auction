@@ -94,7 +94,7 @@ export async function getTeamRows(season: number): Promise<TeamRow[]> {
       abbr: team.abbr,
       division: team.division,
       conference: team.conference,
-      logoUrl: team.logoUrl ?? `https://a.espncdn.com/i/teamlogos/nfl/500/${team.abbr.toLowerCase()}.png`,
+      logoUrl: team.logoUrl ?? `/logos/${team.abbr}.png`,
       playerId: draftPick?.playerId ?? null,
       playerName: player?.name ?? null,
       paid: draftPick?.paid ?? null,

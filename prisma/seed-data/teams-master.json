@@ -5,7 +5,8 @@
     "division": "NFC West",
     "conference": "NFC",
     "name": "Arizona Cardinals",
-    "espnLogoAbbr": "ari"
+    "espnLogoAbbr": "ari",
+    "logoUrl": "/logos/ARI.png"
   },
   {
     "shortName": "Falcons",
@@ -13,7 +14,8 @@
     "division": "NFC South",
     "conference": "NFC",
     "name": "Atlanta Falcons",
-    "espnLogoAbbr": "atl"
+    "espnLogoAbbr": "atl",
+    "logoUrl": "/logos/ATL.png"
   },
   {
     "shortName": "Ravens",
@@ -21,7 +23,8 @@
     "division": "AFC North",
     "conference": "AFC",
     "name": "Baltimore Ravens",
-    "espnLogoAbbr": "bal"
+    "espnLogoAbbr": "bal",
+    "logoUrl": "/logos/BAL.png"
   },
   {
     "shortName": "Bills",
@@ -29,7 +32,8 @@
     "division": "AFC East",
     "conference": "AFC",
     "name": "Buffalo Bills",
-    "espnLogoAbbr": "buf"
+    "espnLogoAbbr": "buf",
+    "logoUrl": "/logos/BUF.png"
   },
   {
     "shortName": "Panthers",
@@ -37,7 +41,8 @@
     "division": "NFC South",
     "conference": "NFC",
     "name": "Carolina Panthers",
-    "espnLogoAbbr": "car"
+    "espnLogoAbbr": "car",
+    "logoUrl": "/logos/CAR.png"
   },
   {
     "shortName": "Bears",
@@ -45,7 +50,8 @@
     "division": "NFC North",
     "conference": "NFC",
     "name": "Chicago Bears",
-    "espnLogoAbbr": "chi"
+    "espnLogoAbbr": "chi",
+    "logoUrl": "/logos/CHI.png"
   },
   {
     "shortName": "Bengals",
@@ -53,7 +59,8 @@
     "division": "AFC North",
     "conference": "AFC",
     "name": "Cincinnati Bengals",
-    "espnLogoAbbr": "cin"
+    "espnLogoAbbr": "cin",
+    "logoUrl": "/logos/CIN.png"
   },
   {
     "shortName": "Browns",
@@ -61,7 +68,8 @@
     "division": "AFC North",
     "conference": "AFC",
     "name": "Cleveland Browns",
-    "espnLogoAbbr": "cle"
+    "espnLogoAbbr": "cle",
+    "logoUrl": "/logos/CLE.png"
   },
   {
     "shortName": "Cowboys",
@@ -69,7 +77,8 @@
     "division": "NFC East",
     "conference": "NFC",
     "name": "Dallas Cowboys",
-    "espnLogoAbbr": "dal"
+    "espnLogoAbbr": "dal",
+    "logoUrl": "/logos/DAL.png"
   },
   {
     "shortName": "Broncos",
@@ -77,7 +86,8 @@
     "division": "AFC West",
     "conference": "AFC",
     "name": "Denver Broncos",
-    "espnLogoAbbr": "den"
+    "espnLogoAbbr": "den",
+    "logoUrl": "/logos/DEN.png"
   },
   {
     "shortName": "Lions",
@@ -85,7 +95,8 @@
     "division": "NFC North",
     "conference": "NFC",
     "name": "Detroit Lions",
-    "espnLogoAbbr": "det"
+    "espnLogoAbbr": "det",
+    "logoUrl": "/logos/DET.png"
   },
   {
     "shortName": "Packers",
@@ -93,7 +104,8 @@
     "division": "NFC North",
     "conference": "NFC",
     "name": "Green Bay Packers",
-    "espnLogoAbbr": "gb"
+    "espnLogoAbbr": "gb",
+    "logoUrl": "/logos/GB.png"
   },
   {
     "shortName": "Texans",
@@ -101,7 +113,8 @@
     "division": "AFC South",
     "conference": "AFC",
     "name": "Houston Texans",
-    "espnLogoAbbr": "hou"
+    "espnLogoAbbr": "hou",
+    "logoUrl": "/logos/HOU.png"
   },
   {
     "shortName": "Colts",
@@ -109,7 +122,8 @@
     "division": "AFC South",
     "conference": "AFC",
     "name": "Indianapolis Colts",
-    "espnLogoAbbr": "ind"
+    "espnLogoAbbr": "ind",
+    "logoUrl": "/logos/IND.png"
   },
   {
     "shortName": "Jaguars",
@@ -117,7 +131,8 @@
     "division": "AFC South",
     "conference": "AFC",
     "name": "Jacksonville Jaguars",
-    "espnLogoAbbr": "jax"
+    "espnLogoAbbr": "jax",
+    "logoUrl": "/logos/JAX.png"
   },
   {
     "shortName": "Chiefs",
@@ -125,7 +140,8 @@
     "division": "AFC West",
     "conference": "AFC",
     "name": "Kansas City Chiefs",
-    "espnLogoAbbr": "kc"
+    "espnLogoAbbr": "kc",
+    "logoUrl": "/logos/KC.png"
   },
   {
     "shortName": "Chargers",
@@ -133,7 +149,8 @@
     "division": "AFC West",
     "conference": "AFC",
     "name": "Los Angeles Chargers",
-    "espnLogoAbbr": "lac"
+    "espnLogoAbbr": "lac",
+    "logoUrl": "/logos/LAC.png"
   },
   {
     "shortName": "Rams",
@@ -141,7 +158,8 @@
     "division": "NFC West",
     "conference": "NFC",
     "name": "Los Angeles Rams",
-    "espnLogoAbbr": "lar"
+    "espnLogoAbbr": "lar",
+    "logoUrl": "/logos/LAR.png"
   },
   {
     "shortName": "Raiders",
@@ -149,7 +167,8 @@
     "division": "AFC West",
     "conference": "AFC",
     "name": "Las Vegas Raiders",
-    "espnLogoAbbr": "lv"
+    "espnLogoAbbr": "lv",
+    "logoUrl": "/logos/LV.png"
   },
   {
     "shortName": "Dolphins",
@@ -157,7 +176,8 @@
     "division": "AFC East",
     "conference": "AFC",
     "name": "Miami Dolphins",
-    "espnLogoAbbr": "mia"
+    "espnLogoAbbr": "mia",
+    "logoUrl": "/logos/MIA.png"
   },
   {
     "shortName": "Vikings",
@@ -165,7 +185,8 @@
     "division": "NFC North",
     "conference": "NFC",
     "name": "Minnesota Vikings",
-    "espnLogoAbbr": "min"
+    "espnLogoAbbr": "min",
+    "logoUrl": "/logos/MIN.png"
   },
   {
     "shortName": "Patriots",
@@ -173,7 +194,8 @@
     "division": "AFC East",
     "conference": "AFC",
     "name": "New England Patriots",
-    "espnLogoAbbr": "ne"
+    "espnLogoAbbr": "ne",
+    "logoUrl": "/logos/NE.png"
   },
   {
     "shortName": "Saints",
@@ -181,7 +203,8 @@
     "division": "NFC South",
     "conference": "NFC",
     "name": "New Orleans Saints",
-    "espnLogoAbbr": "no"
+    "espnLogoAbbr": "no",
+    "logoUrl": "/logos/NO.png"
   },
   {
     "shortName": "Giants",
@@ -189,7 +212,8 @@
     "division": "NFC East",
     "conference": "NFC",
     "name": "New York Giants",
-    "espnLogoAbbr": "nyg"
+    "espnLogoAbbr": "nyg",
+    "logoUrl": "/logos/NYG.png"
   },
   {
     "shortName": "Jets",
@@ -197,7 +221,8 @@
     "division": "AFC East",
     "conference": "AFC",
     "name": "New York Jets",
-    "espnLogoAbbr": "nyj"
+    "espnLogoAbbr": "nyj",
+    "logoUrl": "/logos/NYJ.png"
   },
   {
     "shortName": "Eagles",
@@ -205,7 +230,8 @@
     "division": "NFC East",
     "conference": "NFC",
     "name": "Philadelphia Eagles",
-    "espnLogoAbbr": "phi"
+    "espnLogoAbbr": "phi",
+    "logoUrl": "/logos/PHI.png"
   },
   {
     "shortName": "Steelers",
@@ -213,7 +239,8 @@
     "division": "AFC North",
     "conference": "AFC",
     "name": "Pittsburgh Steelers",
-    "espnLogoAbbr": "pit"
+    "espnLogoAbbr": "pit",
+    "logoUrl": "/logos/PIT.png"
   },
   {
     "shortName": "Seahawks",
@@ -221,7 +248,8 @@
     "division": "NFC West",
     "conference": "NFC",
     "name": "Seattle Seahawks",
-    "espnLogoAbbr": "sea"
+    "espnLogoAbbr": "sea",
+    "logoUrl": "/logos/SEA.png"
   },
   {
     "shortName": "49ers",
@@ -229,7 +257,8 @@
     "division": "NFC West",
     "conference": "NFC",
     "name": "San Francisco 49ers",
-    "espnLogoAbbr": "sf"
+    "espnLogoAbbr": "sf",
+    "logoUrl": "/logos/SF.png"
   },
   {
     "shortName": "Buccaneers",
@@ -237,7 +266,8 @@
     "division": "NFC South",
     "conference": "NFC",
     "name": "Tampa Bay Buccaneers",
-    "espnLogoAbbr": "tb"
+    "espnLogoAbbr": "tb",
+    "logoUrl": "/logos/TB.png"
   },
   {
     "shortName": "Titans",
@@ -245,7 +275,8 @@
     "division": "AFC South",
     "conference": "AFC",
     "name": "Tennessee Titans",
-    "espnLogoAbbr": "ten"
+    "espnLogoAbbr": "ten",
+    "logoUrl": "/logos/TEN.png"
   },
   {
     "shortName": "Commanders",
@@ -253,6 +284,7 @@
     "division": "NFC East",
     "conference": "NFC",
     "name": "Washington Commanders",
-    "espnLogoAbbr": "wsh"
+    "espnLogoAbbr": "wsh",
+    "logoUrl": "/logos/WAS.png"
   }
 ]
