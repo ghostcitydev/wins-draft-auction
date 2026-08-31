@@ -12,8 +12,10 @@ export function useTeams(pollMs = 60000) {
   const load = useCallback(async () => {
     try {
       const res = await fetch("/api/teams", { cache: "no-store" });
-      if (!res.ok) throw new Error(`Request failed (${res.status})`);
-      const data = await res.json();
+      const data = await res.json().catch(() => null);
+      if (!res.ok) {
+        throw new Error(data?.error ? String(data.error) : `Request failed (${res.status})`);
+      }
       setTeams(data.teams);
       setSeason(data.season);
       setError(null);
