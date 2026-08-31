@@ -1,0 +1,258 @@
+[
+  {
+    "shortName": "Cardinals",
+    "abbr": "ARI",
+    "division": "NFC West",
+    "conference": "NFC",
+    "name": "Arizona Cardinals",
+    "espnLogoAbbr": "ari"
+  },
+  {
+    "shortName": "Falcons",
+    "abbr": "ATL",
+    "division": "NFC South",
+    "conference": "NFC",
+    "name": "Atlanta Falcons",
+    "espnLogoAbbr": "atl"
+  },
+  {
+    "shortName": "Ravens",
+    "abbr": "BAL",
+    "division": "AFC North",
+    "conference": "AFC",
+    "name": "Baltimore Ravens",
+    "espnLogoAbbr": "bal"
+  },
+  {
+    "shortName": "Bills",
+    "abbr": "BUF",
+    "division": "AFC East",
+    "conference": "AFC",
+    "name": "Buffalo Bills",
+    "espnLogoAbbr": "buf"
+  },
+  {
+    "shortName": "Panthers",
+    "abbr": "CAR",
+    "division": "NFC South",
+    "conference": "NFC",
+    "name": "Carolina Panthers",
+    "espnLogoAbbr": "car"
+  },
+  {
+    "shortName": "Bears",
+    "abbr": "CHI",
+    "division": "NFC North",
+    "conference": "NFC",
+    "name": "Chicago Bears",
+    "espnLogoAbbr": "chi"
+  },
+  {
+    "shortName": "Bengals",
+    "abbr": "CIN",
+    "division": "AFC North",
+    "conference": "AFC",
+    "name": "Cincinnati Bengals",
+    "espnLogoAbbr": "cin"
+  },
+  {
+    "shortName": "Browns",
+    "abbr": "CLE",
+    "division": "AFC North",
+    "conference": "AFC",
+    "name": "Cleveland Browns",
+    "espnLogoAbbr": "cle"
+  },
+  {
+    "shortName": "Cowboys",
+    "abbr": "DAL",
+    "division": "NFC East",
+    "conference": "NFC",
+    "name": "Dallas Cowboys",
+    "espnLogoAbbr": "dal"
+  },
+  {
+    "shortName": "Broncos",
+    "abbr": "DEN",
+    "division": "AFC West",
+    "conference": "AFC",
+    "name": "Denver Broncos",
+    "espnLogoAbbr": "den"
+  },
+  {
+    "shortName": "Lions",
+    "abbr": "DET",
+    "division": "NFC North",
+    "conference": "NFC",
+    "name": "Detroit Lions",
+    "espnLogoAbbr": "det"
+  },
+  {
+    "shortName": "Packers",
+    "abbr": "GB",
+    "division": "NFC North",
+    "conference": "NFC",
+    "name": "Green Bay Packers",
+    "espnLogoAbbr": "gb"
+  },
+  {
+    "shortName": "Texans",
+    "abbr": "HOU",
+    "division": "AFC South",
+    "conference": "AFC",
+    "name": "Houston Texans",
+    "espnLogoAbbr": "hou"
+  },
+  {
+    "shortName": "Colts",
+    "abbr": "IND",
+    "division": "AFC South",
+    "conference": "AFC",
+    "name": "Indianapolis Colts",
+    "espnLogoAbbr": "ind"
+  },
+  {
+    "shortName": "Jaguars",
+    "abbr": "JAX",
+    "division": "AFC South",
+    "conference": "AFC",
+    "name": "Jacksonville Jaguars",
+    "espnLogoAbbr": "jax"
+  },
+  {
+    "shortName": "Chiefs",
+    "abbr": "KC",
+    "division": "AFC West",
+    "conference": "AFC",
+    "name": "Kansas City Chiefs",
+    "espnLogoAbbr": "kc"
+  },
+  {
+    "shortName": "Chargers",
+    "abbr": "LAC",
+    "division": "AFC West",
+    "conference": "AFC",
+    "name": "Los Angeles Chargers",
+    "espnLogoAbbr": "lac"
+  },
+  {
+    "shortName": "Rams",
+    "abbr": "LAR",
+    "division": "NFC West",
+    "conference": "NFC",
+    "name": "Los Angeles Rams",
+    "espnLogoAbbr": "lar"
+  },
+  {
+    "shortName": "Raiders",
+    "abbr": "LV",
+    "division": "AFC West",
+    "conference": "AFC",
+    "name": "Las Vegas Raiders",
+    "espnLogoAbbr": "lv"
+  },
+  {
+    "shortName": "Dolphins",
+    "abbr": "MIA",
+    "division": "AFC East",
+    "conference": "AFC",
+    "name": "Miami Dolphins",
+    "espnLogoAbbr": "mia"
+  },
+  {
+    "shortName": "Vikings",
+    "abbr": "MIN",
+    "division": "NFC North",
+    "conference": "NFC",
+    "name": "Minnesota Vikings",
+    "espnLogoAbbr": "min"
+  },
+  {
+    "shortName": "Patriots",
+    "abbr": "NE",
+    "division": "AFC East",
+    "conference": "AFC",
+    "name": "New England Patriots",
+    "espnLogoAbbr": "ne"
+  },
+  {
+    "shortName": "Saints",
+    "abbr": "NO",
+    "division": "NFC South",
+    "conference": "NFC",
+    "name": "New Orleans Saints",
+    "espnLogoAbbr": "no"
+  },
+  {
+    "shortName": "Giants",
+    "abbr": "NYG",
+    "division": "NFC East",
+    "conference": "NFC",
+    "name": "New York Giants",
+    "espnLogoAbbr": "nyg"
+  },
+  {
+    "shortName": "Jets",
+    "abbr": "NYJ",
+    "division": "AFC East",
+    "conference": "AFC",
+    "name": "New York Jets",
+    "espnLogoAbbr": "nyj"
+  },
+  {
+    "shortName": "Eagles",
+    "abbr": "PHI",
+    "division": "NFC East",
+    "conference": "NFC",
+    "name": "Philadelphia Eagles",
+    "espnLogoAbbr": "phi"
+  },
+  {
+    "shortName": "Steelers",
+    "abbr": "PIT",
+    "division": "AFC North",
+    "conference": "AFC",
+    "name": "Pittsburgh Steelers",
+    "espnLogoAbbr": "pit"
+  },
+  {
+    "shortName": "Seahawks",
+    "abbr": "SEA",
+    "division": "NFC West",
+    "conference": "NFC",
+    "name": "Seattle Seahawks",
+    "espnLogoAbbr": "sea"
+  },
+  {
+    "shortName": "49ers",
+    "abbr": "SF",
+    "division": "NFC West",
+    "conference": "NFC",
+    "name": "San Francisco 49ers",
+    "espnLogoAbbr": "sf"
+  },
+  {
+    "shortName": "Buccaneers",
+    "abbr": "TB",
+    "division": "NFC South",
+    "conference": "NFC",
+    "name": "Tampa Bay Buccaneers",
+    "espnLogoAbbr": "tb"
+  },
+  {
+    "shortName": "Titans",
+    "abbr": "TEN",
+    "division": "AFC South",
+    "conference": "AFC",
+    "name": "Tennessee Titans",
+    "espnLogoAbbr": "ten"
+  },
+  {
+    "shortName": "Commanders",
+    "abbr": "WAS",
+    "division": "NFC East",
+    "conference": "NFC",
+    "name": "Washington Commanders",
+    "espnLogoAbbr": "wsh"
+  }
+]
