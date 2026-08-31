@@ -2,6 +2,7 @@
 
 import TopBar from "@/components/TopBar";
 import StandingsTable from "@/components/StandingsTable";
+import PlayerLeaderboard from "@/components/PlayerLeaderboard";
 import { useTeams } from "@/lib/useTeams";
 import { groupByPlayer } from "@/lib/team-types";
 import { fmtSignedMoney } from "@/lib/format";
@@ -38,9 +39,16 @@ export default function PlayersPage() {
           </div>
         )}
 
-        <div className="space-y-6 pb-4">
+        {groups.length > 0 && (
+          <>
+            <h2 className="mb-2 px-1 text-sm font-semibold text-muted">Leaderboard</h2>
+            <PlayerLeaderboard groups={groups} />
+          </>
+        )}
+
+        <div className="mt-6 space-y-6 pb-4">
           {groups.map((g, idx) => (
-            <section key={g.playerId}>
+            <section key={g.playerId} id={`player-${g.playerId}`}>
               <div className="mb-2 flex items-baseline justify-between px-1">
                 <h2 className="text-base font-semibold">
                   <span className="mr-2 text-muted">#{idx + 1}</span>

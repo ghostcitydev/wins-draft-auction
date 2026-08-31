@@ -44,37 +44,54 @@ export interface TeamRow {
 export interface PlayerGroup {
   playerId: string;
   playerName: string;
-  totalPaid: number;
+  teams: TeamRow[];
   totalWins: number;
   totalLosses: number;
   totalTies: number;
+  winPct: number;
+  totalPaid: number;
   totalValue: number;
-  teams: TeamRow[];
+  avgPreseasonOU: number;
+  avgDiff: number;
+  totalProjected: number;
+  totalPythagoreanWins: number;
+  avgEpa: number;
 }
 
 export function groupByPlayer(rows: TeamRow[]): PlayerGroup[] {
-  const map = new Map<string, PlayerGroup>();
+  const map = new Map<string, TeamRow[]>();
   for (const row of rows) {
     if (!row.playerId || !row.playerName) continue;
-    if (!map.has(row.playerId)) {
-      map.set(row.playerId, {
-        playerId: row.playerId,
-        playerName: row.playerName,
-        totalPaid: 0,
-        totalWins: 0,
-        totalLosses: 0,
-        totalTies: 0,
-        totalValue: 0,
-        teams: [],
-      });
-    }
-    const group = map.get(row.playerId)!;
-    group.teams.push(row);
-    group.totalPaid += row.paid ?? 0;
-    group.totalWins += row.wins;
-    group.totalLosses += row.losses;
-    group.totalTies += row.ties;
-    group.totalValue += row.value ?? 0;
+    const list = map.get(row.playerId) ?? [];
+    list.push(row);
+    map.set(row.playerId, list);
   }
-  return [...map.values()].sort((a, b) => b.totalWins - a.totalWins);
+
+  const groups: PlayerGroup[] = [...map.entries()].map(([playerId, teams]) => {
+    const playerName = teams[0].playerName!;
+    const totalWins = teams.reduce((s, t) => s + t.wins, 0);
+    const totalLosses = teams.reduce((s, t) => s + t.losses, 0);
+    const totalTies = teams.reduce((s, t) => s + t.ties, 0);
+    const gp = totalWins + totalLosses + totalTies;
+    const n = teams.length || 1;
+
+    return {
+      playerId,
+      playerName,
+      teams,
+      totalWins,
+      totalLosses,
+      totalTies,
+      winPct: gp > 0 ? (totalWins + 0.5 * totalTies) / gp : 0,
+      totalPaid: teams.reduce((s, t) => s + (t.paid ?? 0), 0),
+      totalValue: teams.reduce((s, t) => s + (t.value ?? 0), 0),
+      avgPreseasonOU: teams.reduce((s, t) => s + (t.preseasonOU ?? 0), 0) / n,
+      avgDiff: teams.reduce((s, t) => s + t.diff, 0) / n,
+      totalProjected: teams.reduce((s, t) => s + (t.projected ?? 0), 0),
+      totalPythagoreanWins: teams.reduce((s, t) => s + t.pythagoreanWins, 0),
+      avgEpa: teams.reduce((s, t) => s + t.epa, 0) / n,
+    };
+  });
+
+  return groups.sort((a, b) => b.totalWins - a.totalWins);
 }
