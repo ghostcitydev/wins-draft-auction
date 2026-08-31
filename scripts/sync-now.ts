@@ -1,4 +1,10 @@
-import "dotenv/config";
+import { config as loadEnv } from "dotenv";
+
+// Explicitly load .env.local first (this is where `vercel env pull` and
+// Next.js convention put things) - dotenv/config only auto-loads a plain
+// `.env` file by default, which silently left DATABASE_URL unset here.
+loadEnv({ path: ".env.local" });
+loadEnv(); // fall back to a plain .env if present, without overriding
 import { eq } from "drizzle-orm";
 import { db } from "../src/db";
 import { appConfig } from "../src/db/schema";
