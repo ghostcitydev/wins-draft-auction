@@ -5,11 +5,13 @@ import { config as loadEnv } from "dotenv";
 // `.env` file by default, which silently left DATABASE_URL unset here.
 loadEnv({ path: ".env.local" });
 loadEnv(); // fall back to a plain .env if present, without overriding
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { db } from "../src/db";
-import { teams, players, draftPicks, appConfig } from "../src/db/schema";
+import { teams, players, draftPicks, appConfig, teamRatings } from "../src/db/schema";
+import { ABBR_ALIASES } from "../src/lib/team-aliases";
 import teamsMaster from "../prisma/seed-data/teams-master.json";
 import draftPicks2026 from "../prisma/seed-data/draft-picks-2026.json";
+import teamRatings2025 from "../prisma/seed-data/team-ratings-2025.json";
 
 async function main() {
   const config = await db.select().from(appConfig).where(eq(appConfig.id, "singleton"));
@@ -83,6 +85,76 @@ async function main() {
         preseasonOU: pick.preseasonOU,
         round: pick.round ?? null,
       });
+    }
+  }
+
+  console.log(`Seeding ${teamRatings2025.length} nfelo team-ratings rows for 2025 (placeholder season)...`);
+  for (const r of teamRatings2025 as Array<{
+    abbr: string;
+    season: number;
+    week: number;
+    nfeloRating: number | null;
+    qbAdj: number | null;
+    value: number | null;
+    wow: number | null;
+    ytd: number | null;
+    offPlay: number | null;
+    offPass: number | null;
+    offRush: number | null;
+    defPlay: number | null;
+    defPass: number | null;
+    defRush: number | null;
+    epaPlay: number | null;
+    pointsFor: number | null;
+    pointsAgainst: number | null;
+    diff: number | null;
+    wins: number | null;
+    pythagWins: number | null;
+    elo: number | null;
+    film: number | null;
+  }>) {
+    const abbr = ABBR_ALIASES[r.abbr] ?? r.abbr;
+    const team = (await db.select().from(teams).where(eq(teams.abbr, abbr)))[0];
+    if (!team) {
+      console.warn(`  skip rating for ${r.abbr} - team not found`);
+      continue;
+    }
+
+    const existingRating = await db
+      .select()
+      .from(teamRatings)
+      .where(and(eq(teamRatings.season, r.season), eq(teamRatings.week, r.week), eq(teamRatings.teamId, team.id)));
+
+    const values = {
+      season: r.season,
+      week: r.week,
+      teamId: team.id,
+      source: "nfelo",
+      nfeloRating: r.nfeloRating,
+      qbAdj: r.qbAdj,
+      value: r.value,
+      wow: r.wow,
+      ytd: r.ytd,
+      offPlay: r.offPlay,
+      offPass: r.offPass,
+      offRush: r.offRush,
+      defPlay: r.defPlay,
+      defPass: r.defPass,
+      defRush: r.defRush,
+      epaPlay: r.epaPlay,
+      pointsFor: r.pointsFor,
+      pointsAgainst: r.pointsAgainst,
+      diff: r.diff,
+      wins: r.wins,
+      pythagWins: r.pythagWins,
+      elo: r.elo,
+      film: r.film,
+    };
+
+    if (existingRating.length) {
+      await db.update(teamRatings).set(values).where(eq(teamRatings.id, existingRating[0].id));
+    } else {
+      await db.insert(teamRatings).values(values);
     }
   }
 

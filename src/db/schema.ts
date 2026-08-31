@@ -57,21 +57,43 @@ export const games = pgTable(
   (table) => [index("games_season_week_idx").on(table.season, table.week)]
 );
 
-export const teamWeekStats = pgTable(
-  "team_week_stats",
+/**
+ * A weekly snapshot of nfelo.com's power ratings table (EPA, Pythagorean
+ * wins, Elo, etc.) for one team. nfelo has no public API, so these rows are
+ * populated by the commissioner pasting the site's table into /admin each
+ * week (see /api/admin/team-ratings) - same workflow as the original
+ * spreadsheet's "EPA" tab.
+ */
+export const teamRatings = pgTable(
+  "team_ratings",
   {
     id: text("id").primaryKey().$defaultFn(() => createId()),
     season: integer("season").notNull(),
     week: integer("week").notNull(),
     teamId: text("team_id").notNull().references(() => teams.id),
-    opponentTeamId: text("opponent_team_id").notNull().references(() => teams.id),
-    offPlays: integer("off_plays").notNull(),
-    offEpa: real("off_epa").notNull(),
+    source: text("source").notNull().default("nfelo"),
+    nfeloRating: real("nfelo_rating"),
+    qbAdj: real("qb_adj"),
+    value: real("value"),
+    wow: real("wow"),
+    ytd: real("ytd"),
+    offPlay: real("off_play"),
+    offPass: real("off_pass"),
+    offRush: real("off_rush"),
+    defPlay: real("def_play"),
+    defPass: real("def_pass"),
+    defRush: real("def_rush"),
+    epaPlay: real("epa_play"),
+    pointsFor: real("points_for"),
+    pointsAgainst: real("points_against"),
+    diff: real("diff"),
+    wins: real("wins"),
+    pythagWins: real("pythag_wins"),
+    elo: real("elo"),
+    film: real("film"),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
   },
-  (table) => [
-    uniqueIndex("team_week_stats_unique").on(table.season, table.week, table.teamId),
-    index("team_week_stats_opponent_idx").on(table.season, table.opponentTeamId),
-  ]
+  (table) => [uniqueIndex("team_ratings_unique").on(table.season, table.week, table.teamId)]
 );
 
 export const syncLog = pgTable("sync_log", {

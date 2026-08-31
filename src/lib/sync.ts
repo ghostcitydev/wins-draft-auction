@@ -1,19 +1,7 @@
 import { desc, eq } from "drizzle-orm";
 import { db } from "@/db";
-import { teams, games, teamWeekStats, syncLog } from "@/db/schema";
+import { teams, games, syncLog } from "@/db/schema";
 import { fetchEspnSeason } from "./espn";
-import { fetchNflverseTeamWeekStats } from "./nflverse";
-
-/** Known historical/alternate abbreviations used by outside data sources. */
-const ABBR_ALIASES: Record<string, string> = {
-  LA: "LAR",
-  STL: "LAR",
-  SD: "LAC",
-  OAK: "LV",
-  LVR: "LV",
-  JAC: "JAX",
-  WSH: "WAS",
-};
 
 export async function syncEspnSchedule(season: number) {
   const allTeams = await db.select().from(teams);
@@ -76,94 +64,25 @@ export async function syncEspnSchedule(season: number) {
   return { upserted, unmatched: [...unmatched] };
 }
 
-export async function syncNflverseEpa(season: number) {
-  const allTeams = await db.select().from(teams);
-  const byAbbr = new Map(allTeams.map((t) => [t.abbr, t]));
-  const resolveTeam = (abbr: string) => byAbbr.get(abbr) ?? byAbbr.get(ABBR_ALIASES[abbr] ?? "");
-
-  let rows: Awaited<ReturnType<typeof fetchNflverseTeamWeekStats>>;
-  try {
-    rows = await fetchNflverseTeamWeekStats(season);
-  } catch (err) {
-    await db.insert(syncLog).values({ source: "nflverse", status: "error", message: String(err) });
-    throw err;
-  }
-
-  const unmatched = new Set<string>();
-  let upserted = 0;
-
-  for (const r of rows) {
-    const team = resolveTeam(r.team);
-    const opponent = resolveTeam(r.opponentTeam);
-    if (!team || !opponent) {
-      if (!team) unmatched.add(r.team);
-      if (!opponent) unmatched.add(r.opponentTeam);
-      continue;
-    }
-
-    await db
-      .insert(teamWeekStats)
-      .values({
-        season: r.season,
-        week: r.week,
-        teamId: team.id,
-        opponentTeamId: opponent.id,
-        offPlays: r.offPlays,
-        offEpa: r.offEpa,
-      })
-      .onConflictDoUpdate({
-        target: [teamWeekStats.season, teamWeekStats.week, teamWeekStats.teamId],
-        set: {
-          opponentTeamId: opponent.id,
-          offPlays: r.offPlays,
-          offEpa: r.offEpa,
-        },
-      });
-    upserted++;
-  }
-
-  await db.insert(syncLog).values({
-    source: "nflverse",
-    status: unmatched.size ? "partial" : "ok",
-    message: unmatched.size
-      ? `Upserted ${upserted} team-week rows. Unmatched abbreviations: ${[...unmatched].join(", ")}`
-      : `Upserted ${upserted} team-week rows.`,
-  });
-
-  return { upserted, unmatched: [...unmatched] };
-}
-
 /**
- * One-time backfill of the previous season's games + EPA. Before the current
- * season has any games, the app shows last season's numbers as clearly-marked
- * placeholders (see getTeamRows) so EPA/Pythagorean columns aren't just blank
- * zeros - this is what populates the data behind that.
+ * One-time backfill of the previous season's games. EPA/Pythagorean
+ * placeholders come from team_ratings instead (see getTeamRows +
+ * /api/admin/team-ratings) - those are pasted in by the commissioner, not
+ * auto-synced, since nfelo.com has no public API.
  */
 export async function backfillPreviousSeasonIfNeeded(season: number) {
   const prevSeason = season - 1;
-
-  const [hasGames, hasStats] = await Promise.all([
-    db.select({ id: games.id }).from(games).where(eq(games.season, prevSeason)).limit(1),
-    db.select({ id: teamWeekStats.id }).from(teamWeekStats).where(eq(teamWeekStats.season, prevSeason)).limit(1),
-  ]);
-
-  const tasks: Promise<unknown>[] = [];
-  if (!hasGames.length) tasks.push(syncEspnSchedule(prevSeason));
-  if (!hasStats.length) tasks.push(syncNflverseEpa(prevSeason));
-
-  if (tasks.length) await Promise.allSettled(tasks);
+  const hasGames = await db.select({ id: games.id }).from(games).where(eq(games.season, prevSeason)).limit(1);
+  if (!hasGames.length) await syncEspnSchedule(prevSeason);
 }
 
-/** Runs both syncs; used by the cron route and the manual "sync now" button. */
+/** Runs the live sync; used by the cron route and the manual "sync now" button. */
 export async function runFullSync(season: number) {
-  const [espn, nflverse] = await Promise.allSettled([
-    syncEspnSchedule(season),
-    syncNflverseEpa(season),
-  ]);
+  const espn = await Promise.allSettled([syncEspnSchedule(season)]);
   await backfillPreviousSeasonIfNeeded(season).catch((err) =>
     console.error("[sync] previous-season backfill failed:", err)
   );
-  return { espn, nflverse };
+  return { espn: espn[0] };
 }
 
 export async function getLastSyncTime(): Promise<Date | null> {
