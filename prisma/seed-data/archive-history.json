@@ -1,0 +1,1350 @@
+[
+  {
+    "year": 2022,
+    "title": "NFL Wins Draft | 2022 | Final",
+    "source": "2022 NFL Wins Draft Auction FINAL.pdf",
+    "standings": [
+      {
+        "rank": 1,
+        "player": "Richard",
+        "wins": 40,
+        "losses": 27,
+        "winPct": 0.597
+      },
+      {
+        "rank": 2,
+        "player": "Tyler",
+        "wins": 37,
+        "losses": 29,
+        "winPct": 0.561
+      },
+      {
+        "rank": 3,
+        "player": "Alex",
+        "wins": 34,
+        "losses": 33,
+        "winPct": 0.507
+      },
+      {
+        "rank": 4,
+        "player": "Justin",
+        "wins": 34,
+        "losses": 34,
+        "winPct": 0.5
+      },
+      {
+        "rank": 5,
+        "player": "Barry",
+        "wins": 33,
+        "losses": 34,
+        "winPct": 0.493
+      },
+      {
+        "rank": 6,
+        "player": "Sean",
+        "wins": 32,
+        "losses": 36,
+        "winPct": 0.471
+      },
+      {
+        "rank": 7,
+        "player": "Evan",
+        "wins": 31,
+        "losses": 37,
+        "winPct": 0.456
+      },
+      {
+        "rank": 8,
+        "player": "Tim",
+        "wins": 28,
+        "losses": 39,
+        "winPct": 0.418
+      }
+    ],
+    "teams": {
+      "Richard": [
+        {
+          "team": "Buccaneers",
+          "abbr": "TB",
+          "wins": 8,
+          "losses": null,
+          "paid": 18,
+          "value": 9
+        },
+        {
+          "team": "Eagles",
+          "abbr": "PHI",
+          "wins": 14,
+          "losses": null,
+          "paid": 12,
+          "value": 20
+        },
+        {
+          "team": "Lions",
+          "abbr": "DET",
+          "wins": 9,
+          "losses": null,
+          "paid": 6,
+          "value": 11
+        },
+        {
+          "team": "Giants",
+          "abbr": "NYG",
+          "wins": 9,
+          "losses": null,
+          "paid": 4,
+          "value": 11
+        }
+      ],
+      "Tyler": [
+        {
+          "team": "Bengals",
+          "abbr": "CIN",
+          "wins": 12,
+          "losses": null,
+          "paid": 16,
+          "value": 17
+        },
+        {
+          "team": "Chargers",
+          "abbr": "LAC",
+          "wins": 10,
+          "losses": null,
+          "paid": 15,
+          "value": 13
+        },
+        {
+          "team": "Redskins",
+          "abbr": "WAS",
+          "wins": 8,
+          "losses": null,
+          "paid": 7,
+          "value": 9
+        },
+        {
+          "team": "Panthers",
+          "abbr": "CAR",
+          "wins": 7,
+          "losses": null,
+          "paid": 2,
+          "value": 7
+        }
+      ],
+      "Alex": [
+        {
+          "team": "Packers",
+          "abbr": "GB",
+          "wins": 8,
+          "losses": null,
+          "paid": 18,
+          "value": 9
+        },
+        {
+          "team": "Chiefs",
+          "abbr": "KC",
+          "wins": 14,
+          "losses": null,
+          "paid": 15,
+          "value": 20
+        },
+        {
+          "team": "Seahawks",
+          "abbr": "SEA",
+          "wins": 9,
+          "losses": null,
+          "paid": 6,
+          "value": 11
+        },
+        {
+          "team": "Texans",
+          "abbr": "HOU",
+          "wins": 3,
+          "losses": null,
+          "paid": 1,
+          "value": 0
+        }
+      ],
+      "Justin": [
+        {
+          "team": "Ravens",
+          "abbr": "BAL",
+          "wins": 10,
+          "losses": null,
+          "paid": 14,
+          "value": 13
+        },
+        {
+          "team": "49ers",
+          "abbr": "SF",
+          "wins": 13,
+          "losses": null,
+          "paid": 13,
+          "value": 18
+        },
+        {
+          "team": "Cardinals",
+          "abbr": "ARI",
+          "wins": 4,
+          "losses": null,
+          "paid": 8,
+          "value": 2
+        },
+        {
+          "team": "Falcons",
+          "abbr": "ATL",
+          "wins": 7,
+          "losses": null,
+          "paid": 5,
+          "value": 7
+        }
+      ],
+      "Barry": [
+        {
+          "team": "Bills",
+          "abbr": "BUF",
+          "wins": 13,
+          "losses": null,
+          "paid": 21,
+          "value": 18
+        },
+        {
+          "team": "Raiders",
+          "abbr": "LV",
+          "wins": 6,
+          "losses": null,
+          "paid": 9,
+          "value": 6
+        },
+        {
+          "team": "Browns",
+          "abbr": "CLE",
+          "wins": 7,
+          "losses": null,
+          "paid": 8,
+          "value": 7
+        },
+        {
+          "team": "Jets",
+          "abbr": "NYJ",
+          "wins": 7,
+          "losses": null,
+          "paid": 2,
+          "value": 7
+        }
+      ],
+      "Sean": [
+        {
+          "team": "Steelers",
+          "abbr": "PIT",
+          "wins": 9,
+          "losses": null,
+          "paid": 12,
+          "value": 11
+        },
+        {
+          "team": "Saints",
+          "abbr": "NO",
+          "wins": 7,
+          "losses": null,
+          "paid": 11,
+          "value": 7
+        },
+        {
+          "team": "Dolphins",
+          "abbr": "MIA",
+          "wins": 9,
+          "losses": null,
+          "paid": 10,
+          "value": 11
+        },
+        {
+          "team": "Titans",
+          "abbr": "TEN",
+          "wins": 7,
+          "losses": null,
+          "paid": 7,
+          "value": 7
+        }
+      ],
+      "Evan": [
+        {
+          "team": "Rams",
+          "abbr": "LAR",
+          "wins": 5,
+          "losses": null,
+          "paid": 14,
+          "value": 4
+        },
+        {
+          "team": "Broncos",
+          "abbr": "DEN",
+          "wins": 5,
+          "losses": null,
+          "paid": 14,
+          "value": 4
+        },
+        {
+          "team": "Cowboys",
+          "abbr": "DAL",
+          "wins": 12,
+          "losses": null,
+          "paid": 11,
+          "value": 17
+        },
+        {
+          "team": "Jaguars",
+          "abbr": "JAX",
+          "wins": 9,
+          "losses": null,
+          "paid": 1,
+          "value": 11
+        }
+      ],
+      "Tim": [
+        {
+          "team": "Vikings",
+          "abbr": "MIN",
+          "wins": 13,
+          "losses": null,
+          "paid": 15,
+          "value": 18
+        },
+        {
+          "team": "Colts",
+          "abbr": "IND",
+          "wins": 4,
+          "losses": null,
+          "paid": 13,
+          "value": 2
+        },
+        {
+          "team": "Patriots",
+          "abbr": "NE",
+          "wins": 8,
+          "losses": null,
+          "paid": 6,
+          "value": 9
+        },
+        {
+          "team": "Bears",
+          "abbr": "CHI",
+          "wins": 3,
+          "losses": null,
+          "paid": 6,
+          "value": 0
+        }
+      ]
+    }
+  },
+  {
+    "year": 2023,
+    "title": "NFL Wins Draft 2023, Week 18 - \"Rams were the deciding factor. Congrats Leo\"",
+    "source": "2023 Wins Draft Week 18.pdf",
+    "standings": [
+      {
+        "rank": 1,
+        "player": "Leo",
+        "wins": 40,
+        "losses": 28,
+        "winPct": 0.588
+      },
+      {
+        "rank": 2,
+        "player": "Sean L",
+        "wins": 37,
+        "losses": 31,
+        "winPct": 0.544
+      },
+      {
+        "rank": 3,
+        "player": "Niels",
+        "wins": 34,
+        "losses": 34,
+        "winPct": 0.5
+      },
+      {
+        "rank": 4,
+        "player": "Evan",
+        "wins": 34,
+        "losses": 34,
+        "winPct": 0.5
+      },
+      {
+        "rank": 5,
+        "player": "Justin",
+        "wins": 33,
+        "losses": 35,
+        "winPct": 0.485
+      },
+      {
+        "rank": 6,
+        "player": "Barry",
+        "wins": 32,
+        "losses": 36,
+        "winPct": 0.471
+      },
+      {
+        "rank": 7,
+        "player": "John",
+        "wins": 31,
+        "losses": 37,
+        "winPct": 0.456
+      },
+      {
+        "rank": 8,
+        "player": "Control",
+        "wins": 31,
+        "losses": 37,
+        "winPct": 0.456
+      }
+    ],
+    "teams": {
+      "Leo": [
+        {
+          "team": "Chiefs",
+          "abbr": "KC",
+          "wins": 11,
+          "losses": null,
+          "paid": 23,
+          "value": 17
+        },
+        {
+          "team": "Steelers",
+          "abbr": "PIT",
+          "wins": 10,
+          "losses": null,
+          "paid": 14,
+          "value": 15
+        },
+        {
+          "team": "Seahawks",
+          "abbr": "SEA",
+          "wins": 9,
+          "losses": null,
+          "paid": 10,
+          "value": 12
+        },
+        {
+          "team": "Rams",
+          "abbr": "LAR",
+          "wins": 10,
+          "losses": null,
+          "paid": 2,
+          "value": 15
+        }
+      ],
+      "Sean L": [
+        {
+          "team": "Cowboys",
+          "abbr": "DAL",
+          "wins": 12,
+          "losses": null,
+          "paid": 18,
+          "value": 19
+        },
+        {
+          "team": "Browns",
+          "abbr": "CLE",
+          "wins": 11,
+          "losses": null,
+          "paid": 13,
+          "value": 17
+        },
+        {
+          "team": "Vikings",
+          "abbr": "MIN",
+          "wins": 7,
+          "losses": null,
+          "paid": 13,
+          "value": 7
+        },
+        {
+          "team": "Bears",
+          "abbr": "CHI",
+          "wins": 7,
+          "losses": null,
+          "paid": 6,
+          "value": 7
+        }
+      ],
+      "Niels": [
+        {
+          "team": "49ers",
+          "abbr": "SF",
+          "wins": 12,
+          "losses": null,
+          "paid": 21,
+          "value": 19
+        },
+        {
+          "team": "Ravens",
+          "abbr": "BAL",
+          "wins": 13,
+          "losses": null,
+          "paid": 15,
+          "value": 22
+        },
+        {
+          "team": "Falcons",
+          "abbr": "ATL",
+          "wins": 7,
+          "losses": null,
+          "paid": 7,
+          "value": 7
+        },
+        {
+          "team": "Panthers",
+          "abbr": "CAR",
+          "wins": 2,
+          "losses": null,
+          "paid": 1,
+          "value": -5
+        }
+      ],
+      "Evan": [
+        {
+          "team": "Bengals",
+          "abbr": "CIN",
+          "wins": 9,
+          "losses": null,
+          "paid": 21,
+          "value": 12
+        },
+        {
+          "team": "Jets",
+          "abbr": "NYJ",
+          "wins": 7,
+          "losses": null,
+          "paid": 14,
+          "value": 7
+        },
+        {
+          "team": "Saints",
+          "abbr": "NO",
+          "wins": 9,
+          "losses": null,
+          "paid": 14,
+          "value": 12
+        },
+        {
+          "team": "Colts",
+          "abbr": "IND",
+          "wins": 9,
+          "losses": null,
+          "paid": 1,
+          "value": 12
+        }
+      ],
+      "Justin": [
+        {
+          "team": "Bills",
+          "abbr": "BUF",
+          "wins": 11,
+          "losses": null,
+          "paid": 23,
+          "value": 17
+        },
+        {
+          "team": "Chargers",
+          "abbr": "LAC",
+          "wins": 5,
+          "losses": null,
+          "paid": 14,
+          "value": 2
+        },
+        {
+          "team": "Broncos",
+          "abbr": "DEN",
+          "wins": 8,
+          "losses": null,
+          "paid": 9,
+          "value": 10
+        },
+        {
+          "team": "Packers",
+          "abbr": "GB",
+          "wins": 9,
+          "losses": null,
+          "paid": 3,
+          "value": 12
+        }
+      ],
+      "Barry": [
+        {
+          "team": "Eagles",
+          "abbr": "PHI",
+          "wins": 11,
+          "losses": null,
+          "paid": 18,
+          "value": 17
+        },
+        {
+          "team": "Dolphins",
+          "abbr": "MIA",
+          "wins": 11,
+          "losses": null,
+          "paid": 14,
+          "value": 17
+        },
+        {
+          "team": "Titans",
+          "abbr": "TEN",
+          "wins": 6,
+          "losses": null,
+          "paid": 10,
+          "value": 5
+        },
+        {
+          "team": "Patriots",
+          "abbr": "NE",
+          "wins": 4,
+          "losses": null,
+          "paid": 8,
+          "value": 0
+        }
+      ],
+      "John": [
+        {
+          "team": "Jaguars",
+          "abbr": "JAX",
+          "wins": 9,
+          "losses": null,
+          "paid": 17,
+          "value": 12
+        },
+        {
+          "team": "Lions",
+          "abbr": "DET",
+          "wins": 12,
+          "losses": null,
+          "paid": 15,
+          "value": 19
+        },
+        {
+          "team": "Giants",
+          "abbr": "NYG",
+          "wins": 6,
+          "losses": null,
+          "paid": 13,
+          "value": 5
+        },
+        {
+          "team": "Redskins",
+          "abbr": "WAS",
+          "wins": 4,
+          "losses": null,
+          "paid": 5,
+          "value": 0
+        }
+      ],
+      "Control": [
+        {
+          "team": "Raiders",
+          "abbr": "LV",
+          "wins": 8,
+          "losses": null,
+          "paid": 1,
+          "value": 10
+        },
+        {
+          "team": "Buccaneers",
+          "abbr": "TB",
+          "wins": 9,
+          "losses": null,
+          "paid": 1,
+          "value": 12
+        },
+        {
+          "team": "Texans",
+          "abbr": "HOU",
+          "wins": 10,
+          "losses": null,
+          "paid": 1,
+          "value": 15
+        },
+        {
+          "team": "Cardinals",
+          "abbr": "ARI",
+          "wins": 4,
+          "losses": null,
+          "paid": 1,
+          "value": 0
+        }
+      ]
+    }
+  },
+  {
+    "year": 2024,
+    "title": "2024 NFL Wins Draft | Week 18",
+    "source": "NFL Wins Draft 2024 - Week 18 FINAL.pdf",
+    "standings": [
+      {
+        "rank": 1,
+        "player": "Barry",
+        "wins": 47,
+        "losses": 21,
+        "winPct": 0.691
+      },
+      {
+        "rank": 2,
+        "player": "Loh",
+        "wins": 39,
+        "losses": 29,
+        "winPct": 0.574
+      },
+      {
+        "rank": 3,
+        "player": "John",
+        "wins": 38,
+        "losses": 30,
+        "winPct": 0.559
+      },
+      {
+        "rank": 4,
+        "player": "Sean",
+        "wins": 32,
+        "losses": 36,
+        "winPct": 0.471
+      },
+      {
+        "rank": 5,
+        "player": "Leo",
+        "wins": 32,
+        "losses": 36,
+        "winPct": 0.471
+      },
+      {
+        "rank": 6,
+        "player": "Evan",
+        "wins": 29,
+        "losses": 39,
+        "winPct": 0.426
+      },
+      {
+        "rank": 7,
+        "player": "Littlefield",
+        "wins": 28,
+        "losses": 40,
+        "winPct": 0.412
+      },
+      {
+        "rank": 8,
+        "player": "Tyler",
+        "wins": 27,
+        "losses": 41,
+        "winPct": 0.397
+      }
+    ],
+    "teams": {
+      "Barry": [
+        {
+          "team": "Lions",
+          "abbr": "DET",
+          "wins": 15,
+          "losses": 2,
+          "paid": 21,
+          "value": null
+        },
+        {
+          "team": "Texans",
+          "abbr": "HOU",
+          "wins": 10,
+          "losses": 7,
+          "paid": 18,
+          "value": null
+        },
+        {
+          "team": "Commanders",
+          "abbr": "WAS",
+          "wins": 12,
+          "losses": 5,
+          "paid": 6,
+          "value": null
+        },
+        {
+          "team": "Broncos",
+          "abbr": "DEN",
+          "wins": 10,
+          "losses": 7,
+          "paid": 5,
+          "value": null
+        }
+      ],
+      "Evan": [
+        {
+          "team": "Bengals",
+          "abbr": "CIN",
+          "wins": 9,
+          "losses": 8,
+          "paid": 19,
+          "value": null
+        },
+        {
+          "team": "Cowboys",
+          "abbr": "DAL",
+          "wins": 7,
+          "losses": 10,
+          "paid": 16,
+          "value": null
+        },
+        {
+          "team": "Buccaneers",
+          "abbr": "TB",
+          "wins": 10,
+          "losses": 7,
+          "paid": 7,
+          "value": null
+        },
+        {
+          "team": "Giants",
+          "abbr": "NYG",
+          "wins": 3,
+          "losses": 14,
+          "paid": 8,
+          "value": null
+        }
+      ],
+      "John": [
+        {
+          "team": "Ravens",
+          "abbr": "BAL",
+          "wins": 12,
+          "losses": 5,
+          "paid": 18,
+          "value": null
+        },
+        {
+          "team": "Chargers",
+          "abbr": "LAC",
+          "wins": 11,
+          "losses": 6,
+          "paid": 13,
+          "value": null
+        },
+        {
+          "team": "Seahawks",
+          "abbr": "SEA",
+          "wins": 10,
+          "losses": 7,
+          "paid": 9,
+          "value": null
+        },
+        {
+          "team": "Saints",
+          "abbr": "NO",
+          "wins": 5,
+          "losses": 12,
+          "paid": 10,
+          "value": null
+        }
+      ],
+      "Leo": [
+        {
+          "team": "Chiefs",
+          "abbr": "KC",
+          "wins": 15,
+          "losses": 2,
+          "paid": 24,
+          "value": null
+        },
+        {
+          "team": "Rams",
+          "abbr": "LAR",
+          "wins": 10,
+          "losses": 7,
+          "paid": 12,
+          "value": null
+        },
+        {
+          "team": "Browns",
+          "abbr": "CLE",
+          "wins": 3,
+          "losses": 14,
+          "paid": 13,
+          "value": null
+        },
+        {
+          "team": "Patriots",
+          "abbr": "NE",
+          "wins": 4,
+          "losses": 13,
+          "paid": 1,
+          "value": null
+        }
+      ],
+      "Littlefield": [
+        {
+          "team": "Jets",
+          "abbr": "NYJ",
+          "wins": 5,
+          "losses": 12,
+          "paid": 12,
+          "value": null
+        },
+        {
+          "team": "Bears",
+          "abbr": "CHI",
+          "wins": 5,
+          "losses": 12,
+          "paid": 16,
+          "value": null
+        },
+        {
+          "team": "Colts",
+          "abbr": "IND",
+          "wins": 8,
+          "losses": 9,
+          "paid": 10,
+          "value": null
+        },
+        {
+          "team": "Steelers",
+          "abbr": "PIT",
+          "wins": 10,
+          "losses": 7,
+          "paid": 12,
+          "value": null
+        }
+      ],
+      "Loh": [
+        {
+          "team": "Bills",
+          "abbr": "BUF",
+          "wins": 13,
+          "losses": 4,
+          "paid": 19,
+          "value": null
+        },
+        {
+          "team": "Falcons",
+          "abbr": "ATL",
+          "wins": 8,
+          "losses": 9,
+          "paid": 13,
+          "value": null
+        },
+        {
+          "team": "Jaguars",
+          "abbr": "JAX",
+          "wins": 4,
+          "losses": 13,
+          "paid": 12,
+          "value": null
+        },
+        {
+          "team": "Vikings",
+          "abbr": "MIN",
+          "wins": 14,
+          "losses": 3,
+          "paid": 6,
+          "value": null
+        }
+      ],
+      "Sean": [
+        {
+          "team": "Eagles",
+          "abbr": "PHI",
+          "wins": 14,
+          "losses": 3,
+          "paid": 20,
+          "value": null
+        },
+        {
+          "team": "Packers",
+          "abbr": "GB",
+          "wins": 11,
+          "losses": 6,
+          "paid": 13,
+          "value": null
+        },
+        {
+          "team": "Raiders",
+          "abbr": "LV",
+          "wins": 4,
+          "losses": 13,
+          "paid": 6,
+          "value": null
+        },
+        {
+          "team": "Titans",
+          "abbr": "TEN",
+          "wins": 3,
+          "losses": 14,
+          "paid": 11,
+          "value": null
+        }
+      ],
+      "Tyler": [
+        {
+          "team": "49ers",
+          "abbr": "SF",
+          "wins": 6,
+          "losses": 11,
+          "paid": 22,
+          "value": null
+        },
+        {
+          "team": "Dolphins",
+          "abbr": "MIA",
+          "wins": 8,
+          "losses": 9,
+          "paid": 18,
+          "value": null
+        },
+        {
+          "team": "Cardinals",
+          "abbr": "ARI",
+          "wins": 8,
+          "losses": 9,
+          "paid": 9,
+          "value": null
+        },
+        {
+          "team": "Panthers",
+          "abbr": "CAR",
+          "wins": 5,
+          "losses": 12,
+          "paid": 1,
+          "value": null
+        }
+      ]
+    }
+  },
+  {
+    "year": 2025,
+    "title": "2025 Wins Draft | Week 18 - \"Closest Wins Draft Ever\"",
+    "source": "2025 NFL Wins Draft FINAL Standings.pdf",
+    "standings": [
+      {
+        "rank": 1,
+        "player": "John",
+        "wins": 43,
+        "losses": 25,
+        "winPct": 0.632
+      },
+      {
+        "rank": 2,
+        "player": "Sean",
+        "wins": 42,
+        "losses": 26,
+        "winPct": 0.618
+      },
+      {
+        "rank": 3,
+        "player": "Barry",
+        "wins": 41,
+        "losses": 25,
+        "winPct": 0.621
+      },
+      {
+        "rank": 4,
+        "player": "Evan",
+        "wins": 35,
+        "losses": 33,
+        "winPct": 0.515
+      },
+      {
+        "rank": 5,
+        "player": "Leo",
+        "wins": 33,
+        "losses": 35,
+        "winPct": 0.485
+      },
+      {
+        "rank": 6,
+        "player": "Tyler",
+        "wins": 31,
+        "losses": 37,
+        "winPct": 0.456
+      },
+      {
+        "rank": 7,
+        "player": "Niels",
+        "wins": 25,
+        "losses": 43,
+        "winPct": 0.368
+      },
+      {
+        "rank": 8,
+        "player": "Rich",
+        "wins": 21,
+        "losses": 47,
+        "winPct": 0.309
+      }
+    ],
+    "teams": {
+      "Barry": [
+        {
+          "team": "Packers",
+          "abbr": "GB",
+          "wins": 9,
+          "losses": 7,
+          "paid": 17,
+          "value": 14
+        },
+        {
+          "team": "Rams",
+          "abbr": "LAR",
+          "wins": 12,
+          "losses": 5,
+          "paid": 15,
+          "value": 21
+        },
+        {
+          "team": "Jaguars",
+          "abbr": "JAX",
+          "wins": 13,
+          "losses": 4,
+          "paid": 10,
+          "value": 23
+        },
+        {
+          "team": "Cowboys",
+          "abbr": "DAL",
+          "wins": 7,
+          "losses": 9,
+          "paid": 8,
+          "value": 9
+        }
+      ],
+      "Evan": [
+        {
+          "team": "49ers",
+          "abbr": "SF",
+          "wins": 12,
+          "losses": 5,
+          "paid": 18,
+          "value": 21
+        },
+        {
+          "team": "Texans",
+          "abbr": "HOU",
+          "wins": 12,
+          "losses": 5,
+          "paid": 17,
+          "value": 21
+        },
+        {
+          "team": "Bengals",
+          "abbr": "CIN",
+          "wins": 6,
+          "losses": 11,
+          "paid": 14,
+          "value": 7
+        },
+        {
+          "team": "Browns",
+          "abbr": "CLE",
+          "wins": 5,
+          "losses": 12,
+          "paid": 1,
+          "value": 5
+        }
+      ],
+      "John": [
+        {
+          "team": "Broncos",
+          "abbr": "DEN",
+          "wins": 14,
+          "losses": 3,
+          "paid": 17,
+          "value": 25
+        },
+        {
+          "team": "Buccaneers",
+          "abbr": "TB",
+          "wins": 8,
+          "losses": 9,
+          "paid": 15,
+          "value": 11
+        },
+        {
+          "team": "Patriots",
+          "abbr": "NE",
+          "wins": 14,
+          "losses": 3,
+          "paid": 10,
+          "value": 25
+        },
+        {
+          "team": "Dolphins",
+          "abbr": "MIA",
+          "wins": 7,
+          "losses": 10,
+          "paid": 8,
+          "value": 9
+        }
+      ],
+      "Leo": [
+        {
+          "team": "Bills",
+          "abbr": "BUF",
+          "wins": 12,
+          "losses": 5,
+          "paid": 24,
+          "value": 21
+        },
+        {
+          "team": "Steelers",
+          "abbr": "PIT",
+          "wins": 10,
+          "losses": 7,
+          "paid": 14,
+          "value": 16
+        },
+        {
+          "team": "Panthers",
+          "abbr": "CAR",
+          "wins": 8,
+          "losses": 9,
+          "paid": 3,
+          "value": 11
+        },
+        {
+          "team": "Raiders",
+          "abbr": "LV",
+          "wins": 3,
+          "losses": 14,
+          "paid": 9,
+          "value": 0
+        }
+      ],
+      "Niels": [
+        {
+          "team": "Ravens",
+          "abbr": "BAL",
+          "wins": 8,
+          "losses": 9,
+          "paid": 25,
+          "value": 11
+        },
+        {
+          "team": "Cardinals",
+          "abbr": "ARI",
+          "wins": 3,
+          "losses": 14,
+          "paid": 12,
+          "value": 0
+        },
+        {
+          "team": "Bears",
+          "abbr": "CHI",
+          "wins": 11,
+          "losses": 6,
+          "paid": 4,
+          "value": 18
+        },
+        {
+          "team": "Jets",
+          "abbr": "NYJ",
+          "wins": 3,
+          "losses": 14,
+          "paid": 9,
+          "value": 0
+        }
+      ],
+      "Rich": [
+        {
+          "team": "Chiefs",
+          "abbr": "KC",
+          "wins": 6,
+          "losses": 11,
+          "paid": 24,
+          "value": 7
+        },
+        {
+          "team": "Commanders",
+          "abbr": "WAS",
+          "wins": 5,
+          "losses": 12,
+          "paid": 19,
+          "value": 5
+        },
+        {
+          "team": "Giants",
+          "abbr": "NYG",
+          "wins": 4,
+          "losses": 13,
+          "paid": 4,
+          "value": 2
+        },
+        {
+          "team": "Saints",
+          "abbr": "NO",
+          "wins": 6,
+          "losses": 11,
+          "paid": 3,
+          "value": 7
+        }
+      ],
+      "Sean": [
+        {
+          "team": "Vikings",
+          "abbr": "MIN",
+          "wins": 9,
+          "losses": 8,
+          "paid": 14,
+          "value": 14
+        },
+        {
+          "team": "Chargers",
+          "abbr": "LAC",
+          "wins": 11,
+          "losses": 6,
+          "paid": 13,
+          "value": 18
+        },
+        {
+          "team": "Falcons",
+          "abbr": "ATL",
+          "wins": 8,
+          "losses": 9,
+          "paid": 12,
+          "value": 11
+        },
+        {
+          "team": "Seahawks",
+          "abbr": "SEA",
+          "wins": 14,
+          "losses": 3,
+          "paid": 11,
+          "value": 25
+        }
+      ],
+      "Tyler": [
+        {
+          "team": "Eagles",
+          "abbr": "PHI",
+          "wins": 11,
+          "losses": 6,
+          "paid": 23,
+          "value": 18
+        },
+        {
+          "team": "Lions",
+          "abbr": "DET",
+          "wins": 9,
+          "losses": 8,
+          "paid": 19,
+          "value": 14
+        },
+        {
+          "team": "Colts",
+          "abbr": "IND",
+          "wins": 8,
+          "losses": 9,
+          "paid": 1,
+          "value": 11
+        },
+        {
+          "team": "Titans",
+          "abbr": "TEN",
+          "wins": 3,
+          "losses": 14,
+          "paid": 7,
+          "value": 0
+        }
+      ]
+    }
+  }
+]

@@ -57,6 +57,7 @@ async function main() {
     round?: number;
     paid: number;
     preseasonOU: number;
+    athleticProjection?: number;
   }>) {
     const team = (await db.select().from(teams).where(eq(teams.abbr, pick.abbr)))[0];
     if (!team) {
@@ -74,7 +75,14 @@ async function main() {
     if (existingPick.length) {
       await db
         .update(draftPicks)
-        .set({ playerId: player.id, paid: pick.paid, preseasonOU: pick.preseasonOU, round: pick.round ?? null, season })
+        .set({
+          playerId: player.id,
+          paid: pick.paid,
+          preseasonOU: pick.preseasonOU,
+          athleticProjection: pick.athleticProjection ?? null,
+          round: pick.round ?? null,
+          season,
+        })
         .where(eq(draftPicks.teamId, team.id));
     } else {
       await db.insert(draftPicks).values({
@@ -83,6 +91,7 @@ async function main() {
         playerId: player.id,
         paid: pick.paid,
         preseasonOU: pick.preseasonOU,
+        athleticProjection: pick.athleticProjection ?? null,
         round: pick.round ?? null,
       });
     }

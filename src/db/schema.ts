@@ -36,6 +36,10 @@ export const draftPicks = pgTable("draft_picks", {
   paid: real("paid").notNull(),
   round: integer("round"),
   preseasonOU: real("preseason_ou").notNull(),
+  // Real published preseason win-total projection (e.g. The Athletic's NFL
+  // preview), not a computed proxy. Falls back to the OU-based formula in
+  // src/lib/calculations.ts when a season/team doesn't have one yet.
+  athleticProjection: real("athletic_projection"),
   updatedAt: timestamp("updated_at").defaultNow().notNull(),
 });
 

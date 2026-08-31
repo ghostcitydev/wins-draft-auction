@@ -20,6 +20,7 @@ interface AdminDraftPick {
   playerId: string;
   paid: number;
   preseasonOU: number;
+  athleticProjection: number | null;
   round: number | null;
 }
 
@@ -27,6 +28,7 @@ interface RowState {
   playerName: string;
   paid: string;
   preseasonOU: string;
+  athleticProjection: string;
 }
 
 interface RatingsSummary {
@@ -88,6 +90,7 @@ export default function AdminPage() {
             playerName: pick ? playerById.get(pick.playerId)?.name ?? "" : "",
             paid: pick ? String(pick.paid) : "",
             preseasonOU: pick ? String(pick.preseasonOU) : "",
+            athleticProjection: pick?.athleticProjection != null ? String(pick.athleticProjection) : "",
           };
         }
         setRows(initial);
@@ -174,6 +177,7 @@ export default function AdminPage() {
           playerName: r.playerName.trim(),
           paid: Number(r.paid),
           preseasonOU: Number(r.preseasonOU),
+          athleticProjection: r.athleticProjection ? Number(r.athleticProjection) : null,
         };
       })
       .filter(Boolean);
@@ -220,8 +224,10 @@ export default function AdminPage() {
       <TopBar title="Setup" />
       <main className="mx-auto max-w-2xl px-3 pt-4 pb-8">
         <p className="mb-3 px-1 text-sm text-muted">
-          Assign each team to a player, the $ paid at auction, and the preseason O/U win total.
-          Budgets and team counts below are shown for your own sanity-check.
+          Assign each team to a player, the $ paid at auction, the Vegas preseason O/U win total,
+          and a real published win projection (e.g. The Athletic&apos;s preview) - leave that last
+          one blank to fall back to the O/U-based estimate. Budgets and team counts below are
+          shown for your own sanity-check.
         </p>
 
         {players.length > 0 && (
@@ -247,20 +253,20 @@ export default function AdminPage() {
 
         <div className="space-y-2">
           {teams.map((t) => {
-            const r = rows[t.id] ?? { playerName: "", paid: "", preseasonOU: "" };
+            const r = rows[t.id] ?? { playerName: "", paid: "", preseasonOU: "", athleticProjection: "" };
             return (
               <div key={t.id} className="rounded-2xl border border-border bg-surface p-3">
                 <div className="mb-2 flex items-center gap-2">
                   {t.logoUrl && <Image src={t.logoUrl} alt={t.abbr} width={24} height={24} unoptimized />}
                   <span className="text-sm font-semibold">{t.name}</span>
                 </div>
-                <div className="grid grid-cols-3 gap-2">
+                <div className="grid grid-cols-2 gap-2">
                   <input
                     list="player-names"
                     value={r.playerName}
                     onChange={(e) => updateRow(t.id, { playerName: e.target.value })}
                     placeholder="Player"
-                    className="col-span-1 rounded-lg border border-border bg-surface-2 px-2 py-1.5 text-sm outline-none focus:border-accent"
+                    className="col-span-2 rounded-lg border border-border bg-surface-2 px-2 py-1.5 text-sm outline-none focus:border-accent"
                   />
                   <input
                     inputMode="decimal"
@@ -273,8 +279,15 @@ export default function AdminPage() {
                     inputMode="decimal"
                     value={r.preseasonOU}
                     onChange={(e) => updateRow(t.id, { preseasonOU: e.target.value })}
-                    placeholder="O/U"
+                    placeholder="Vegas O/U"
                     className="rounded-lg border border-border bg-surface-2 px-2 py-1.5 text-sm outline-none focus:border-accent"
+                  />
+                  <input
+                    inputMode="decimal"
+                    value={r.athleticProjection}
+                    onChange={(e) => updateRow(t.id, { athleticProjection: e.target.value })}
+                    placeholder="Athletic proj."
+                    className="col-span-2 rounded-lg border border-border bg-surface-2 px-2 py-1.5 text-sm outline-none focus:border-accent"
                   />
                 </div>
               </div>

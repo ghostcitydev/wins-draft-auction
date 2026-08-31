@@ -3,192 +3,224 @@
     "abbr": "BAL",
     "player": "Sean",
     "paid": 22,
-    "preseasonOU": 11.5
+    "preseasonOU": 11.5,
+    "athleticProjection": 10.9
   },
   {
     "abbr": "SEA",
     "player": "Evan",
     "paid": 19,
-    "preseasonOU": 10.5
+    "preseasonOU": 10.5,
+    "athleticProjection": 10.8
   },
   {
     "abbr": "DET",
     "player": "Leo",
     "paid": 23,
-    "preseasonOU": 10.5
+    "preseasonOU": 10.5,
+    "athleticProjection": 10.2
   },
   {
     "abbr": "BUF",
     "player": "Barry",
     "paid": 23,
-    "preseasonOU": 10.5
+    "preseasonOU": 10.5,
+    "athleticProjection": 10.7
   },
   {
     "abbr": "LAR",
     "player": "Leo",
     "paid": 24,
-    "preseasonOU": 10.5
+    "preseasonOU": 10.5,
+    "athleticProjection": 11.6
   },
   {
     "abbr": "CHI",
     "player": "John",
     "paid": 13,
-    "preseasonOU": 9.5
+    "preseasonOU": 9.5,
+    "athleticProjection": 9.6
   },
   {
     "abbr": "PHI",
     "player": "Liam",
     "paid": 19,
-    "preseasonOU": 10.5
+    "preseasonOU": 10.5,
+    "athleticProjection": 10.4
   },
   {
     "abbr": "SF",
     "player": "Evan",
     "paid": 11,
-    "preseasonOU": 10.5
+    "preseasonOU": 10.5,
+    "athleticProjection": 10.2
   },
   {
     "abbr": "DEN",
     "player": "Rich",
     "paid": 16,
-    "preseasonOU": 9.5
+    "preseasonOU": 9.5,
+    "athleticProjection": 9.1
   },
   {
     "abbr": "HOU",
     "player": "Barry",
     "paid": 17,
-    "preseasonOU": 9.5
+    "preseasonOU": 9.5,
+    "athleticProjection": 9.8
   },
   {
     "abbr": "GB",
     "player": "Sean",
     "paid": 11,
-    "preseasonOU": 10.5
+    "preseasonOU": 10.5,
+    "athleticProjection": 9.7
   },
   {
     "abbr": "KC",
     "player": "Liam",
     "paid": 19,
-    "preseasonOU": 10.5
+    "preseasonOU": 10.5,
+    "athleticProjection": 9.6
   },
   {
     "abbr": "NE",
     "player": "Tyler",
     "paid": 19,
-    "preseasonOU": 9.5
+    "preseasonOU": 9.5,
+    "athleticProjection": 10.3
   },
   {
     "abbr": "CIN",
     "player": "Rich",
     "paid": 17,
-    "preseasonOU": 9.5
+    "preseasonOU": 9.5,
+    "athleticProjection": 10.3
   },
   {
     "abbr": "JAX",
     "player": "John",
     "paid": 14,
-    "preseasonOU": 8.5
+    "preseasonOU": 8.5,
+    "athleticProjection": 9.0
   },
   {
     "abbr": "LAC",
     "player": "John",
     "paid": 11,
-    "preseasonOU": 9.5
+    "preseasonOU": 9.5,
+    "athleticProjection": 9.4
   },
   {
     "abbr": "DAL",
     "player": "Sean",
     "paid": 7,
-    "preseasonOU": 9.5
+    "preseasonOU": 9.5,
+    "athleticProjection": 9.2
   },
   {
     "abbr": "MIN",
     "player": "Evan",
     "paid": 13,
-    "preseasonOU": 8.5
+    "preseasonOU": 8.5,
+    "athleticProjection": 8.7
   },
   {
     "abbr": "PIT",
     "player": "Barry",
     "paid": 5,
-    "preseasonOU": 8.5
+    "preseasonOU": 8.5,
+    "athleticProjection": 8.4
   },
   {
     "abbr": "TB",
     "player": "Rich",
     "paid": 11,
-    "preseasonOU": 8.5
+    "preseasonOU": 8.5,
+    "athleticProjection": 8.0
   },
   {
     "abbr": "NO",
     "player": "John",
     "paid": 12,
-    "preseasonOU": 7.5
+    "preseasonOU": 7.5,
+    "athleticProjection": 7.8
   },
   {
     "abbr": "CAR",
     "player": "Liam",
     "paid": 10,
-    "preseasonOU": 7.5
+    "preseasonOU": 7.5,
+    "athleticProjection": 6.7
   },
   {
     "abbr": "IND",
     "player": "Tyler",
     "paid": 11,
-    "preseasonOU": 7.5
+    "preseasonOU": 7.5,
+    "athleticProjection": 8.2
   },
   {
     "abbr": "NYG",
     "player": "Tyler",
     "paid": 9,
-    "preseasonOU": 7.5
+    "preseasonOU": 7.5,
+    "athleticProjection": 7.1
   },
   {
     "abbr": "WAS",
     "player": "Tyler",
     "paid": 11,
-    "preseasonOU": 7.5
+    "preseasonOU": 7.5,
+    "athleticProjection": 7.6
   },
   {
     "abbr": "ATL",
     "player": "Sean",
     "paid": 10,
-    "preseasonOU": 6.5
+    "preseasonOU": 6.5,
+    "athleticProjection": 7.1
   },
   {
     "abbr": "TEN",
     "player": "Rich",
     "paid": 6,
-    "preseasonOU": 6.5
+    "preseasonOU": 6.5,
+    "athleticProjection": 5.8
   },
   {
     "abbr": "CLE",
     "player": "Liam",
     "paid": 2,
-    "preseasonOU": 6.5
+    "preseasonOU": 6.5,
+    "athleticProjection": 5.3
   },
   {
     "abbr": "LV",
     "player": "Barry",
     "paid": 3,
-    "preseasonOU": 5.5
+    "preseasonOU": 5.5,
+    "athleticProjection": 6.2
   },
   {
     "abbr": "NYJ",
     "player": "Evan",
     "paid": 7,
-    "preseasonOU": 5.5
+    "preseasonOU": 5.5,
+    "athleticProjection": 5.6
   },
   {
     "abbr": "MIA",
     "player": "Leo",
     "paid": 1,
-    "preseasonOU": 4.5
+    "preseasonOU": 4.5,
+    "athleticProjection": 4.5
   },
   {
     "abbr": "ARI",
     "player": "Leo",
     "paid": 1,
-    "preseasonOU": 4.5
+    "preseasonOU": 4.5,
+    "athleticProjection": 4.4
   }
 ]

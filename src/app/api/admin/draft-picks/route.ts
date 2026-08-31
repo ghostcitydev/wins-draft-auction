@@ -31,6 +31,7 @@ interface DraftPickPayload {
   playerName: string;
   paid: number;
   preseasonOU: number;
+  athleticProjection?: number | null;
   round?: number;
 }
 
@@ -62,6 +63,7 @@ export async function POST(req: NextRequest) {
           playerId: player.id,
           paid: pick.paid,
           preseasonOU: pick.preseasonOU,
+          athleticProjection: pick.athleticProjection ?? null,
           round: pick.round ?? null,
         })
         .where(eq(draftPicks.teamId, pick.teamId));
@@ -72,6 +74,7 @@ export async function POST(req: NextRequest) {
         playerId: player.id,
         paid: pick.paid,
         preseasonOU: pick.preseasonOU,
+        athleticProjection: pick.athleticProjection ?? null,
         round: pick.round ?? null,
       });
     }
