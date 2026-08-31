@@ -33,7 +33,10 @@ export interface TeamRow {
   pointsAgainst: number;
   diff: number;
   pythagoreanWins: number;
+  pythagoreanIsPlaceholder: boolean;
   epa: number;
+  epaIsPlaceholder: boolean;
+  placeholderSeason: number | null;
   value: number | null;
   vor: number | null;
   currentValue: number | null;

@@ -19,7 +19,13 @@ type SortKey =
   | "pythagoreanWins"
   | "epa";
 
-const COLUMNS: { key: SortKey; label: string; format: (r: TeamRow) => string; positive?: (r: TeamRow) => boolean | null }[] = [
+const COLUMNS: {
+  key: SortKey;
+  label: string;
+  format: (r: TeamRow) => string;
+  positive?: (r: TeamRow) => boolean | null;
+  placeholder?: (r: TeamRow) => boolean;
+}[] = [
   { key: "wins", label: "W", format: (r) => `${r.wins}` },
   { key: "losses", label: "L", format: (r) => `${r.losses}` },
   { key: "winPct", label: "PCT", format: (r) => fmtPct(r.winPct) },
@@ -28,8 +34,19 @@ const COLUMNS: { key: SortKey; label: string; format: (r: TeamRow) => string; po
   { key: "value", label: "Value", format: (r) => fmtSignedMoney(r.value), positive: (r) => (r.value ?? 0) > 0 },
   { key: "diff", label: "Diff", format: (r) => fmtSigned(r.diff), positive: (r) => r.diff > 0 },
   { key: "projected", label: "Proj", format: (r) => fmtNum(r.projected) },
-  { key: "pythagoreanWins", label: "Pyth", format: (r) => fmtNum(r.pythagoreanWins) },
-  { key: "epa", label: "EPA", format: (r) => fmtSigned(r.epa, 3), positive: (r) => r.epa > 0 },
+  {
+    key: "pythagoreanWins",
+    label: "Pyth",
+    format: (r) => fmtNum(r.pythagoreanWins),
+    placeholder: (r) => r.pythagoreanIsPlaceholder,
+  },
+  {
+    key: "epa",
+    label: "EPA",
+    format: (r) => fmtSigned(r.epa, 3),
+    positive: (r) => r.epa > 0,
+    placeholder: (r) => r.epaIsPlaceholder,
+  },
 ];
 
 export default function StandingsTable({ teams }: { teams: TeamRow[] }) {
@@ -103,16 +120,20 @@ export default function StandingsTable({ teams }: { teams: TeamRow[] }) {
           <div key={t.id} className="flex h-16 border-b border-border last:border-b-0">
             {COLUMNS.map((col, idx) => {
               const isPositive = col.positive?.(t);
+              const isPlaceholder = col.placeholder?.(t);
               return (
                 <div
                   key={col.label + idx}
                   className={clsx(
                     "flex w-[62px] flex-shrink-0 items-center justify-center text-sm tabular-nums",
-                    isPositive === true && "text-accent",
-                    isPositive === false && "text-danger"
+                    isPositive === true && !isPlaceholder && "text-accent",
+                    isPositive === false && !isPlaceholder && "text-danger",
+                    isPlaceholder && "italic text-muted"
                   )}
+                  title={isPlaceholder ? `${t.placeholderSeason} placeholder - ${t.abbr} hasn't played yet this season` : undefined}
                 >
                   {col.format(t)}
+                  {isPlaceholder && <span className="ml-0.5 align-super text-[9px]">*</span>}
                 </div>
               );
             })}

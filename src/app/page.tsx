@@ -39,9 +39,14 @@ export default function StandingsPage() {
           <StandingsTable teams={teams} />
         )}
 
-        <p className="mt-3 pb-2 text-center text-[11px] text-muted">
+        <p className="mt-3 pb-1 text-center text-[11px] text-muted">
           Scroll sideways for more stats · tap a team for its full schedule
         </p>
+        {!loading && teams?.some((t) => t.epaIsPlaceholder || t.pythagoreanIsPlaceholder) && (
+          <p className="pb-2 text-center text-[11px] text-muted">
+            * shows last season&apos;s numbers until that team has played its first game this season
+          </p>
+        )}
       </main>
     </>
   );

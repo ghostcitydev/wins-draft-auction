@@ -14,13 +14,16 @@ export type { TeamRow, ScheduleGame, PlayerGroup } from "./team-types";
 export { groupByPlayer } from "./team-types";
 
 export async function getTeamRows(season: number): Promise<TeamRow[]> {
-  const [allTeams, allDraftPicks, allPlayers, config, allGames, allWeekStats] = await Promise.all([
+  const prevSeason = season - 1;
+  const [allTeams, allDraftPicks, allPlayers, config, allGames, allWeekStats, prevGames, prevWeekStats] = await Promise.all([
     db.select().from(teams),
     db.select().from(draftPicks).where(eq(draftPicks.season, season)),
     db.select().from(players),
     db.select().from(appConfig).where(eq(appConfig.id, "singleton")),
     db.select().from(games).where(eq(games.season, season)),
     db.select().from(teamWeekStats).where(eq(teamWeekStats.season, season)),
+    db.select().from(games).where(eq(games.season, prevSeason)),
+    db.select().from(teamWeekStats).where(eq(teamWeekStats.season, prevSeason)),
   ]);
 
   const playerById = new Map(allPlayers.map((p) => [p.id, p]));
@@ -78,11 +81,53 @@ export async function getTeamRows(season: number): Promise<TeamRow[]> {
     const record = { wins, losses, ties, pointsFor, pointsAgainst };
 
     const myWeekStats = allWeekStats.filter((w) => w.teamId === team.id);
-    const offPlays = myWeekStats.reduce((s, w) => s + w.offPlays, 0);
-    const offEpa = myWeekStats.reduce((s, w) => s + w.offEpa, 0);
+    let offPlays = myWeekStats.reduce((s, w) => s + w.offPlays, 0);
+    let offEpa = myWeekStats.reduce((s, w) => s + w.offEpa, 0);
     const defWeekStats = allWeekStats.filter((w) => w.opponentTeamId === team.id);
-    const defPlaysFaced = defWeekStats.reduce((s, w) => s + w.offPlays, 0);
-    const defEpaAllowed = defWeekStats.reduce((s, w) => s + w.offEpa, 0);
+    let defPlaysFaced = defWeekStats.reduce((s, w) => s + w.offPlays, 0);
+    let defEpaAllowed = defWeekStats.reduce((s, w) => s + w.offEpa, 0);
+
+    // Before this season has any plays logged yet (e.g. preseason), fall back
+    // to last season's EPA as a clearly-flagged placeholder rather than
+    // showing a meaningless 0.
+    let epaIsPlaceholder = false;
+    if (offPlays === 0 && defPlaysFaced === 0) {
+      const myPrevWeekStats = prevWeekStats.filter((w) => w.teamId === team.id);
+      const defPrevWeekStats = prevWeekStats.filter((w) => w.opponentTeamId === team.id);
+      if (myPrevWeekStats.length || defPrevWeekStats.length) {
+        offPlays = myPrevWeekStats.reduce((s, w) => s + w.offPlays, 0);
+        offEpa = myPrevWeekStats.reduce((s, w) => s + w.offEpa, 0);
+        defPlaysFaced = defPrevWeekStats.reduce((s, w) => s + w.offPlays, 0);
+        defEpaAllowed = defPrevWeekStats.reduce((s, w) => s + w.offEpa, 0);
+        epaIsPlaceholder = true;
+      }
+    }
+
+    // Same idea for Pythagorean wins, which need points for/against - before
+    // any games are played this season, show last season's as a placeholder.
+    let pythagoreanRecord = record;
+    let pythagoreanIsPlaceholder = false;
+    if (record.wins + record.losses + record.ties === 0) {
+      const prevTeamGames = prevGames.filter(
+        (g) => (g.homeTeamId === team.id || g.awayTeamId === team.id) && g.completed
+      );
+      if (prevTeamGames.length) {
+        let pw = 0, pl = 0, pt = 0, ppf = 0, ppa = 0;
+        for (const g of prevTeamGames) {
+          const isHome = g.homeTeamId === team.id;
+          const ts = isHome ? g.homeScore : g.awayScore;
+          const os = isHome ? g.awayScore : g.homeScore;
+          if (ts === null || os === null) continue;
+          if (ts > os) pw++;
+          else if (ts < os) pl++;
+          else pt++;
+          ppf += ts;
+          ppa += os;
+        }
+        pythagoreanRecord = { wins: pw, losses: pl, ties: pt, pointsFor: ppf, pointsAgainst: ppa };
+        pythagoreanIsPlaceholder = true;
+      }
+    }
 
     const draftPick = draftPickByTeamId.get(team.id);
     const player = draftPick ? playerById.get(draftPick.playerId) : undefined;
@@ -107,8 +152,11 @@ export async function getTeamRows(season: number): Promise<TeamRow[]> {
       pointsFor,
       pointsAgainst,
       diff: pointDiffPerGame(record),
-      pythagoreanWins: pythagoreanWins(record),
+      pythagoreanWins: pythagoreanWins(pythagoreanRecord),
+      pythagoreanIsPlaceholder,
       epa: epaDifferential(offEpa, offPlays, defEpaAllowed, defPlaysFaced),
+      epaIsPlaceholder,
+      placeholderSeason: epaIsPlaceholder || pythagoreanIsPlaceholder ? prevSeason : null,
       value: null,
       vor: null,
       currentValue: null,
@@ -121,7 +169,9 @@ export async function getTeamRows(season: number): Promise<TeamRow[]> {
     .map((r, i) => ({ r, i }))
     .filter(({ r }) => r.paid !== null);
 
-  if (draftedIdx.length) {
+  const leagueHasAnyWins = draftedIdx.some(({ r }) => r.wins > 0);
+
+  if (draftedIdx.length && leagueHasAnyWins) {
     const values = computeLeagueValues(
       draftedIdx.map(({ r }) => ({
         wins: r.wins,
@@ -138,6 +188,14 @@ export async function getTeamRows(season: number): Promise<TeamRow[]> {
       rows[i].vor = values[idx].vor;
       rows[i].currentValue = values[idx].currentValue;
       rows[i].value = values[idx].value;
+    });
+  } else if (draftedIdx.length) {
+    // Nobody has a win yet (preseason) - show 0 rather than a misleading
+    // "-$paid" that would imply every pick is already underwater.
+    draftedIdx.forEach(({ i }) => {
+      rows[i].vor = 0;
+      rows[i].currentValue = 0;
+      rows[i].value = 0;
     });
   }
 

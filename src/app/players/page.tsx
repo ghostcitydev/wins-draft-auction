@@ -46,6 +46,12 @@ export default function PlayersPage() {
           </>
         )}
 
+        {!loading && teams?.some((t) => t.epaIsPlaceholder || t.pythagoreanIsPlaceholder) && (
+          <p className="mt-2 text-center text-[11px] text-muted">
+            * shows last season&apos;s numbers until that team has played its first game this season
+          </p>
+        )}
+
         <div className="mt-6 space-y-6 pb-4">
           {groups.map((g, idx) => (
             <section key={g.playerId} id={`player-${g.playerId}`}>

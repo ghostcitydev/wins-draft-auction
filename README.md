@@ -26,10 +26,10 @@ This matters, so it's spelled out rather than left implicit:
 | Field | Source | Notes |
 |---|---|---|
 | Team master data (name, division, logo) | Hardcoded, `prisma/seed-data/teams-master.json` | Static NFL facts, seeded once |
-| Player, $ paid, preseason O/U | Entered by you via `/admin` | Nothing is fabricated - you enter your league's real auction results |
-| Wins / losses / ties / schedule / scores | [ESPN's public scoreboard API](https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard) | Refreshed live, see below |
-| Win %, Diff, Projected, Pythagorean wins, Value/VOR | Computed in `src/lib/calculations.ts` | Projected/Value/VOR formulas are reverse-engineered **exactly** from the original commissioner spreadsheet's live formulas (verified against all 32 rows - see `scripts/` history). Pythagorean wins uses the standard Football Outsiders/PFR NFL exponent (2.37) |
-| EPA/play | [nflverse's public team-week stats](https://github.com/nflverse/nflverse-data/releases/tag/stats_team) | Real play-by-play-derived data, refreshed ~1 day after each game (not a fabricated stand-in for any proprietary rating) |
+| Player, $ paid, preseason O/U | Seeded from the 2026 Auction tab (`prisma/seed-data/draft-picks-2026.json`); editable any time via `/admin` | Real auction results, not placeholders |
+| Wins / losses / ties / schedule / scores | [ESPN's public scoreboard API](https://site.api.espn.com/apis/site/v2/sports/football/nfl/scoreboard) | Refreshed live. Always the real current season - never backfilled with placeholder data, so every team correctly shows 0-0 until it's actually played a game |
+| Win %, Diff, Projected, Value/VOR | Computed in `src/lib/calculations.ts` | Projected/Value/VOR formulas are reverse-engineered **exactly** from the original commissioner spreadsheet's live formulas (verified against all 32 rows). Diff and Value both correctly show `0` (not a misleading negative) before anyone in the league has a win yet |
+| Pythagorean wins, EPA/play | Computed in `src/lib/calculations.ts` from real games/[nflverse stats](https://github.com/nflverse/nflverse-data/releases/tag/stats_team) | Uses the standard Football Outsiders/PFR NFL Pythagorean exponent (2.37). **Before a team has played its first game of the current season**, these two columns fall back to showing last season's numbers as a clearly-marked placeholder (italic + `*` in the app) so the columns aren't just blank zeros - never presented as this season's real data |
 
 The app refreshes ESPN + nflverse data on-demand: any time someone opens the
 app and the data is >15 minutes old, it syncs before responding, so it feels

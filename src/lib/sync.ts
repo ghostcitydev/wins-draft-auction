@@ -1,4 +1,4 @@
-import { desc } from "drizzle-orm";
+import { desc, eq } from "drizzle-orm";
 import { db } from "@/db";
 import { teams, games, teamWeekStats, syncLog } from "@/db/schema";
 import { fetchEspnSeason } from "./espn";
@@ -133,12 +133,36 @@ export async function syncNflverseEpa(season: number) {
   return { upserted, unmatched: [...unmatched] };
 }
 
+/**
+ * One-time backfill of the previous season's games + EPA. Before the current
+ * season has any games, the app shows last season's numbers as clearly-marked
+ * placeholders (see getTeamRows) so EPA/Pythagorean columns aren't just blank
+ * zeros - this is what populates the data behind that.
+ */
+export async function backfillPreviousSeasonIfNeeded(season: number) {
+  const prevSeason = season - 1;
+
+  const [hasGames, hasStats] = await Promise.all([
+    db.select({ id: games.id }).from(games).where(eq(games.season, prevSeason)).limit(1),
+    db.select({ id: teamWeekStats.id }).from(teamWeekStats).where(eq(teamWeekStats.season, prevSeason)).limit(1),
+  ]);
+
+  const tasks: Promise<unknown>[] = [];
+  if (!hasGames.length) tasks.push(syncEspnSchedule(prevSeason));
+  if (!hasStats.length) tasks.push(syncNflverseEpa(prevSeason));
+
+  if (tasks.length) await Promise.allSettled(tasks);
+}
+
 /** Runs both syncs; used by the cron route and the manual "sync now" button. */
 export async function runFullSync(season: number) {
   const [espn, nflverse] = await Promise.allSettled([
     syncEspnSchedule(season),
     syncNflverseEpa(season),
   ]);
+  await backfillPreviousSeasonIfNeeded(season).catch((err) =>
+    console.error("[sync] previous-season backfill failed:", err)
+  );
   return { espn, nflverse };
 }
 

@@ -98,10 +98,10 @@ export default function TeamDetailPage() {
               <StatCard label="Diff/G" value={fmtSigned(team.diff)} tone={team.diff > 0 ? "pos" : team.diff < 0 ? "neg" : undefined} />
               <StatCard label="Preseason O/U" value={fmtNum(team.preseasonOU)} />
               <StatCard label="Projected" value={fmtNum(team.projected)} />
-              <StatCard label="Pythagorean" value={fmtNum(team.pythagoreanWins)} />
+              <StatCard label={team.pythagoreanIsPlaceholder ? `Pythagorean (${team.placeholderSeason})` : "Pythagorean"} value={fmtNum(team.pythagoreanWins)} />
               <StatCard label="Paid" value={fmtMoney(team.paid)} />
               <StatCard label="Value" value={fmtSignedMoney(team.value)} tone={(team.value ?? 0) > 0 ? "pos" : (team.value ?? 0) < 0 ? "neg" : undefined} />
-              <StatCard label="EPA/play" value={fmtSigned(team.epa, 3)} tone={team.epa > 0 ? "pos" : team.epa < 0 ? "neg" : undefined} />
+              <StatCard label={team.epaIsPlaceholder ? `EPA/play (${team.placeholderSeason})` : "EPA/play"} value={fmtSigned(team.epa, 3)} tone={team.epaIsPlaceholder ? undefined : team.epa > 0 ? "pos" : team.epa < 0 ? "neg" : undefined} />
             </div>
 
             <section className="mt-5">
