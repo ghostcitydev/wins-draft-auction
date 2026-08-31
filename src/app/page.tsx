@@ -3,6 +3,7 @@
 import TopBar from "@/components/TopBar";
 import PlayerLeaderboard from "@/components/PlayerLeaderboard";
 import StandingsTable from "@/components/StandingsTable";
+import WinsByWeekChart from "@/components/WinsByWeekChart";
 import { useTeams } from "@/lib/useTeams";
 import { groupByPlayer } from "@/lib/team-types";
 import { fmtSignedMoney } from "@/lib/format";
@@ -46,7 +47,13 @@ export default function StandingsPage() {
           </>
         )}
 
-        {!loading && teams?.some((t) => t.epaIsPlaceholder || t.pythagoreanIsPlaceholder) && (
+        {groups.length > 0 && (
+          <div className="mt-4">
+            <WinsByWeekChart />
+          </div>
+        )}
+
+        {!loading && teams?.some((t) => t.epaIsPlaceholder) && (
           <p className="mt-2 text-center text-[11px] text-muted">
             * shows last season&apos;s numbers until that team has played its first game this season
           </p>
