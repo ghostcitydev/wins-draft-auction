@@ -7,13 +7,13 @@ import { useTeams } from "@/lib/useTeams";
 import { groupByPlayer } from "@/lib/team-types";
 import { fmtSignedMoney } from "@/lib/format";
 
-export default function PlayersPage() {
+export default function StandingsPage() {
   const { teams, loading, error } = useTeams();
   const groups = teams ? groupByPlayer(teams) : [];
 
   return (
     <>
-      <TopBar title="Players" />
+      <TopBar title="Standings" />
       <main className="mx-auto max-w-2xl px-3 pt-4">
         {loading && (
           <div className="space-y-2">

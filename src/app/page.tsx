@@ -4,12 +4,12 @@ import TopBar from "@/components/TopBar";
 import StandingsTable from "@/components/StandingsTable";
 import { useTeams } from "@/lib/useTeams";
 
-export default function StandingsPage() {
+export default function TeamsPage() {
   const { teams, loading, error } = useTeams();
 
   return (
     <>
-      <TopBar title="Standings" />
+      <TopBar title="Teams" />
       <main className="mx-auto max-w-2xl px-3 pt-4">
         {loading && (
           <div className="space-y-2">

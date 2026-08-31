@@ -1,6 +1,50 @@
 @import "tailwindcss";
 
 :root {
+  /* Light theme (default) */
+  --background: #f4f6f8;
+  --surface: #ffffff;
+  --surface-2: #eef1f4;
+  --border: #dde3e9;
+  --foreground: #10151b;
+  --muted: #667080;
+  --accent: #17965c;
+  --accent-2: #2f6fe0;
+  --danger: #d63656;
+  --warning: #b8790a;
+  --radius: 1rem;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0e14;
+    --surface: #131a24;
+    --surface-2: #1a2330;
+    --border: #232e3d;
+    --foreground: #f4f6f8;
+    --muted: #8b98a8;
+    --accent: #3dd68c;
+    --accent-2: #4f8cff;
+    --danger: #ff5470;
+    --warning: #ffb648;
+  }
+}
+
+/* Manual overrides (from the theme toggle), take priority over system preference */
+:root[data-theme="light"] {
+  --background: #f4f6f8;
+  --surface: #ffffff;
+  --surface-2: #eef1f4;
+  --border: #dde3e9;
+  --foreground: #10151b;
+  --muted: #667080;
+  --accent: #17965c;
+  --accent-2: #2f6fe0;
+  --danger: #d63656;
+  --warning: #b8790a;
+}
+
+:root[data-theme="dark"] {
   --background: #0a0e14;
   --surface: #131a24;
   --surface-2: #1a2330;
@@ -11,7 +55,6 @@
   --accent-2: #4f8cff;
   --danger: #ff5470;
   --warning: #ffb648;
-  --radius: 1rem;
 }
 
 @theme inline {
@@ -43,6 +86,7 @@ body {
 
 body {
   min-height: 100dvh;
+  transition: background-color 0.15s ease, color 0.15s ease;
 }
 
 ::-webkit-scrollbar {

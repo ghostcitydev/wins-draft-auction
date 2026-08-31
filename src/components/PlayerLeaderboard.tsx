@@ -9,7 +9,7 @@ const COLUMNS: { label: string; format: (g: PlayerGroup) => string; positive?: (
   { label: "W", format: (g) => `${g.totalWins}` },
   { label: "L", format: (g) => `${g.totalLosses}` },
   { label: "PCT", format: (g) => fmtPct(g.winPct) },
-  { label: "O/U", format: (g) => fmtNum(g.avgPreseasonOU) },
+  { label: "O/U", format: (g) => fmtNum(g.totalPreseasonOU) },
   { label: "Paid", format: (g) => fmtMoney(g.totalPaid) },
   { label: "Value", format: (g) => fmtSignedMoney(g.totalValue), positive: (g) => g.totalValue > 0 },
   { label: "Diff", format: (g) => fmtSigned(g.avgDiff), positive: (g) => g.avgDiff > 0 },

@@ -54,7 +54,7 @@ export interface PlayerGroup {
   winPct: number;
   totalPaid: number;
   totalValue: number;
-  avgPreseasonOU: number;
+  totalPreseasonOU: number;
   avgDiff: number;
   totalProjected: number;
   totalPythagoreanWins: number;
@@ -88,7 +88,7 @@ export function groupByPlayer(rows: TeamRow[]): PlayerGroup[] {
       winPct: gp > 0 ? (totalWins + 0.5 * totalTies) / gp : 0,
       totalPaid: teams.reduce((s, t) => s + (t.paid ?? 0), 0),
       totalValue: teams.reduce((s, t) => s + (t.value ?? 0), 0),
-      avgPreseasonOU: teams.reduce((s, t) => s + (t.preseasonOU ?? 0), 0) / n,
+      totalPreseasonOU: teams.reduce((s, t) => s + (t.preseasonOU ?? 0), 0),
       avgDiff: teams.reduce((s, t) => s + t.diff, 0) / n,
       totalProjected: teams.reduce((s, t) => s + (t.projected ?? 0), 0),
       totalPythagoreanWins: teams.reduce((s, t) => s + t.pythagoreanWins, 0),

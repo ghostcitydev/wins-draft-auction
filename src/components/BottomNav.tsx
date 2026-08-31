@@ -6,7 +6,9 @@ import clsx from "clsx";
 
 const TABS = [
   { href: "/", label: "Standings", icon: TrophyIcon },
-  { href: "/players", label: "Players", icon: UsersIcon },
+  { href: "/teams", label: "Teams", icon: ShieldIcon },
+  { href: "/archive", label: "Archive", icon: ArchiveIcon },
+  { href: "/bets", label: "Bets", icon: DiceIcon },
   { href: "/admin", label: "Setup", icon: GearIcon },
 ];
 
@@ -68,13 +70,39 @@ function TrophyIcon({ className }: { className?: string }) {
   );
 }
 
-function UsersIcon({ className }: { className?: string }) {
+function ShieldIcon({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 24 24" fill="none" className={className}>
-      <circle cx="9" cy="8" r="3" stroke="currentColor" strokeWidth="1.7" />
-      <path d="M3 20c0-3.3 2.7-6 6-6s6 2.7 6 6" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
-      <circle cx="17" cy="9" r="2.4" stroke="currentColor" strokeWidth="1.7" />
-      <path d="M15.5 14.2c2.6.4 4.5 2.7 4.5 5.8" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
+      <path
+        d="M12 3.5l7 2.6v5.4c0 4.4-2.9 7.9-7 9-4.1-1.1-7-4.6-7-9V6.1l7-2.6Z"
+        stroke="currentColor"
+        strokeWidth="1.7"
+        strokeLinejoin="round"
+      />
+      <path d="M9 12l2 2 4-4.5" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" />
+    </svg>
+  );
+}
+
+function ArchiveIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" className={className}>
+      <rect x="3.5" y="4" width="17" height="4.5" rx="1" stroke="currentColor" strokeWidth="1.7" strokeLinejoin="round" />
+      <path d="M4.5 8.5v9a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2v-9" stroke="currentColor" strokeWidth="1.7" strokeLinejoin="round" />
+      <path d="M10 12.5h4" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function DiceIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" className={className}>
+      <rect x="4" y="4" width="16" height="16" rx="3" stroke="currentColor" strokeWidth="1.7" />
+      <circle cx="8.5" cy="8.5" r="1.1" fill="currentColor" />
+      <circle cx="15.5" cy="8.5" r="1.1" fill="currentColor" />
+      <circle cx="12" cy="12" r="1.1" fill="currentColor" />
+      <circle cx="8.5" cy="15.5" r="1.1" fill="currentColor" />
+      <circle cx="15.5" cy="15.5" r="1.1" fill="currentColor" />
     </svg>
   );
 }

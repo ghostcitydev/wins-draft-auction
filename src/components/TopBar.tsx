@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useState, useCallback } from "react";
+import ThemeToggle from "./ThemeToggle";
 
 function timeAgo(iso: string | null): string {
   if (!iso) return "never synced";
@@ -51,22 +52,27 @@ export default function TopBar({ title }: { title: string }) {
     <header className="sticky top-0 z-30 border-b border-border bg-background/85 backdrop-blur-lg safe-top">
       <div className="mx-auto flex max-w-2xl items-center justify-between px-4 py-3">
         <div>
+          <p className="text-[10px] font-semibold uppercase tracking-wider text-muted">
+            {season ? `${season} NFL Wins Draft` : "NFL Wins Draft"}
+          </p>
           <h1 className="text-lg font-semibold tracking-tight">{title}</h1>
-          <p className="text-xs text-muted">{season ? `${season} season` : " "}</p>
         </div>
-        <button
-          onClick={handleSync}
-          disabled={syncing}
-          className="flex items-center gap-1.5 rounded-full border border-border bg-surface px-3 py-1.5 text-xs font-medium text-muted active:scale-95 transition disabled:opacity-60"
-        >
-          <span
-            className={syncing ? "animate-spin" : ""}
-            style={{ display: "inline-flex" }}
+        <div className="flex items-center gap-2">
+          <ThemeToggle />
+          <button
+            onClick={handleSync}
+            disabled={syncing}
+            className="flex items-center gap-1.5 rounded-full border border-border bg-surface px-3 py-1.5 text-xs font-medium text-muted active:scale-95 transition disabled:opacity-60"
           >
-            <RefreshIcon className="h-3.5 w-3.5" />
-          </span>
-          {syncing ? "Syncing…" : timeAgo(lastSync)}
-        </button>
+            <span
+              className={syncing ? "animate-spin" : ""}
+              style={{ display: "inline-flex" }}
+            >
+              <RefreshIcon className="h-3.5 w-3.5" />
+            </span>
+            {syncing ? "Syncing…" : timeAgo(lastSync)}
+          </button>
+        </div>
       </div>
     </header>
   );
