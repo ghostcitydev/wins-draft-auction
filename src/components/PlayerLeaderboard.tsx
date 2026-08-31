@@ -19,45 +19,47 @@ const COLUMNS: { label: string; format: (g: PlayerGroup) => string; positive?: (
 ];
 
 export default function PlayerLeaderboard({ groups }: { groups: PlayerGroup[] }) {
+  const sorted = groups;
+
   return (
     <div className="flex overflow-x-auto no-scrollbar rounded-2xl border border-border">
       <div className="sticky left-0 z-10 flex-shrink-0 bg-surface">
-        <div className="flex h-10 items-center border-b border-border px-3 text-xs font-semibold text-muted">
+        <div className="flex h-9 items-center border-b border-border px-2.5 text-xs font-semibold text-muted">
           Player
         </div>
-        {groups.map((g, i) => (
+        {sorted.map((g, i) => (
           <Link
             key={g.playerId}
             href={`#player-${g.playerId}`}
             className={clsx(
-              "flex h-12 items-center gap-2 border-b border-border px-3 active:bg-surface-2",
-              i === groups.length - 1 && "border-b-0"
+              "flex h-11 items-center gap-2 border-b border-border px-2.5 active:bg-surface-2",
+              i === sorted.length - 1 && "border-b-0"
             )}
-            style={{ minWidth: 148 }}
+            style={{ minWidth: 136 }}
           >
             <span className="w-4 flex-shrink-0 text-xs text-muted">{i + 1}</span>
-            <span className="truncate text-sm font-semibold">{g.playerName}</span>
+            <span className="truncate text-[13px] font-semibold">{g.playerName}</span>
           </Link>
         ))}
       </div>
 
       <div className="flex-shrink-0">
-        <div className="flex h-10 border-b border-border">
+        <div className="flex h-9 border-b border-border">
           {COLUMNS.map((col) => (
-            <div key={col.label} className="flex w-[62px] flex-shrink-0 items-center justify-center text-xs font-semibold text-muted">
+            <div key={col.label} className="flex w-[54px] flex-shrink-0 items-center justify-center text-xs font-semibold text-muted">
               {col.label}
             </div>
           ))}
         </div>
-        {groups.map((g) => (
-          <div key={g.playerId} className="flex h-12 border-b border-border last:border-b-0">
+        {sorted.map((g) => (
+          <div key={g.playerId} className="flex h-11 border-b border-border last:border-b-0">
             {COLUMNS.map((col) => {
               const isPositive = col.positive?.(g);
               return (
                 <div
                   key={col.label}
                   className={clsx(
-                    "flex w-[62px] flex-shrink-0 items-center justify-center text-sm tabular-nums",
+                    "flex w-[54px] flex-shrink-0 items-center justify-center text-[13px] tabular-nums",
                     isPositive === true && "text-accent",
                     isPositive === false && col.label === "Value" && g.totalValue < 0 && "text-danger",
                     isPositive === false && col.label === "Diff" && g.avgDiff < 0 && "text-danger",
