@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
+import clsx from "clsx";
 import TopBar from "@/components/TopBar";
 import archiveHistory from "../../../prisma/seed-data/archive-history.json";
 import { fmtMoney, fmtSignedMoney, fmtPct } from "@/lib/format";
@@ -140,43 +141,65 @@ export default function ArchivePage() {
                     </div>
                   </div>
                   <div className="overflow-hidden rounded-xl border border-border">
-                    <table className="w-full text-sm">
+                    <table className="w-full table-fixed text-sm">
+                      <colgroup>
+                        <col />
+                        <col style={{ width: 34 }} />
+                        <col style={{ width: 34 }} />
+                        <col style={{ width: 52 }} />
+                        <col style={{ width: 52 }} />
+                        <col style={{ width: 52 }} />
+                      </colgroup>
                       <thead>
                         <tr className="border-b border-border text-xs text-muted">
                           <th className="px-2.5 py-1.5 text-left font-semibold">Team</th>
-                          <th className="px-2.5 py-1.5 text-center font-semibold">W</th>
-                          <th className="px-2.5 py-1.5 text-center font-semibold">L</th>
-                          <th className="px-2.5 py-1.5 text-center font-semibold">Paid</th>
-                          <th className="px-2.5 py-1.5 text-center font-semibold">Value</th>
+                          <th className="px-1 py-1.5 text-center font-semibold">W</th>
+                          <th className="px-1 py-1.5 text-center font-semibold">L</th>
+                          <th className="px-1 py-1.5 text-center font-semibold">Paid</th>
+                          <th className="px-1 py-1.5 text-center font-semibold">Value</th>
+                          <th className="px-1 py-1.5 text-center font-semibold">Diff</th>
                         </tr>
                       </thead>
                       <tbody>
-                        {selected.teams[s.player]?.map((t) => (
-                          <tr key={t.abbr} className="border-b border-border bg-surface last:border-b-0">
-                            <td className="px-2.5 py-1.5">
-                              <div className="flex items-center gap-2">
-                                <Image
-                                  src={`/logos/${t.abbr}.png`}
-                                  alt={t.abbr}
-                                  width={20}
-                                  height={20}
-                                  unoptimized
-                                />
-                                <span className="truncate">{t.team}</span>
-                              </div>
-                            </td>
-                            <td className="px-2.5 py-1.5 text-center tabular-nums">{t.wins}</td>
-                            <td className="px-2.5 py-1.5 text-center tabular-nums">
-                              {t.losses ?? "—"}
-                            </td>
-                            <td className="px-2.5 py-1.5 text-center tabular-nums">
-                              {fmtMoney(t.paid)}
-                            </td>
-                            <td className="px-2.5 py-1.5 text-center tabular-nums">
-                              {t.value === null ? "—" : fmtSignedMoney(t.value)}
-                            </td>
-                          </tr>
-                        ))}
+                        {selected.teams[s.player]?.map((t) => {
+                          const diff = t.value === null ? null : t.value - t.paid;
+                          return (
+                            <tr key={t.abbr} className="border-b border-border bg-surface last:border-b-0">
+                              <td className="px-2.5 py-1.5">
+                                <div className="flex items-center gap-2">
+                                  <Image
+                                    src={`/logos/${t.abbr}.png`}
+                                    alt={t.abbr}
+                                    width={20}
+                                    height={20}
+                                    className="flex-shrink-0"
+                                    unoptimized
+                                  />
+                                  <span className="truncate">{t.team}</span>
+                                </div>
+                              </td>
+                              <td className="px-1 py-1.5 text-center tabular-nums">{t.wins}</td>
+                              <td className="px-1 py-1.5 text-center tabular-nums">
+                                {t.losses ?? "—"}
+                              </td>
+                              <td className="px-1 py-1.5 text-center tabular-nums">
+                                {fmtMoney(t.paid)}
+                              </td>
+                              <td className="px-1 py-1.5 text-center tabular-nums">
+                                {t.value === null ? "—" : fmtMoney(t.value)}
+                              </td>
+                              <td
+                                className={clsx(
+                                  "px-1 py-1.5 text-center tabular-nums",
+                                  diff !== null && diff > 0 && "text-accent",
+                                  diff !== null && diff < 0 && "text-danger"
+                                )}
+                              >
+                                {diff === null ? "—" : fmtSignedMoney(diff)}
+                              </td>
+                            </tr>
+                          );
+                        })}
                       </tbody>
                     </table>
                   </div>

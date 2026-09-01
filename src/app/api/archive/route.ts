@@ -24,7 +24,14 @@ export async function GET() {
         })
     );
 
-    files.sort((a, b) => b.modifiedAt.localeCompare(a.modifiedAt));
+    // Sort by the year in the filename (newest first) rather than file
+    // modified time, which doesn't reflect chronological season order once
+    // files have all been re-synced on the same day.
+    const yearOf = (name: string) => {
+      const match = name.match(/\b(19|20)\d{2}\b/);
+      return match ? Number(match[0]) : -Infinity;
+    };
+    files.sort((a, b) => yearOf(b.name) - yearOf(a.name) || b.modifiedAt.localeCompare(a.modifiedAt));
     return NextResponse.json({ files });
   } catch (err) {
     console.error("[api/archive] failed:", err);

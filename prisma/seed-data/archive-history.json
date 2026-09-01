@@ -2,7 +2,7 @@
   {
     "year": 2022,
     "title": "NFL Wins Draft | 2022 | Final",
-    "source": "2022 NFL Wins Draft Auction FINAL.pdf",
+    "source": "2022 NFL Wins Draft - Final Standings.pdf",
     "standings": [
       {
         "rank": 1,
@@ -339,7 +339,7 @@
   {
     "year": 2023,
     "title": "NFL Wins Draft 2023, Week 18 - \"Rams were the deciding factor. Congrats Leo\"",
-    "source": "2023 Wins Draft Week 18.pdf",
+    "source": "2023 NFL Wins Draft - Final Standings.pdf",
     "standings": [
       {
         "rank": 1,
@@ -350,7 +350,7 @@
       },
       {
         "rank": 2,
-        "player": "Sean L",
+        "player": "Sean",
         "wins": 37,
         "losses": 31,
         "winPct": 0.544
@@ -431,40 +431,6 @@
           "losses": null,
           "paid": 2,
           "value": 15
-        }
-      ],
-      "Sean L": [
-        {
-          "team": "Cowboys",
-          "abbr": "DAL",
-          "wins": 12,
-          "losses": null,
-          "paid": 18,
-          "value": 19
-        },
-        {
-          "team": "Browns",
-          "abbr": "CLE",
-          "wins": 11,
-          "losses": null,
-          "paid": 13,
-          "value": 17
-        },
-        {
-          "team": "Vikings",
-          "abbr": "MIN",
-          "wins": 7,
-          "losses": null,
-          "paid": 13,
-          "value": 7
-        },
-        {
-          "team": "Bears",
-          "abbr": "CHI",
-          "wins": 7,
-          "losses": null,
-          "paid": 6,
-          "value": 7
         }
       ],
       "Niels": [
@@ -670,13 +636,47 @@
           "paid": 1,
           "value": 0
         }
+      ],
+      "Sean": [
+        {
+          "team": "Cowboys",
+          "abbr": "DAL",
+          "wins": 12,
+          "losses": null,
+          "paid": 18,
+          "value": 19
+        },
+        {
+          "team": "Browns",
+          "abbr": "CLE",
+          "wins": 11,
+          "losses": null,
+          "paid": 13,
+          "value": 17
+        },
+        {
+          "team": "Vikings",
+          "abbr": "MIN",
+          "wins": 7,
+          "losses": null,
+          "paid": 13,
+          "value": 7
+        },
+        {
+          "team": "Bears",
+          "abbr": "CHI",
+          "wins": 7,
+          "losses": null,
+          "paid": 6,
+          "value": 7
+        }
       ]
     }
   },
   {
     "year": 2024,
     "title": "2024 NFL Wins Draft | Week 18",
-    "source": "NFL Wins Draft 2024 - Week 18 FINAL.pdf",
+    "source": "2024 NFL Wins Draft - Final Standings.pdf",
     "standings": [
       {
         "rank": 1,
@@ -1013,7 +1013,7 @@
   {
     "year": 2025,
     "title": "2025 Wins Draft | Week 18 - \"Closest Wins Draft Ever\"",
-    "source": "2025 NFL Wins Draft FINAL Standings.pdf",
+    "source": "2025 NFL Wins Draft - Final Standings.pdf",
     "standings": [
       {
         "rank": 1,

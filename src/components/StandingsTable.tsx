@@ -63,9 +63,7 @@ export default function StandingsTable({ teams }: { teams: TeamRow[] }) {
             <Image src={t.logoUrl} alt={t.abbr} width={26} height={26} className="flex-shrink-0" unoptimized />
             <div className="min-w-0">
               <div className="truncate text-[13px] font-semibold">{t.shortName}</div>
-              <div className="truncate text-[11px] text-muted">
-                {t.playerName ?? "Undrafted"}
-              </div>
+              <div className="truncate text-[11px] text-muted">{t.division}</div>
             </div>
           </Link>
         ))}
