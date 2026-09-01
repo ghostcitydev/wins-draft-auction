@@ -64,25 +64,36 @@ export async function syncEspnSchedule(season: number) {
   return { upserted, unmatched: [...unmatched] };
 }
 
+// A real 18-week regular season has 272 games (32 teams * 17 games / 2).
+// Used to detect a partial backfill (e.g. a transient fetch failure on one
+// week) so it retries instead of treating "some rows" as "done forever".
+const FULL_SEASON_GAME_COUNT = 272;
+
 /**
- * One-time backfill of the previous season's games. EPA/Pythagorean
+ * Backfill of the previous season's games - used as a stand-in for
+ * "past opponent strength" on the Stats page before the current season has
+ * any completed games of its own (see getTeamRows). EPA/Pythagorean
  * placeholders come from team_ratings instead (see getTeamRows +
  * /api/admin/team-ratings) - those are pasted in by the commissioner, not
  * auto-synced, since nfelo.com has no public API.
  */
 export async function backfillPreviousSeasonIfNeeded(season: number) {
   const prevSeason = season - 1;
-  const hasGames = await db.select({ id: games.id }).from(games).where(eq(games.season, prevSeason)).limit(1);
-  if (!hasGames.length) await syncEspnSchedule(prevSeason);
+  const existing = await db.select({ id: games.id }).from(games).where(eq(games.season, prevSeason));
+  if (existing.length < FULL_SEASON_GAME_COUNT) {
+    return syncEspnSchedule(prevSeason);
+  }
+  return { upserted: 0, unmatched: [], skipped: true as const };
 }
 
 /** Runs the live sync; used by the cron route and the manual "sync now" button. */
 export async function runFullSync(season: number) {
   const espn = await Promise.allSettled([syncEspnSchedule(season)]);
-  await backfillPreviousSeasonIfNeeded(season).catch((err) =>
-    console.error("[sync] previous-season backfill failed:", err)
-  );
-  return { espn: espn[0] };
+  const backfill = await Promise.allSettled([backfillPreviousSeasonIfNeeded(season)]);
+  if (backfill[0].status === "rejected") {
+    console.error("[sync] previous-season backfill failed:", backfill[0].reason);
+  }
+  return { espn: espn[0], backfill: backfill[0] };
 }
 
 export async function getLastSyncTime(): Promise<Date | null> {

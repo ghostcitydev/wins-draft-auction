@@ -27,10 +27,10 @@ export default function QBStatsTable() {
         QB stats <span className="align-super text-[10px] text-muted">*</span>
       </p>
       <div className="max-h-[420px] overflow-y-auto rounded-xl border border-border">
-        <table className="w-full table-fixed text-sm">
+        <table className="table-fixed text-sm">
           <colgroup>
             <col style={{ width: 24 }} />
-            <col />
+            <col style={{ width: 120 }} />
             <col style={{ width: 58 }} />
             <col style={{ width: 58 }} />
             <col style={{ width: 58 }} />

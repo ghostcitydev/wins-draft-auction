@@ -160,19 +160,29 @@ export default function StatsPage() {
               note="More negative is better on both axes."
             />
 
-            <LogoScatterChart
-              title={`Past vs. Future Schedule${scheduleIsPreseason ? "*" : ""}`}
-              xLabel="Past opp. EPA/play"
-              yLabel="Future opp. EPA/play"
-              points={schedulePoints}
-              xFmt={teamPctFmt}
-              yFmt={teamPctFmt}
-              note={
-                scheduleIsPreseason
-                  ? "* Season hasn't started - \"past\" uses last season's completed schedule as a stand-in, \"future\" uses this year's full schedule. Switches to real in-season splits after Week 1."
-                  : "Past = opponents already played; future = opponents left to play, both by avg opponent EPA/play. Top-right = tough schedule already, tough schedule ahead too."
-              }
-            />
+            {schedulePoints.length > 0 ? (
+              <LogoScatterChart
+                title={`Past vs. Future Schedule${scheduleIsPreseason ? "*" : ""}`}
+                xLabel="Past opp. EPA/play"
+                yLabel="Future opp. EPA/play"
+                points={schedulePoints}
+                xFmt={teamPctFmt}
+                yFmt={teamPctFmt}
+                note={
+                  scheduleIsPreseason
+                    ? "* Season hasn't started - \"past\" uses last season's completed schedule as a stand-in, \"future\" uses this year's full schedule. Switches to real in-season splits after Week 1."
+                    : "Past = opponents already played; future = opponents left to play, both by avg opponent EPA/play. Top-right = tough schedule already, tough schedule ahead too."
+                }
+              />
+            ) : (
+              <div className="rounded-2xl border border-border bg-surface p-6 text-center">
+                <p className="text-sm font-semibold">Past vs. Future Schedule</p>
+                <p className="mt-1 text-sm text-muted">
+                  No schedule data to compare yet - tap the sync button (top right) to pull last
+                  season&apos;s completed games, then reload.
+                </p>
+              </div>
+            )}
 
             <LogoScatterChart
               title="MVP Watch*"
