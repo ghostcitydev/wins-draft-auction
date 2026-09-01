@@ -27,14 +27,17 @@ export default function QBStatsTable() {
         QB stats <span className="align-super text-[10px] text-muted">*</span>
       </p>
       <div className="max-h-[420px] overflow-y-auto rounded-xl border border-border">
-        <table className="table-fixed text-sm">
+        <table className="w-full table-fixed text-sm">
+          {/* Percentage widths (not px) so the table always fills the card
+              and reflows with it, instead of a fixed px sum leaving a gap
+              or forcing horizontal scroll. */}
           <colgroup>
-            <col style={{ width: 24 }} />
-            <col style={{ width: 120 }} />
-            <col style={{ width: 58 }} />
-            <col style={{ width: 58 }} />
-            <col style={{ width: 58 }} />
-            <col style={{ width: 58 }} />
+            <col style={{ width: "7%" }} />
+            <col style={{ width: "25%" }} />
+            <col style={{ width: "17%" }} />
+            <col style={{ width: "17%" }} />
+            <col style={{ width: "17%" }} />
+            <col style={{ width: "17%" }} />
           </colgroup>
           <thead className="sticky top-0 z-10 bg-surface">
             <tr className="border-b border-border text-xs text-muted">
