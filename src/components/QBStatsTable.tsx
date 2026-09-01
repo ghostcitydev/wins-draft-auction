@@ -29,17 +29,17 @@ export default function QBStatsTable() {
       <div className="max-h-[420px] overflow-y-auto rounded-xl border border-border">
         <table className="w-full table-fixed text-sm">
           <colgroup>
-            <col style={{ width: 26 }} />
+            <col style={{ width: 24 }} />
             <col />
-            <col style={{ width: 50 }} />
-            <col style={{ width: 46 }} />
-            <col style={{ width: 46 }} />
-            <col style={{ width: 46 }} />
+            <col style={{ width: 58 }} />
+            <col style={{ width: 58 }} />
+            <col style={{ width: 58 }} />
+            <col style={{ width: 58 }} />
           </colgroup>
           <thead className="sticky top-0 z-10 bg-surface">
             <tr className="border-b border-border text-xs text-muted">
               <th className="px-1 py-1.5 text-center font-semibold">#</th>
-              <th className="px-1.5 py-1.5 text-left font-semibold">QB</th>
+              <th className="px-2 py-1.5 text-left font-semibold">QB</th>
               <th className="px-1 py-1.5 text-center font-semibold">EPA/pl</th>
               <th className="px-1 py-1.5 text-center font-semibold">CPOE</th>
               <th className="px-1 py-1.5 text-center font-semibold">ANY/A</th>
@@ -50,16 +50,16 @@ export default function QBStatsTable() {
             {qbs.map((q) => (
               <tr key={`${q.abbr}-${q.name}`} className="border-b border-border last:border-b-0 odd:bg-surface even:bg-surface-2">
                 <td className="px-1 py-1.5 text-center text-xs text-muted">{q.rank}</td>
-                <td className="px-1.5 py-1.5">
+                <td className="px-2 py-1.5">
                   <div className="flex items-center gap-1.5">
                     <Image src={`/logos/${q.abbr}.png`} alt={q.abbr} width={16} height={16} unoptimized />
                     <span className="truncate text-[12px]">{q.name}</span>
                   </div>
                 </td>
-                <td className="px-1 py-1.5 text-center tabular-nums text-[12px]">{fmtSignedPct(q.epaPlay, 2)}</td>
-                <td className="px-1 py-1.5 text-center tabular-nums text-[12px]">{fmtSignedPct(q.cpoe, 0)}</td>
-                <td className="px-1 py-1.5 text-center tabular-nums text-[12px]">{fmtNum(q.anyA, 1)}</td>
-                <td className="px-1 py-1.5 text-center tabular-nums text-[12px]">{fmtPct(q.successRate, 0)}</td>
+                <td className="px-1 py-1.5 text-center tabular-nums text-[11px] text-muted">{fmtSignedPct(q.epaPlay, 2)}</td>
+                <td className="px-1 py-1.5 text-center tabular-nums text-[11px] text-muted">{fmtSignedPct(q.cpoe, 0)}</td>
+                <td className="px-1 py-1.5 text-center tabular-nums text-[11px] text-muted">{fmtNum(q.anyA, 1)}</td>
+                <td className="px-1 py-1.5 text-center tabular-nums text-[11px] text-muted">{fmtPct(q.successRate, 0)}</td>
               </tr>
             ))}
           </tbody>

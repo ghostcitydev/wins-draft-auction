@@ -5,7 +5,7 @@ import Link from "next/link";
 import Image from "next/image";
 import clsx from "clsx";
 import type { TeamRow } from "@/lib/team-types";
-import { fmtNum, fmtSigned, fmtMoney, fmtSignedMoney, fmtPct, fmtSignedPct } from "@/lib/format";
+import { fmtNum, fmtMoney, fmtSignedMoney, fmtPct, fmtSignedPct } from "@/lib/format";
 
 const COLUMNS: {
   label: string;
@@ -18,8 +18,11 @@ const COLUMNS: {
   { label: "PCT", format: (r) => fmtPct(r.winPct) },
   { label: "O/U", format: (r) => fmtNum(r.preseasonOU) },
   { label: "Paid", format: (r) => fmtMoney(r.paid) },
-  { label: "Value", format: (r) => fmtSignedMoney(r.value), positive: (r) => (r.value ?? 0) > 0 },
-  { label: "Diff", format: (r) => fmtSigned(r.diff), positive: (r) => r.diff > 0 },
+  // Value = the raw auction dollar value this team's wins are worth right
+  // now. Diff = that value minus what was paid for it (the P&L), matching
+  // the Archive page's Value/Diff convention.
+  { label: "Value", format: (r) => fmtMoney(r.currentValue) },
+  { label: "Diff", format: (r) => fmtSignedMoney(r.value), positive: (r) => (r.value ?? 0) > 0 },
   { label: "Proj", format: (r) => fmtNum(r.projected) },
   {
     label: "Pyth",

@@ -1,9 +1,8 @@
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { db } from "@/db";
 import { teams, draftPicks, players, games, teamRatings, appConfig } from "@/db/schema";
 import {
   winPct,
-  pointDiffPerGame,
   projectedWins,
   computeLeagueValues,
 } from "./calculations";
@@ -13,15 +12,22 @@ export { groupByPlayer } from "./team-types";
 
 export async function getTeamRows(season: number): Promise<TeamRow[]> {
   const prevSeason = season - 1;
-  const [allTeams, allDraftPicks, allPlayers, config, allGames, allRatings, prevRatings] = await Promise.all([
-    db.select().from(teams),
-    db.select().from(draftPicks).where(eq(draftPicks.season, season)),
-    db.select().from(players),
-    db.select().from(appConfig).where(eq(appConfig.id, "singleton")),
-    db.select().from(games).where(eq(games.season, season)),
-    db.select().from(teamRatings).where(eq(teamRatings.season, season)),
-    db.select().from(teamRatings).where(eq(teamRatings.season, prevSeason)),
-  ]);
+  const [allTeams, allDraftPicks, allPlayers, config, allGames, prevSeasonCompletedGames, allRatings, prevRatings] =
+    await Promise.all([
+      db.select().from(teams),
+      db.select().from(draftPicks).where(eq(draftPicks.season, season)),
+      db.select().from(players),
+      db.select().from(appConfig).where(eq(appConfig.id, "singleton")),
+      db.select().from(games).where(eq(games.season, season)),
+      db.select().from(games).where(and(eq(games.season, prevSeason), eq(games.completed, true))),
+      db.select().from(teamRatings).where(eq(teamRatings.season, season)),
+      db.select().from(teamRatings).where(eq(teamRatings.season, prevSeason)),
+    ]);
+
+  // Has this season actually started? Used to decide whether "past/future
+  // opponent strength" should use this season's real completed/remaining
+  // splits, or fall back to last season's schedule as a preseason proxy.
+  const seasonHasStarted = allGames.some((g) => g.completed);
 
   // Ratings are pasted in weekly (all 32 teams at once) - use whichever week
   // is most recent for each season.
@@ -35,6 +41,17 @@ export async function getTeamRows(season: number): Promise<TeamRow[]> {
   const prevRatingsByTeam = new Map(
     prevRatings.filter((r) => r.week === prevWeek).map((r) => [r.teamId, r])
   );
+
+  // Same current-season/prior-season fallback used for `epa` above, exposed
+  // as a lookup so we can resolve an opponent's EPA (not just a team's own).
+  const resolvedEpa = (teamId: string): number =>
+    currentRatingsByTeam.get(teamId)?.epaPlay ?? prevRatingsByTeam.get(teamId)?.epaPlay ?? 0;
+
+  const avgOpponentEpa = (opponentIds: string[]): number | null => {
+    if (!opponentIds.length) return null;
+    const vals = opponentIds.map(resolvedEpa);
+    return vals.reduce((a, b) => a + b, 0) / vals.length;
+  };
 
   const playerById = new Map(allPlayers.map((p) => [p.id, p]));
   const draftPickByTeamId = new Map(allDraftPicks.map((d) => [d.teamId, d]));
@@ -107,6 +124,24 @@ export async function getTeamRows(season: number): Promise<TeamRow[]> {
     const draftPick = draftPickByTeamId.get(team.id);
     const player = draftPick ? playerById.get(draftPick.playerId) : undefined;
 
+    // Past/future opponent strength (avg EPA/play of opponents already
+    // played vs. opponents still to come). Once the season has real
+    // completed games, this uses this season's actual past/future splits.
+    // Before that, "past" borrows last season's completed schedule as a
+    // stand-in (flagged as a placeholder) and "future" uses this season's
+    // full schedule, since every game is still ahead of it.
+    const opponentIdOf = (g: { homeTeamId: string; awayTeamId: string }) =>
+      g.homeTeamId === team.id ? g.awayTeamId : g.homeTeamId;
+    const prevSeasonGamesForTeam = prevSeasonCompletedGames.filter(
+      (g) => g.homeTeamId === team.id || g.awayTeamId === team.id
+    );
+    const pastOppGames = seasonHasStarted
+      ? teamGames.filter((g) => g.completed)
+      : prevSeasonGamesForTeam;
+    const futureOppGames = seasonHasStarted ? teamGames.filter((g) => !g.completed) : teamGames;
+    const pastOpponentEpa = avgOpponentEpa(pastOppGames.map(opponentIdOf));
+    const futureOpponentEpa = avgOpponentEpa(futureOppGames.map(opponentIdOf));
+
     return {
       id: team.id,
       name: team.name,
@@ -131,7 +166,6 @@ export async function getTeamRows(season: number): Promise<TeamRow[]> {
       winPct: winPct(record),
       pointsFor,
       pointsAgainst,
-      diff: pointDiffPerGame(record),
       pythagoreanWins: currentRating?.pythagWins ?? 0,
       pythagoreanIsPlaceholder: false,
       epa: epaRating?.epaPlay ?? 0,
@@ -145,6 +179,9 @@ export async function getTeamRows(season: number): Promise<TeamRow[]> {
       defEpa: epaRating?.defPlay ?? 0,
       defPassEpa: epaRating?.defPass ?? 0,
       defRushEpa: epaRating?.defRush ?? 0,
+      pastOpponentEpa,
+      futureOpponentEpa,
+      scheduleIsPreseason: !seasonHasStarted,
       value: null,
       vor: null,
       currentValue: null,

@@ -5,7 +5,7 @@ import Image from "next/image";
 import clsx from "clsx";
 import TopBar from "@/components/TopBar";
 import { useTeams } from "@/lib/useTeams";
-import { fmtNum, fmtSigned, fmtMoney, fmtSignedMoney, fmtPct, fmtSignedPct } from "@/lib/format";
+import { fmtNum, fmtMoney, fmtSignedMoney, fmtPct, fmtSignedPct } from "@/lib/format";
 import type { ScheduleGame } from "@/lib/team-types";
 
 function StatCard({ label, value, tone }: { label: string; value: string; tone?: "pos" | "neg" }) {
@@ -95,12 +95,14 @@ export default function TeamDetailPage() {
             <div className="mb-2 grid grid-cols-3 gap-2">
               <StatCard label="Record" value={`${team.wins}-${team.losses}${team.ties ? `-${team.ties}` : ""}`} />
               <StatCard label="Win %" value={fmtPct(team.winPct)} />
-              <StatCard label="Diff/G" value={fmtSigned(team.diff)} tone={team.diff > 0 ? "pos" : team.diff < 0 ? "neg" : undefined} />
               <StatCard label="Preseason O/U" value={fmtNum(team.preseasonOU)} />
               <StatCard label="Projected" value={fmtNum(team.projected)} />
               <StatCard label="Pythagorean" value={fmtNum(team.pythagoreanWins)} />
               <StatCard label="Paid" value={fmtMoney(team.paid)} />
-              <StatCard label="Value" value={fmtSignedMoney(team.value)} tone={(team.value ?? 0) > 0 ? "pos" : (team.value ?? 0) < 0 ? "neg" : undefined} />
+              {/* Value = raw auction dollar value this team's wins are worth right now.
+                  Diff = that value minus what was paid (the P&L). */}
+              <StatCard label="Value" value={fmtMoney(team.currentValue)} />
+              <StatCard label="Diff" value={fmtSignedMoney(team.value)} tone={(team.value ?? 0) > 0 ? "pos" : (team.value ?? 0) < 0 ? "neg" : undefined} />
               <StatCard label={team.epaIsPlaceholder ? `EPA/play (${team.placeholderSeason})` : "EPA/play"} value={fmtSignedPct(team.epa)} tone={team.epaIsPlaceholder ? undefined : team.epa > 0 ? "pos" : team.epa < 0 ? "neg" : undefined} />
             </div>
 

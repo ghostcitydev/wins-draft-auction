@@ -31,7 +31,6 @@ export interface TeamRow {
   winPct: number;
   pointsFor: number;
   pointsAgainst: number;
-  diff: number;
   pythagoreanWins: number;
   pythagoreanIsPlaceholder: boolean;
   epa: number;
@@ -43,6 +42,13 @@ export interface TeamRow {
   defEpa: number;
   defPassEpa: number;
   defRushEpa: number;
+  // Avg EPA/play of opponents already played / still to come (see
+  // src/lib/team-stats.ts for the preseason last-season-schedule fallback).
+  pastOpponentEpa: number | null;
+  futureOpponentEpa: number | null;
+  scheduleIsPreseason: boolean;
+  // `value` = currentValue - paid (this team's auction P&L). `currentValue`
+  // = the raw dollar worth its wins are worth in the pool right now.
   value: number | null;
   vor: number | null;
   currentValue: number | null;
@@ -60,8 +66,8 @@ export interface PlayerGroup {
   winPct: number;
   totalPaid: number;
   totalValue: number;
+  totalCurrentValue: number;
   totalPreseasonOU: number;
-  avgDiff: number;
   totalProjected: number;
   totalPythagoreanWins: number;
   avgEpa: number;
@@ -94,8 +100,8 @@ export function groupByPlayer(rows: TeamRow[]): PlayerGroup[] {
       winPct: gp > 0 ? (totalWins + 0.5 * totalTies) / gp : 0,
       totalPaid: teams.reduce((s, t) => s + (t.paid ?? 0), 0),
       totalValue: teams.reduce((s, t) => s + (t.value ?? 0), 0),
+      totalCurrentValue: teams.reduce((s, t) => s + (t.currentValue ?? 0), 0),
       totalPreseasonOU: teams.reduce((s, t) => s + (t.preseasonOU ?? 0), 0),
-      avgDiff: teams.reduce((s, t) => s + t.diff, 0) / n,
       totalProjected: teams.reduce((s, t) => s + (t.projected ?? 0), 0),
       totalPythagoreanWins: teams.reduce((s, t) => s + t.pythagoreanWins, 0),
       avgEpa: teams.reduce((s, t) => s + t.epa, 0) / n,

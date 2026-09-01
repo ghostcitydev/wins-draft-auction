@@ -4,7 +4,7 @@ import { useMemo, useState } from "react";
 import Link from "next/link";
 import clsx from "clsx";
 import type { PlayerGroup } from "@/lib/team-types";
-import { fmtNum, fmtSigned, fmtMoney, fmtSignedMoney, fmtPct, fmtSignedPct } from "@/lib/format";
+import { fmtNum, fmtMoney, fmtSignedMoney, fmtPct, fmtSignedPct } from "@/lib/format";
 
 type SortKey = "player" | "w" | "l" | "pct" | "ou" | "paid" | "value" | "diff" | "proj" | "pyth" | "epa";
 
@@ -20,19 +20,21 @@ const COLUMNS: {
   { key: "pct", label: "PCT", format: (g) => fmtPct(g.winPct), value: (g) => g.winPct },
   { key: "ou", label: "O/U", format: (g) => fmtNum(g.totalPreseasonOU), value: (g) => g.totalPreseasonOU },
   { key: "paid", label: "Paid", format: (g) => fmtMoney(g.totalPaid), value: (g) => g.totalPaid },
+  // Value = raw auction dollar value this player's teams are worth right
+  // now. Diff = that value minus what was paid (the P&L) - matches the
+  // Archive page's Value/Diff convention.
   {
     key: "value",
     label: "Value",
-    format: (g) => fmtSignedMoney(g.totalValue),
-    value: (g) => g.totalValue,
-    positive: (g) => g.totalValue > 0,
+    format: (g) => fmtMoney(g.totalCurrentValue),
+    value: (g) => g.totalCurrentValue,
   },
   {
     key: "diff",
     label: "Diff",
-    format: (g) => fmtSigned(g.avgDiff),
-    value: (g) => g.avgDiff,
-    positive: (g) => g.avgDiff > 0,
+    format: (g) => fmtSignedMoney(g.totalValue),
+    value: (g) => g.totalValue,
+    positive: (g) => g.totalValue > 0,
   },
   { key: "proj", label: "Proj", format: (g) => fmtNum(g.totalProjected), value: (g) => g.totalProjected },
   { key: "pyth", label: "Pyth", format: (g) => fmtNum(g.totalPythagoreanWins), value: (g) => g.totalPythagoreanWins },
@@ -80,7 +82,7 @@ export default function PlayerLeaderboard({ groups }: { groups: PlayerGroup[] })
           type="button"
           onClick={() => handleSort("player")}
           className={clsx(
-            "flex h-9 w-full items-center gap-1 border-b border-border px-2.5 text-xs font-semibold",
+            "flex h-9 w-full items-center gap-1 border-b border-border px-2 text-xs font-semibold",
             sortKey === "player" ? "text-foreground" : "text-muted"
           )}
         >
@@ -91,12 +93,12 @@ export default function PlayerLeaderboard({ groups }: { groups: PlayerGroup[] })
             key={g.playerId}
             href={`#player-${g.playerId}`}
             className={clsx(
-              "flex h-11 items-center gap-2 border-b border-border px-2.5 active:bg-surface-2",
+              "flex h-11 items-center gap-1.5 border-b border-border px-2 active:bg-surface-2",
               i === sorted.length - 1 && "border-b-0"
             )}
-            style={{ minWidth: 136 }}
+            style={{ minWidth: 100 }}
           >
-            <span className="w-4 flex-shrink-0 text-xs text-muted">{i + 1}</span>
+            <span className="w-3.5 flex-shrink-0 text-xs text-muted">{i + 1}</span>
             <span className="truncate text-[13px] font-semibold">{g.playerName}</span>
           </Link>
         ))}
@@ -128,8 +130,7 @@ export default function PlayerLeaderboard({ groups }: { groups: PlayerGroup[] })
                   className={clsx(
                     "flex w-[54px] flex-shrink-0 items-center justify-center text-[13px] tabular-nums",
                     isPositive === true && "text-accent",
-                    isPositive === false && col.label === "Value" && g.totalValue < 0 && "text-danger",
-                    isPositive === false && col.label === "Diff" && g.avgDiff < 0 && "text-danger",
+                    isPositive === false && col.label === "Diff" && g.totalValue < 0 && "text-danger",
                     isPositive === false && col.label === "EPA" && g.avgEpa < 0 && "text-danger"
                   )}
                 >

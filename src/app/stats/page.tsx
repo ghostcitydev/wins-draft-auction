@@ -86,6 +86,21 @@ export default function StatsPage() {
     }));
   }, [teams]);
 
+  const schedulePoints: ScatterPoint[] = useMemo(
+    () =>
+      (teams ?? [])
+        .filter((t) => t.pastOpponentEpa !== null && t.futureOpponentEpa !== null)
+        .map((t) => ({
+          key: t.abbr,
+          label: t.shortName,
+          logoUrl: t.logoUrl,
+          x: t.pastOpponentEpa as number,
+          y: t.futureOpponentEpa as number,
+        })),
+    [teams]
+  );
+  const scheduleIsPreseason = teams?.some((t) => t.scheduleIsPreseason) ?? false;
+
   return (
     <>
       <TopBar title="Stats" />
@@ -113,6 +128,8 @@ export default function StatsPage() {
                 numbers.
               </p>
             )}
+
+            <TeamRankingsTable teams={teams} />
 
             <LogoScatterChart
               title={`Total EPA${isPlaceholder ? "*" : ""}`}
@@ -143,10 +160,19 @@ export default function StatsPage() {
               note="More negative is better on both axes."
             />
 
-            <div className="rounded-2xl border border-border bg-surface p-6 text-center">
-              <p className="text-sm font-semibold">Past vs. future schedule</p>
-              <p className="mt-1 text-sm text-muted">Coming soon.</p>
-            </div>
+            <LogoScatterChart
+              title={`Past vs. Future Schedule${scheduleIsPreseason ? "*" : ""}`}
+              xLabel="Past opp. EPA/play"
+              yLabel="Future opp. EPA/play"
+              points={schedulePoints}
+              xFmt={teamPctFmt}
+              yFmt={teamPctFmt}
+              note={
+                scheduleIsPreseason
+                  ? "* Season hasn't started - \"past\" uses last season's completed schedule as a stand-in, \"future\" uses this year's full schedule. Switches to real in-season splits after Week 1."
+                  : "Past = opponents already played; future = opponents left to play, both by avg opponent EPA/play. Top-right = tough schedule already, tough schedule ahead too."
+              }
+            />
 
             <LogoScatterChart
               title="MVP Watch*"
@@ -157,8 +183,6 @@ export default function StatsPage() {
               yFmt={anyAFmt}
               note="* Using ANY/A in place of passing yards - yards weren't available from a source we could reliably parse. 2025 season stats."
             />
-
-            <TeamRankingsTable teams={teams} />
 
             <QBStatsTable />
           </div>
