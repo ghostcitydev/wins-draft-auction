@@ -64,11 +64,6 @@ export async function syncEspnSchedule(season: number) {
   return { upserted, unmatched: [...unmatched] };
 }
 
-// A real 18-week regular season has 272 games (32 teams * 17 games / 2).
-// Used to detect a partial backfill (e.g. a transient fetch failure on one
-// week) so it retries instead of treating "some rows" as "done forever".
-const FULL_SEASON_GAME_COUNT = 272;
-
 /**
  * Backfill of the previous season's games - used as a stand-in for
  * "past opponent strength" on the Stats page before the current season has
@@ -76,13 +71,20 @@ const FULL_SEASON_GAME_COUNT = 272;
  * placeholders come from team_ratings instead (see getTeamRows +
  * /api/admin/team-ratings) - those are pasted in by the commissioner, not
  * auto-synced, since nfelo.com has no public API.
+ *
+ * This only ever runs once (gated on "does this season have zero games
+ * yet", not "does it have a full slate") - retrying on every stale-sync
+ * cycle previously re-ran an 18-week ESPN refetch + ~270 sequential DB
+ * upserts on top of the *current* season's own sync inside the same
+ * request, which could blow past the serverless function's time limit and
+ * take the whole page down mid-query. If a backfill genuinely comes up
+ * short (partial team-name mismatches, etc.), re-run it deliberately via
+ * a one-off script rather than looping it into every page load.
  */
 export async function backfillPreviousSeasonIfNeeded(season: number) {
   const prevSeason = season - 1;
-  const existing = await db.select({ id: games.id }).from(games).where(eq(games.season, prevSeason));
-  if (existing.length < FULL_SEASON_GAME_COUNT) {
-    return syncEspnSchedule(prevSeason);
-  }
+  const hasGames = await db.select({ id: games.id }).from(games).where(eq(games.season, prevSeason)).limit(1);
+  if (!hasGames.length) return syncEspnSchedule(prevSeason);
   return { upserted: 0, unmatched: [], skipped: true as const };
 }
 
