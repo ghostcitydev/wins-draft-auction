@@ -36,10 +36,18 @@ function getDb(): Db {
       connect_timeout: 10,
     });
 
-  if (process.env.NODE_ENV !== "production") global.__dbClient = client;
+  // Always cache on `global`, in prod too. Vercel reuses warm serverless
+  // containers across invocations, so *not* caching here meant every single
+  // db.<method>() call (the Proxy below calls getDb() on every property
+  // access) spun up a brand-new postgres connection pool that was never
+  // closed - a real connection leak that grows with traffic until Neon's
+  // connection limit is hit and every query starts failing, which is almost
+  // certainly what's been causing the recurring "Couldn't load standings"
+  // errors (not the sync logic those errors were originally blamed on).
+  global.__dbClient = client;
 
   const instance = drizzle(client, { schema });
-  if (process.env.NODE_ENV !== "production") global.__drizzleDb = instance;
+  global.__drizzleDb = instance;
   return instance;
 }
 
