@@ -137,6 +137,14 @@ export async function getTeamRows(season: number): Promise<TeamRow[]> {
       epa: epaRating?.epaPlay ?? 0,
       epaIsPlaceholder,
       placeholderSeason: epaIsPlaceholder ? prevSeason : null,
+      // Offense/defense EPA splits come from the same weekly nfelo paste as
+      // `epa` above, so they share its current-season/placeholder status.
+      offEpa: epaRating?.offPlay ?? 0,
+      offPassEpa: epaRating?.offPass ?? 0,
+      offRushEpa: epaRating?.offRush ?? 0,
+      defEpa: epaRating?.defPlay ?? 0,
+      defPassEpa: epaRating?.defPass ?? 0,
+      defRushEpa: epaRating?.defRush ?? 0,
       value: null,
       vor: null,
       currentValue: null,

@@ -37,6 +37,12 @@ export interface TeamRow {
   epa: number;
   epaIsPlaceholder: boolean;
   placeholderSeason: number | null;
+  offEpa: number;
+  offPassEpa: number;
+  offRushEpa: number;
+  defEpa: number;
+  defPassEpa: number;
+  defRushEpa: number;
   value: number | null;
   vor: number | null;
   currentValue: number | null;
