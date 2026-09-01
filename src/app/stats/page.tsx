@@ -6,7 +6,7 @@ import LogoScatterChart, { ScatterPoint } from "@/components/LogoScatterChart";
 import TeamRankingsTable from "@/components/TeamRankingsTable";
 import QBStatsTable from "@/components/QBStatsTable";
 import { useTeams } from "@/lib/useTeams";
-import { fmtSignedPct } from "@/lib/format";
+import { fmtSignedPct, fmtNum } from "@/lib/format";
 import qbStats from "../../../prisma/seed-data/qb-stats-2025.json";
 
 interface QBStat {
@@ -21,7 +21,14 @@ interface QBStat {
   successRate: number;
 }
 
-const pctFmt = (n: number) => fmtSignedPct(n, 2);
+// Team-level EPA/play splits run roughly ±0.03-0.15 - 1 decimal on the
+// percentage keeps the same digit count as how they're shown elsewhere
+// in the app (e.g. Standings' EPA column).
+const teamPctFmt = (n: number) => fmtSignedPct(n, 1);
+// QB EPA/play is an order of magnitude smaller (±0.001-0.02), so it needs
+// an extra decimal to preserve the same precision once shifted to a percent.
+const qbEpaPctFmt = (n: number) => fmtSignedPct(n, 2);
+const anyAFmt = (n: number) => fmtNum(n, 1);
 
 export default function StatsPage() {
   const { teams, loading, error } = useTeams();
@@ -108,28 +115,31 @@ export default function StatsPage() {
             )}
 
             <LogoScatterChart
-              title={`Total EPA - Offense × Defense${isPlaceholder ? "*" : ""}`}
+              title={`Total EPA${isPlaceholder ? "*" : ""}`}
               xLabel="Off EPA/play"
               yLabel="Def EPA/play"
               points={totalEpaPoints}
-              fmt={pctFmt}
+              xFmt={teamPctFmt}
+              yFmt={teamPctFmt}
               note="Negative defensive EPA/play is better. Top-right = strong offense, weak defense."
             />
 
             <LogoScatterChart
-              title={`Off EPA - Pass × Rush${isPlaceholder ? "*" : ""}`}
+              title={`Off EPA${isPlaceholder ? "*" : ""}`}
               xLabel="Pass EPA/play"
               yLabel="Rush EPA/play"
               points={offEpaPoints}
-              fmt={pctFmt}
+              xFmt={teamPctFmt}
+              yFmt={teamPctFmt}
             />
 
             <LogoScatterChart
-              title={`Def EPA - Pass × Rush${isPlaceholder ? "*" : ""}`}
+              title={`Def EPA${isPlaceholder ? "*" : ""}`}
               xLabel="Pass EPA/play allowed"
               yLabel="Rush EPA/play allowed"
               points={defEpaPoints}
-              fmt={pctFmt}
+              xFmt={teamPctFmt}
+              yFmt={teamPctFmt}
               note="More negative is better on both axes."
             />
 
@@ -139,11 +149,12 @@ export default function StatsPage() {
             </div>
 
             <LogoScatterChart
-              title="MVP Watch - EPA/play × ANY/A*"
+              title="MVP Watch*"
               xLabel="EPA/play"
               yLabel="ANY/A"
               points={mvpPoints}
-              fmt={(n) => n.toFixed(2)}
+              xFmt={qbEpaPctFmt}
+              yFmt={anyAFmt}
               note="* Using ANY/A in place of passing yards - yards weren't available from a source we could reliably parse. 2025 season stats."
             />
 

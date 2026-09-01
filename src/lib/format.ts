@@ -20,9 +20,9 @@ export function fmtSignedMoney(n: number | null | undefined): string {
   return rounded > 0 ? `+$${rounded}` : `-$${Math.abs(rounded)}`;
 }
 
-export function fmtPct(n: number | null | undefined): string {
+export function fmtPct(n: number | null | undefined, decimals = 1): string {
   if (n === null || n === undefined || Number.isNaN(n)) return "—";
-  return `${(n * 100).toFixed(1)}%`;
+  return `${(n * 100).toFixed(decimals)}%`;
 }
 
 export function fmtSignedPct(n: number | null | undefined, decimals = 1): string {

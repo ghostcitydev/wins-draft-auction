@@ -40,13 +40,15 @@ function ChartTooltip({
   payload,
   xLabel,
   yLabel,
-  fmt,
+  xFmt,
+  yFmt,
 }: {
   active?: boolean;
   payload?: { payload: ScatterPoint }[];
   xLabel: string;
   yLabel: string;
-  fmt: (n: number) => string;
+  xFmt: (n: number) => string;
+  yFmt: (n: number) => string;
 }) {
   if (!active || !payload?.length) return null;
   const p = payload[0].payload;
@@ -54,10 +56,10 @@ function ChartTooltip({
     <div className="rounded-lg border border-border bg-surface px-2.5 py-1.5 text-xs shadow-sm">
       <p className="font-semibold">{p.label}</p>
       <p className="text-muted">
-        {xLabel}: <span className="text-foreground">{fmt(p.x)}</span>
+        {xLabel}: <span className="text-foreground">{xFmt(p.x)}</span>
       </p>
       <p className="text-muted">
-        {yLabel}: <span className="text-foreground">{fmt(p.y)}</span>
+        {yLabel}: <span className="text-foreground">{yFmt(p.y)}</span>
       </p>
     </div>
   );
@@ -69,7 +71,8 @@ export default function LogoScatterChart({
   points,
   xLabel,
   yLabel,
-  fmt = (n: number) => n.toFixed(3),
+  xFmt = (n: number) => n.toFixed(1),
+  yFmt = xFmt,
   height = 260,
 }: {
   title: string;
@@ -77,15 +80,19 @@ export default function LogoScatterChart({
   points: ScatterPoint[];
   xLabel: string;
   yLabel: string;
-  fmt?: (n: number) => string;
+  xFmt?: (n: number) => string;
+  yFmt?: (n: number) => string;
   height?: number;
 }) {
   return (
     <div className="rounded-2xl border border-border bg-surface p-3">
-      <p className="mb-1 px-1 text-sm font-semibold">{title}</p>
+      <p className="px-1 text-sm font-semibold">{title}</p>
+      <p className="mb-1 px-1 text-[11px] text-muted">
+        X: {xLabel} · Y: {yLabel}
+      </p>
       <div style={{ height }} className="w-full">
         <ResponsiveContainer width="100%" height="100%">
-          <ScatterChart margin={{ top: 8, right: 16, left: 0, bottom: 8 }}>
+          <ScatterChart margin={{ top: 8, right: 16, left: 0, bottom: 0 }}>
             <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
             <XAxis
               type="number"
@@ -94,7 +101,7 @@ export default function LogoScatterChart({
               tick={{ fontSize: 10, fill: "var(--muted)" }}
               tickLine={false}
               axisLine={{ stroke: "var(--border)" }}
-              label={{ value: xLabel, position: "insideBottom", offset: -4, fontSize: 11, fill: "var(--muted)" }}
+              tickFormatter={(v) => xFmt(v as number)}
             />
             <YAxis
               type="number"
@@ -103,13 +110,13 @@ export default function LogoScatterChart({
               tick={{ fontSize: 10, fill: "var(--muted)" }}
               tickLine={false}
               axisLine={false}
-              width={36}
-              label={{ value: yLabel, angle: -90, position: "insideLeft", fontSize: 11, fill: "var(--muted)" }}
+              width={44}
+              tickFormatter={(v) => yFmt(v as number)}
             />
             <ReferenceLine x={0} stroke="var(--border)" />
             <ReferenceLine y={0} stroke="var(--border)" />
             <Tooltip
-              content={<ChartTooltip xLabel={xLabel} yLabel={yLabel} fmt={fmt} />}
+              content={<ChartTooltip xLabel={xLabel} yLabel={yLabel} xFmt={xFmt} yFmt={yFmt} />}
               cursor={{ stroke: "var(--border)" }}
             />
             <Scatter data={points} shape={(props: unknown) => <LogoDot {...(props as DotProps)} />} />

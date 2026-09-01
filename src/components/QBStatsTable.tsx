@@ -57,9 +57,9 @@ export default function QBStatsTable() {
                   </div>
                 </td>
                 <td className="px-1 py-1.5 text-center tabular-nums text-[12px]">{fmtSignedPct(q.epaPlay, 2)}</td>
-                <td className="px-1 py-1.5 text-center tabular-nums text-[12px]">{fmtSignedPct(q.cpoe, 1)}</td>
+                <td className="px-1 py-1.5 text-center tabular-nums text-[12px]">{fmtSignedPct(q.cpoe, 0)}</td>
                 <td className="px-1 py-1.5 text-center tabular-nums text-[12px]">{fmtNum(q.anyA, 1)}</td>
-                <td className="px-1 py-1.5 text-center tabular-nums text-[12px]">{fmtPct(q.successRate)}</td>
+                <td className="px-1 py-1.5 text-center tabular-nums text-[12px]">{fmtPct(q.successRate, 0)}</td>
               </tr>
             ))}
           </tbody>

@@ -2,6 +2,7 @@
 
 import Image from "next/image";
 import type { TeamRow } from "@/lib/team-types";
+import { fmtSignedPct } from "@/lib/format";
 
 interface RankColumn {
   label: string;
@@ -19,6 +20,11 @@ const COLUMNS: RankColumn[] = [
   { label: "Total EPA", direction: "desc", value: (t) => t.epa },
 ];
 
+// Same digit-shift convention as the scatter charts - team EPA/play splits
+// run roughly ±0.03-0.15, so 1 decimal on the percentage keeps the same
+// precision as the raw fraction.
+const fmt = (n: number) => fmtSignedPct(n, 1);
+
 export default function TeamRankingsTable({ teams }: { teams: TeamRow[] }) {
   const ranked = COLUMNS.map((col) => {
     const sorted = [...teams].sort((a, b) =>
@@ -32,19 +38,13 @@ export default function TeamRankingsTable({ teams }: { teams: TeamRow[] }) {
   return (
     <div className="rounded-2xl border border-border bg-surface p-3">
       <p className="mb-2 px-1 text-sm font-semibold">Team rankings</p>
-      <div className="max-h-[420px] overflow-y-auto rounded-xl border border-border">
-        <table className="w-full table-fixed text-sm">
-          <colgroup>
-            <col style={{ width: 28 }} />
-            {COLUMNS.map((c) => (
-              <col key={c.label} />
-            ))}
-          </colgroup>
+      <div className="max-h-[420px] overflow-auto rounded-xl border border-border">
+        <table className="text-sm">
           <thead className="sticky top-0 z-10 bg-surface">
             <tr className="border-b border-border text-xs text-muted">
-              <th className="px-1 py-1.5 text-center font-semibold">#</th>
+              <th className="w-7 px-1 py-1.5 text-center font-semibold">#</th>
               {COLUMNS.map((c) => (
-                <th key={c.label} className="px-1 py-1.5 text-center font-semibold">
+                <th key={c.label} className="whitespace-nowrap px-2.5 py-1.5 text-left font-semibold">
                   {c.label}
                 </th>
               ))}
@@ -57,10 +57,13 @@ export default function TeamRankingsTable({ teams }: { teams: TeamRow[] }) {
                 {ranked.map(({ col, sorted }) => {
                   const t = sorted[i];
                   return (
-                    <td key={col.label} className="px-1 py-1.5">
-                      <div className="flex items-center justify-center gap-1">
+                    <td key={col.label} className="whitespace-nowrap px-2.5 py-1.5">
+                      <div className="flex items-center gap-1.5">
                         <Image src={t.logoUrl} alt={t.abbr} width={16} height={16} unoptimized />
-                        <span className="text-[12px]">{t.abbr}</span>
+                        <span className="text-[12px] font-medium">{t.abbr}</span>
+                        <span className="ml-auto pl-2 text-[11px] tabular-nums text-muted">
+                          {fmt(col.value(t))}
+                        </span>
                       </div>
                     </td>
                   );
