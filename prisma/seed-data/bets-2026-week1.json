@@ -1,0 +1,12 @@
+[
+  { "week": 1, "abbr": "CAR", "spread": 2.5, "juice": -107, "units": 1 },
+  { "week": 1, "abbr": "ARI", "spread": 10, "juice": -107, "units": 1 },
+  { "week": 1, "abbr": "TB", "spread": 3.5, "juice": -107, "units": 1 },
+  { "week": 1, "abbr": "DET", "spread": -6.5, "juice": -107, "units": 1 },
+  { "week": 1, "abbr": "MIN", "spread": -1.5, "juice": -107, "units": 1 },
+  { "week": 1, "abbr": "WAS", "spread": 5.5, "juice": -107, "units": 1 },
+  { "week": 1, "abbr": "NE", "spread": 3.5, "juice": -107, "units": 1 },
+  { "week": 1, "abbr": "SF", "spread": 3.5, "juice": -107, "units": 1 },
+  { "week": 1, "abbr": "MIA", "spread": 3.5, "juice": -107, "units": 1 },
+  { "week": 1, "abbr": "DEN", "spread": 2.5, "juice": -107, "units": 1 }
+]

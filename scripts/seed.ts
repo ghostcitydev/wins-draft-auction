@@ -7,11 +7,12 @@ loadEnv({ path: ".env.local" });
 loadEnv(); // fall back to a plain .env if present, without overriding
 import { and, eq } from "drizzle-orm";
 import { db } from "../src/db";
-import { teams, players, draftPicks, appConfig, teamRatings } from "../src/db/schema";
+import { teams, players, draftPicks, appConfig, teamRatings, bets } from "../src/db/schema";
 import { ABBR_ALIASES } from "../src/lib/team-aliases";
 import teamsMaster from "../prisma/seed-data/teams-master.json";
 import draftPicks2026 from "../prisma/seed-data/draft-picks-2026.json";
 import teamRatings2025 from "../prisma/seed-data/team-ratings-2025.json";
+import betsWeek1 from "../prisma/seed-data/bets-2026-week1.json";
 
 async function main() {
   const config = await db.select().from(appConfig).where(eq(appConfig.id, "singleton"));
@@ -164,6 +165,34 @@ async function main() {
       await db.update(teamRatings).set(values).where(eq(teamRatings.id, existingRating[0].id));
     } else {
       await db.insert(teamRatings).values(values);
+    }
+  }
+
+  console.log(`Seeding ${betsWeek1.length} bets for season ${season}...`);
+  for (const b of betsWeek1 as Array<{
+    week: number;
+    abbr: string;
+    spread: number;
+    juice: number;
+    units: number;
+  }>) {
+    const team = (await db.select().from(teams).where(eq(teams.abbr, b.abbr)))[0];
+    if (!team) {
+      console.warn(`  skip bet on ${b.abbr} - team not found`);
+      continue;
+    }
+
+    const existingBet = await db
+      .select()
+      .from(bets)
+      .where(and(eq(bets.season, season), eq(bets.week, b.week), eq(bets.teamId, team.id)));
+
+    const values = { season, week: b.week, teamId: team.id, spread: b.spread, juice: b.juice, units: b.units };
+
+    if (existingBet.length) {
+      await db.update(bets).set(values).where(eq(bets.id, existingBet[0].id));
+    } else {
+      await db.insert(bets).values(values);
     }
   }
 

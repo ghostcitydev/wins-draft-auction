@@ -100,6 +100,31 @@ export const teamRatings = pgTable(
   (table) => [uniqueIndex("team_ratings_unique").on(table.season, table.week, table.teamId)]
 );
 
+/**
+ * A single spread bet placed on a real game. Grading (win/loss/push, units
+ * won/lost) is computed live from the real synced score in `games` (see
+ * src/lib/bets.ts) rather than stored here - so it's never stale and never
+ * requires a manual "mark as graded" step. `spread`/`closingLine` are both
+ * signed relative to `teamId` (the side taken), e.g. +2.5 = getting points,
+ * -6.5 = laying points. `juice` is American odds (e.g. -110).
+ */
+export const bets = pgTable(
+  "bets",
+  {
+    id: text("id").primaryKey().$defaultFn(() => createId()),
+    season: integer("season").notNull(),
+    week: integer("week").notNull(),
+    teamId: text("team_id").notNull().references(() => teams.id),
+    spread: real("spread").notNull(),
+    juice: integer("juice").notNull().default(-110),
+    units: real("units").notNull().default(1),
+    closingLine: real("closing_line"),
+    notes: text("notes"),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+  },
+  (table) => [uniqueIndex("bets_unique").on(table.season, table.week, table.teamId)]
+);
+
 export const syncLog = pgTable("sync_log", {
   id: text("id").primaryKey().$defaultFn(() => createId()),
   source: text("source").notNull(),

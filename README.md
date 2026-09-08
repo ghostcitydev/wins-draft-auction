@@ -20,7 +20,9 @@ stats for one team.
 
 **Archive** (`/archive`) - past seasons' final standings PDFs.
 
-**Bets** (`/bets`) - placeholder, content TBD.
+**Bets** (`/bets`) - personal spread-betting tracker: log a bet (team, spread,
+juice, units), add the closing line once it's posted, and see performance
+over time (record, units, closing-line value, a cumulative-units chart).
 
 **Setup** (`/admin`) - where the commissioner enters each season's real draft
 results (which player has which team, $ paid, preseason O/U line), and pastes
