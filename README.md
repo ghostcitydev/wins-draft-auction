@@ -64,6 +64,10 @@ npm run db:seed              # seeds the 32 NFL teams, 2026 draft picks, and 202
 npm run dev
 ```
 
+On Windows, once your `.env.local` is set up, you can double-click **`db-update.bat`**
+(in the project root) any time a schema change needs `db:push` + `db:seed` run
+again, instead of typing both commands out.
+
 Then open `/admin` and enter this season's real draft picks (player, $ paid,
 preseason O/U per team) - the standings and team pages are empty until you do
 this. Once the 2026 season is underway, paste each week's nfelo power ratings
