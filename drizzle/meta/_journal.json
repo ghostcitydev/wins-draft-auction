@@ -43,6 +43,13 @@
       "when": 1788811200000,
       "tag": "0005_bets_persona",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1788897600000,
+      "tag": "0006_future_picks",
+      "breakpoints": true
     }
   ]
 }

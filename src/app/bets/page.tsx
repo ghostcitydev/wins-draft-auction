@@ -14,8 +14,10 @@ import {
   YAxis,
 } from "recharts";
 import TopBar from "@/components/TopBar";
+import FuturesBoard from "@/components/FuturesBoard";
 import { useBets } from "@/lib/useBets";
 import { useTeams } from "@/lib/useTeams";
+import { useFutures } from "@/lib/useFutures";
 import { fmtSigned, fmtPct } from "@/lib/format";
 import type { BetRow } from "@/lib/bets";
 
@@ -273,7 +275,9 @@ function ClosingLineInput({ bet, onSaved }: { bet: BetRow; onSaved: () => void }
 export default function BetsPage() {
   const { betRows, loading, error, reload } = useBets();
   const { teams } = useTeams();
+  const { picks: futurePicks, loading: futuresLoading, error: futuresError, reload: reloadFutures } = useFutures();
   const [deletingId, setDeletingId] = useState<string | null>(null);
+  const [activeTab, setActiveTab] = useState<"bets" | "futures">("bets");
 
   const teamOptions = useMemo(
     () =>
@@ -283,14 +287,15 @@ export default function BetsPage() {
     [teams]
   );
 
-  // All personas seen across every bet (not filtered), used to populate the
-  // AddBetForm's persona picker and the filter control below - always
-  // includes the "Datong Dave" default even before any bets exist for it.
+  // All personas seen across bets AND futures picks, so a persona added in
+  // either place shows up as an option in both - always includes "Datong
+  // Dave" even before any bets/picks exist for it.
   const existingPersonas = useMemo(() => {
     const set = new Set<string>(["Datong Dave"]);
     for (const b of betRows ?? []) set.add(b.persona);
+    for (const p of futurePicks ?? []) set.add(p.persona);
     return [...set].sort();
-  }, [betRows]);
+  }, [betRows, futurePicks]);
 
   const [personaFilter, setPersonaFilter] = useState<string>("All");
 
@@ -343,6 +348,34 @@ export default function BetsPage() {
     <>
       <TopBar title="Bets" />
       <main className="mx-auto max-w-2xl px-3 pt-4 pb-6">
+        <div className="mb-4 flex rounded-full border border-border bg-surface p-1">
+          {(["bets", "futures"] as const).map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={clsx(
+                "flex-1 rounded-full py-1.5 text-sm font-medium transition-colors",
+                activeTab === tab ? "bg-accent text-white" : "text-muted"
+              )}
+            >
+              {tab === "bets" ? "My Bets" : "Futures"}
+            </button>
+          ))}
+        </div>
+
+        {activeTab === "futures" && (
+          <FuturesBoard
+            teams={teams}
+            existingPersonas={existingPersonas}
+            picks={futurePicks}
+            loading={futuresLoading}
+            error={futuresError}
+            reload={reloadFutures}
+          />
+        )}
+
+        {activeTab === "bets" && (
+          <>
         {loading && (
           <div className="space-y-3">
             {Array.from({ length: 3 }).map((_, i) => (
@@ -519,6 +552,8 @@ export default function BetsPage() {
               ))}
             </div>
           </div>
+        )}
+          </>
         )}
       </main>
     </>

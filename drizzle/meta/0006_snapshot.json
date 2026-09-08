@@ -1,0 +1,879 @@
+{
+  "id": "d3ce4f19-577c-4d80-aca0-652ccf87ada0",
+  "prevId": "965ad9f3-c2dc-4a96-b3b7-93b965ea0f55",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.app_config": {
+      "name": "app_config",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "'singleton'"
+        },
+        "season": {
+          "name": "season",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 2026
+        },
+        "total_budget": {
+          "name": "total_budget",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 400
+        },
+        "max_team_value": {
+          "name": "max_team_value",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 47
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.draft_picks": {
+      "name": "draft_picks",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "season": {
+          "name": "season",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "team_id": {
+          "name": "team_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "player_id": {
+          "name": "player_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "paid": {
+          "name": "paid",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "round": {
+          "name": "round",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "preseason_ou": {
+          "name": "preseason_ou",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "athletic_projection": {
+          "name": "athletic_projection",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "draft_picks_team_id_teams_id_fk": {
+          "name": "draft_picks_team_id_teams_id_fk",
+          "tableFrom": "draft_picks",
+          "tableTo": "teams",
+          "columnsFrom": [
+            "team_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "draft_picks_player_id_players_id_fk": {
+          "name": "draft_picks_player_id_players_id_fk",
+          "tableFrom": "draft_picks",
+          "tableTo": "players",
+          "columnsFrom": [
+            "player_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "draft_picks_team_id_unique": {
+          "name": "draft_picks_team_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "team_id"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.games": {
+      "name": "games",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "season": {
+          "name": "season",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "week": {
+          "name": "week",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "season_type": {
+          "name": "season_type",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'REG'"
+        },
+        "date": {
+          "name": "date",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "home_team_id": {
+          "name": "home_team_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "away_team_id": {
+          "name": "away_team_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "home_score": {
+          "name": "home_score",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "away_score": {
+          "name": "away_score",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "completed": {
+          "name": "completed",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": true,
+          "default": false
+        },
+        "espn_event_id": {
+          "name": "espn_event_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {
+        "games_season_week_idx": {
+          "name": "games_season_week_idx",
+          "columns": [
+            {
+              "expression": "season",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "week",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": false,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "games_home_team_id_teams_id_fk": {
+          "name": "games_home_team_id_teams_id_fk",
+          "tableFrom": "games",
+          "tableTo": "teams",
+          "columnsFrom": [
+            "home_team_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        },
+        "games_away_team_id_teams_id_fk": {
+          "name": "games_away_team_id_teams_id_fk",
+          "tableFrom": "games",
+          "tableTo": "teams",
+          "columnsFrom": [
+            "away_team_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "games_espn_event_id_unique": {
+          "name": "games_espn_event_id_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "espn_event_id"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.players": {
+      "name": "players",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "players_name_unique": {
+          "name": "players_name_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "name"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.sync_log": {
+      "name": "sync_log",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "source": {
+          "name": "source",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ran_at": {
+          "name": "ran_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "status": {
+          "name": "status",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "message": {
+          "name": "message",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.team_ratings": {
+      "name": "team_ratings",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "season": {
+          "name": "season",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "week": {
+          "name": "week",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "team_id": {
+          "name": "team_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "source": {
+          "name": "source",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'nfelo'"
+        },
+        "nfelo_rating": {
+          "name": "nfelo_rating",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "qb_adj": {
+          "name": "qb_adj",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "value": {
+          "name": "value",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "wow": {
+          "name": "wow",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "ytd": {
+          "name": "ytd",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "off_play": {
+          "name": "off_play",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "off_pass": {
+          "name": "off_pass",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "off_rush": {
+          "name": "off_rush",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "def_play": {
+          "name": "def_play",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "def_pass": {
+          "name": "def_pass",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "def_rush": {
+          "name": "def_rush",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "epa_play": {
+          "name": "epa_play",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "points_for": {
+          "name": "points_for",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "points_against": {
+          "name": "points_against",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "diff": {
+          "name": "diff",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "wins": {
+          "name": "wins",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "pythag_wins": {
+          "name": "pythag_wins",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "elo": {
+          "name": "elo",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "film": {
+          "name": "film",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "team_ratings_unique": {
+          "name": "team_ratings_unique",
+          "columns": [
+            {
+              "expression": "season",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "week",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "team_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "team_ratings_team_id_teams_id_fk": {
+          "name": "team_ratings_team_id_teams_id_fk",
+          "tableFrom": "team_ratings",
+          "tableTo": "teams",
+          "columnsFrom": [
+            "team_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.teams": {
+      "name": "teams",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name": {
+          "name": "name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "short_name": {
+          "name": "short_name",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "abbr": {
+          "name": "abbr",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "conference": {
+          "name": "conference",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "division": {
+          "name": "division",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "logo_url": {
+          "name": "logo_url",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "teams_abbr_unique": {
+          "name": "teams_abbr_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "abbr"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.bets": {
+      "name": "bets",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "season": {
+          "name": "season",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "week": {
+          "name": "week",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "team_id": {
+          "name": "team_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "persona": {
+          "name": "persona",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'Datong Dave'"
+        },
+        "spread": {
+          "name": "spread",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "juice": {
+          "name": "juice",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": -107
+        },
+        "units": {
+          "name": "units",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 1
+        },
+        "closing_line": {
+          "name": "closing_line",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "notes": {
+          "name": "notes",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "bets_unique": {
+          "name": "bets_unique",
+          "columns": [
+            {
+              "expression": "season",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "week",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "team_id",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "persona",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {
+        "bets_team_id_teams_id_fk": {
+          "name": "bets_team_id_teams_id_fk",
+          "tableFrom": "bets",
+          "tableTo": "teams",
+          "columnsFrom": [
+            "team_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "no action",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.future_picks": {
+      "name": "future_picks",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "season": {
+          "name": "season",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "persona": {
+          "name": "persona",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "'Datong Dave'"
+        },
+        "category": {
+          "name": "category",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "value": {
+          "name": "value",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "updated_at": {
+          "name": "updated_at",
+          "type": "timestamp",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {
+        "future_picks_unique": {
+          "name": "future_picks_unique",
+          "columns": [
+            {
+              "expression": "season",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "persona",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            },
+            {
+              "expression": "category",
+              "isExpression": false,
+              "asc": true,
+              "nulls": "last"
+            }
+          ],
+          "isUnique": true,
+          "concurrently": false,
+          "method": "btree",
+          "with": {}
+        }
+      },
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

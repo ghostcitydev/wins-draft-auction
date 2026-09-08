@@ -129,6 +129,29 @@ export const bets = pgTable(
   (table) => [uniqueIndex("bets_unique").on(table.season, table.week, table.teamId, table.persona)]
 );
 
+/**
+ * A single "futures" prediction - a preseason pick that isn't tied to any
+ * one game, spanning the playoff bracket (seeds/conference champs/Super
+ * Bowl champ) and award categories (MVP, Coach of the Year, etc - see
+ * src/lib/future-categories.ts for the fixed category list). Purely a
+ * side-by-side comparison across personas - unlike `bets`, there's no
+ * grading/scoring against a real outcome. `value` is a team abbreviation
+ * for "team"-type categories or free text (a player/coach name) for
+ * "text"-type categories.
+ */
+export const futurePicks = pgTable(
+  "future_picks",
+  {
+    id: text("id").primaryKey().$defaultFn(() => createId()),
+    season: integer("season").notNull(),
+    persona: text("persona").notNull().default("Datong Dave"),
+    category: text("category").notNull(),
+    value: text("value").notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().notNull(),
+  },
+  (table) => [uniqueIndex("future_picks_unique").on(table.season, table.persona, table.category)]
+);
+
 export const syncLog = pgTable("sync_log", {
   id: text("id").primaryKey().$defaultFn(() => createId()),
   source: text("source").notNull(),
