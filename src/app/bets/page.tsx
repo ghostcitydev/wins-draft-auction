@@ -27,18 +27,21 @@ const fmtSpread = (n: number) => fmtSigned(n, 1);
 const fmtJuice = (n: number) => fmtSigned(n, 0);
 const fmtClv = (n: number | null) => (n === null ? "—" : fmtSigned(n, 1));
 
-function resultBadge(bet: BetRow) {
+/** Small inline text (not a pill) - meant to sit in the same small muted
+ * meta line as "Wk 1 · Sep 14 · -107 · 1.00u risked" rather than crowd the
+ * row header, which is what pushed "Datong Dave" off the edge on mobile. */
+function resultLabel(bet: BetRow) {
   if (!bet.result) {
-    return <span className="rounded-full bg-surface-2 px-2 py-0.5 text-[11px] text-muted">Pending</span>;
+    return <span className="text-muted">Pending</span>;
   }
   const label = bet.result === "win" ? "Win" : bet.result === "loss" ? "Loss" : "Push";
   return (
     <span
       className={clsx(
-        "rounded-full px-2 py-0.5 text-[11px] font-semibold",
-        bet.result === "win" && "bg-accent/20 text-accent",
-        bet.result === "loss" && "bg-danger/20 text-danger",
-        bet.result === "push" && "bg-surface-2 text-muted"
+        "font-medium",
+        bet.result === "win" && "text-accent",
+        bet.result === "loss" && "text-danger",
+        bet.result === "push" && "text-muted"
       )}
     >
       {label}
@@ -466,7 +469,10 @@ export default function BetsPage() {
                           Wk {b.week}
                           {b.gameDate && ` · ${new Date(b.gameDate).toLocaleDateString(undefined, { month: "short", day: "numeric" })}`}
                           {" · "}
-                          {fmtJuice(b.juice)} · {fmtUnits(b.units, true)} risked
+                          {fmtJuice(b.juice)}
+                        </p>
+                        <p className="text-[11px] text-muted">
+                          {fmtUnits(b.units, true)} risked · {resultLabel(b)}
                         </p>
                       </div>
                     </div>
@@ -474,7 +480,6 @@ export default function BetsPage() {
                       <span className="rounded-full bg-surface-2 px-2 py-0.5 text-[11px] text-muted">
                         {b.persona}
                       </span>
-                      {resultBadge(b)}
                       <button
                         onClick={() => handleDelete(b.id)}
                         disabled={deletingId === b.id}
