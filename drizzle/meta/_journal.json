@@ -29,6 +29,13 @@
       "when": 1788804000000,
       "tag": "0003_add_bets",
       "breakpoints": true
+    },
+    {
+      "idx": 4,
+      "version": "7",
+      "when": 1788807600000,
+      "tag": "0004_bets_default_juice",
+      "breakpoints": true
     }
   ]
 }

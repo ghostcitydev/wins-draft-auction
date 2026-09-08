@@ -67,7 +67,7 @@ function AddBetForm({
   const [week, setWeek] = useState("1");
   const [teamAbbr, setTeamAbbr] = useState(teamOptions[0]?.abbr ?? "");
   const [spread, setSpread] = useState("");
-  const [juice, setJuice] = useState("-110");
+  const [juice, setJuice] = useState("-107");
   const [units, setUnits] = useState("1");
   const [error, setError] = useState<string | null>(null);
   const [saving, setSaving] = useState(false);

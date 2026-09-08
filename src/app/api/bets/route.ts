@@ -65,7 +65,7 @@ export async function POST(req: NextRequest) {
         week,
         teamId: team.id,
         spread,
-        juice: body.juice ?? -110,
+        juice: body.juice ?? -107,
         units: body.units ?? 1,
         notes: body.notes ?? null,
       })

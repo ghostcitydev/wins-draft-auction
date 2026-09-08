@@ -106,7 +106,7 @@ export const teamRatings = pgTable(
  * src/lib/bets.ts) rather than stored here - so it's never stale and never
  * requires a manual "mark as graded" step. `spread`/`closingLine` are both
  * signed relative to `teamId` (the side taken), e.g. +2.5 = getting points,
- * -6.5 = laying points. `juice` is American odds (e.g. -110).
+ * -6.5 = laying points. `juice` is American odds (e.g. -107).
  */
 export const bets = pgTable(
   "bets",
@@ -116,7 +116,7 @@ export const bets = pgTable(
     week: integer("week").notNull(),
     teamId: text("team_id").notNull().references(() => teams.id),
     spread: real("spread").notNull(),
-    juice: integer("juice").notNull().default(-110),
+    juice: integer("juice").notNull().default(-107),
     units: real("units").notNull().default(1),
     closingLine: real("closing_line"),
     notes: text("notes"),

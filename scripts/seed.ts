@@ -7,12 +7,13 @@ loadEnv({ path: ".env.local" });
 loadEnv(); // fall back to a plain .env if present, without overriding
 import { and, eq } from "drizzle-orm";
 import { db } from "../src/db";
-import { teams, players, draftPicks, appConfig, teamRatings, bets } from "../src/db/schema";
+import { teams, players, draftPicks, appConfig, teamRatings, bets, games } from "../src/db/schema";
 import { ABBR_ALIASES } from "../src/lib/team-aliases";
 import teamsMaster from "../prisma/seed-data/teams-master.json";
 import draftPicks2026 from "../prisma/seed-data/draft-picks-2026.json";
 import teamRatings2025 from "../prisma/seed-data/team-ratings-2025.json";
 import betsWeek1 from "../prisma/seed-data/bets-2026-week1.json";
+import schedule2026 from "../prisma/seed-data/schedule-2026.json";
 
 async function main() {
   const config = await db.select().from(appConfig).where(eq(appConfig.id, "singleton"));
@@ -195,6 +196,51 @@ async function main() {
       await db.insert(bets).values(values);
     }
   }
+
+  // Real, official 2026 regular-season schedule (source: the user's own
+  // schedule export), used only to *backfill gaps* - if ESPN's live sync
+  // already has a game for a given (season, week, home, away), it's left
+  // completely alone (ESPN is the authoritative source for anything that's
+  // actually been played). This just guarantees the full schedule exists -
+  // needed so Bets can always resolve an opponent/date even if a live sync
+  // hasn't run recently (see the connection-leak incident notes).
+  console.log(`Backfilling ${schedule2026.length}-game 2026 schedule (gaps only)...`);
+  let scheduleInserted = 0;
+  for (const g of schedule2026 as Array<{ week: number; date: string; away: string; home: string }>) {
+    const homeTeam = (await db.select().from(teams).where(eq(teams.name, g.home)))[0];
+    const awayTeam = (await db.select().from(teams).where(eq(teams.name, g.away)))[0];
+    if (!homeTeam || !awayTeam) {
+      console.warn(`  skip ${g.away} @ ${g.home} (wk ${g.week}) - team not found`);
+      continue;
+    }
+
+    const existingGame = await db
+      .select()
+      .from(games)
+      .where(
+        and(
+          eq(games.season, season),
+          eq(games.week, g.week),
+          eq(games.homeTeamId, homeTeam.id),
+          eq(games.awayTeamId, awayTeam.id)
+        )
+      );
+    if (existingGame.length) continue; // already synced from ESPN - don't touch it
+
+    await db.insert(games).values({
+      season,
+      week: g.week,
+      seasonType: "REG",
+      date: new Date(`${g.date}T00:00:00.000Z`),
+      homeTeamId: homeTeam.id,
+      awayTeamId: awayTeam.id,
+      homeScore: null,
+      awayScore: null,
+      completed: false,
+    });
+    scheduleInserted++;
+  }
+  console.log(`  inserted ${scheduleInserted} missing games (rest already existed).`);
 
   console.log("Done.");
   process.exit(0);

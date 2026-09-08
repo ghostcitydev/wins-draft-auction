@@ -1,0 +1,1634 @@
+[
+  {
+    "week": 1,
+    "date": "2026-09-09",
+    "away": "New England Patriots",
+    "home": "Seattle Seahawks"
+  },
+  {
+    "week": 1,
+    "date": "2026-09-10",
+    "away": "San Francisco 49ers",
+    "home": "Los Angeles Rams"
+  },
+  {
+    "week": 1,
+    "date": "2026-09-13",
+    "away": "Chicago Bears",
+    "home": "Carolina Panthers"
+  },
+  {
+    "week": 1,
+    "date": "2026-09-13",
+    "away": "Tampa Bay Buccaneers",
+    "home": "Cincinnati Bengals"
+  },
+  {
+    "week": 1,
+    "date": "2026-09-13",
+    "away": "Baltimore Ravens",
+    "home": "Indianapolis Colts"
+  },
+  {
+    "week": 1,
+    "date": "2026-09-13",
+    "away": "New Orleans Saints",
+    "home": "Detroit Lions"
+  },
+  {
+    "week": 1,
+    "date": "2026-09-13",
+    "away": "Buffalo Bills",
+    "home": "Houston Texans"
+  },
+  {
+    "week": 1,
+    "date": "2026-09-13",
+    "away": "Cleveland Browns",
+    "home": "Jacksonville Jaguars"
+  },
+  {
+    "week": 1,
+    "date": "2026-09-13",
+    "away": "New York Jets",
+    "home": "Tennessee Titans"
+  },
+  {
+    "week": 1,
+    "date": "2026-09-13",
+    "away": "Atlanta Falcons",
+    "home": "Pittsburgh Steelers"
+  },
+  {
+    "week": 1,
+    "date": "2026-09-13",
+    "away": "Green Bay Packers",
+    "home": "Minnesota Vikings"
+  },
+  {
+    "week": 1,
+    "date": "2026-09-13",
+    "away": "Washington Commanders",
+    "home": "Philadelphia Eagles"
+  },
+  {
+    "week": 1,
+    "date": "2026-09-13",
+    "away": "Miami Dolphins",
+    "home": "Las Vegas Raiders"
+  },
+  {
+    "week": 1,
+    "date": "2026-09-13",
+    "away": "Arizona Cardinals",
+    "home": "Los Angeles Chargers"
+  },
+  {
+    "week": 1,
+    "date": "2026-09-13",
+    "away": "Dallas Cowboys",
+    "home": "New York Giants"
+  },
+  {
+    "week": 1,
+    "date": "2026-09-14",
+    "away": "Denver Broncos",
+    "home": "Kansas City Chiefs"
+  },
+  {
+    "week": 2,
+    "date": "2026-09-17",
+    "away": "Detroit Lions",
+    "home": "Buffalo Bills"
+  },
+  {
+    "week": 2,
+    "date": "2026-09-20",
+    "away": "Carolina Panthers",
+    "home": "Atlanta Falcons"
+  },
+  {
+    "week": 2,
+    "date": "2026-09-20",
+    "away": "Minnesota Vikings",
+    "home": "Chicago Bears"
+  },
+  {
+    "week": 2,
+    "date": "2026-09-20",
+    "away": "Cincinnati Bengals",
+    "home": "Houston Texans"
+  },
+  {
+    "week": 2,
+    "date": "2026-09-20",
+    "away": "Pittsburgh Steelers",
+    "home": "New England Patriots"
+  },
+  {
+    "week": 2,
+    "date": "2026-09-20",
+    "away": "Green Bay Packers",
+    "home": "New York Jets"
+  },
+  {
+    "week": 2,
+    "date": "2026-09-20",
+    "away": "Philadelphia Eagles",
+    "home": "Tennessee Titans"
+  },
+  {
+    "week": 2,
+    "date": "2026-09-20",
+    "away": "New Orleans Saints",
+    "home": "Baltimore Ravens"
+  },
+  {
+    "week": 2,
+    "date": "2026-09-20",
+    "away": "Cleveland Browns",
+    "home": "Tampa Bay Buccaneers"
+  },
+  {
+    "week": 2,
+    "date": "2026-09-20",
+    "away": "Jacksonville Jaguars",
+    "home": "Denver Broncos"
+  },
+  {
+    "week": 2,
+    "date": "2026-09-20",
+    "away": "Las Vegas Raiders",
+    "home": "Los Angeles Chargers"
+  },
+  {
+    "week": 2,
+    "date": "2026-09-20",
+    "away": "Seattle Seahawks",
+    "home": "Arizona Cardinals"
+  },
+  {
+    "week": 2,
+    "date": "2026-09-20",
+    "away": "Washington Commanders",
+    "home": "Dallas Cowboys"
+  },
+  {
+    "week": 2,
+    "date": "2026-09-20",
+    "away": "Miami Dolphins",
+    "home": "San Francisco 49ers"
+  },
+  {
+    "week": 2,
+    "date": "2026-09-20",
+    "away": "Indianapolis Colts",
+    "home": "Kansas City Chiefs"
+  },
+  {
+    "week": 2,
+    "date": "2026-09-21",
+    "away": "New York Giants",
+    "home": "Los Angeles Rams"
+  },
+  {
+    "week": 3,
+    "date": "2026-09-24",
+    "away": "Atlanta Falcons",
+    "home": "Green Bay Packers"
+  },
+  {
+    "week": 3,
+    "date": "2026-09-27",
+    "away": "Los Angeles Chargers",
+    "home": "Buffalo Bills"
+  },
+  {
+    "week": 3,
+    "date": "2026-09-27",
+    "away": "Carolina Panthers",
+    "home": "Cleveland Browns"
+  },
+  {
+    "week": 3,
+    "date": "2026-09-27",
+    "away": "Houston Texans",
+    "home": "Indianapolis Colts"
+  },
+  {
+    "week": 3,
+    "date": "2026-09-27",
+    "away": "New York Jets",
+    "home": "Detroit Lions"
+  },
+  {
+    "week": 3,
+    "date": "2026-09-27",
+    "away": "New England Patriots",
+    "home": "Jacksonville Jaguars"
+  },
+  {
+    "week": 3,
+    "date": "2026-09-27",
+    "away": "Kansas City Chiefs",
+    "home": "Miami Dolphins"
+  },
+  {
+    "week": 3,
+    "date": "2026-09-27",
+    "away": "Tennessee Titans",
+    "home": "New York Giants"
+  },
+  {
+    "week": 3,
+    "date": "2026-09-27",
+    "away": "Cincinnati Bengals",
+    "home": "Pittsburgh Steelers"
+  },
+  {
+    "week": 3,
+    "date": "2026-09-27",
+    "away": "Seattle Seahawks",
+    "home": "Washington Commanders"
+  },
+  {
+    "week": 3,
+    "date": "2026-09-27",
+    "away": "Arizona Cardinals",
+    "home": "San Francisco 49ers"
+  },
+  {
+    "week": 3,
+    "date": "2026-09-27",
+    "away": "Minnesota Vikings",
+    "home": "Tampa Bay Buccaneers"
+  },
+  {
+    "week": 3,
+    "date": "2026-09-27",
+    "away": "Baltimore Ravens",
+    "home": "Dallas Cowboys"
+  },
+  {
+    "week": 3,
+    "date": "2026-09-27",
+    "away": "Las Vegas Raiders",
+    "home": "New Orleans Saints"
+  },
+  {
+    "week": 3,
+    "date": "2026-09-27",
+    "away": "Los Angeles Rams",
+    "home": "Denver Broncos"
+  },
+  {
+    "week": 3,
+    "date": "2026-09-28",
+    "away": "Philadelphia Eagles",
+    "home": "Chicago Bears"
+  },
+  {
+    "week": 4,
+    "date": "2026-10-01",
+    "away": "Pittsburgh Steelers",
+    "home": "Cleveland Browns"
+  },
+  {
+    "week": 4,
+    "date": "2026-10-04",
+    "away": "Indianapolis Colts",
+    "home": "Washington Commanders"
+  },
+  {
+    "week": 4,
+    "date": "2026-10-04",
+    "away": "New England Patriots",
+    "home": "Buffalo Bills"
+  },
+  {
+    "week": 4,
+    "date": "2026-10-04",
+    "away": "New York Jets",
+    "home": "Chicago Bears"
+  },
+  {
+    "week": 4,
+    "date": "2026-10-04",
+    "away": "Jacksonville Jaguars",
+    "home": "Cincinnati Bengals"
+  },
+  {
+    "week": 4,
+    "date": "2026-10-04",
+    "away": "Dallas Cowboys",
+    "home": "Houston Texans"
+  },
+  {
+    "week": 4,
+    "date": "2026-10-04",
+    "away": "Arizona Cardinals",
+    "home": "New York Giants"
+  },
+  {
+    "week": 4,
+    "date": "2026-10-04",
+    "away": "Los Angeles Rams",
+    "home": "Philadelphia Eagles"
+  },
+  {
+    "week": 4,
+    "date": "2026-10-04",
+    "away": "Tennessee Titans",
+    "home": "Baltimore Ravens"
+  },
+  {
+    "week": 4,
+    "date": "2026-10-04",
+    "away": "Green Bay Packers",
+    "home": "Tampa Bay Buccaneers"
+  },
+  {
+    "week": 4,
+    "date": "2026-10-04",
+    "away": "Miami Dolphins",
+    "home": "Minnesota Vikings"
+  },
+  {
+    "week": 4,
+    "date": "2026-10-04",
+    "away": "Kansas City Chiefs",
+    "home": "Las Vegas Raiders"
+  },
+  {
+    "week": 4,
+    "date": "2026-10-04",
+    "away": "Los Angeles Chargers",
+    "home": "Seattle Seahawks"
+  },
+  {
+    "week": 4,
+    "date": "2026-10-04",
+    "away": "Denver Broncos",
+    "home": "San Francisco 49ers"
+  },
+  {
+    "week": 4,
+    "date": "2026-10-04",
+    "away": "Detroit Lions",
+    "home": "Carolina Panthers"
+  },
+  {
+    "week": 4,
+    "date": "2026-10-05",
+    "away": "Atlanta Falcons",
+    "home": "New Orleans Saints"
+  },
+  {
+    "week": 5,
+    "date": "2026-10-08",
+    "away": "Tampa Bay Buccaneers",
+    "home": "Dallas Cowboys"
+  },
+  {
+    "week": 5,
+    "date": "2026-10-11",
+    "away": "Philadelphia Eagles",
+    "home": "Jacksonville Jaguars"
+  },
+  {
+    "week": 5,
+    "date": "2026-10-11",
+    "away": "Cincinnati Bengals",
+    "home": "Miami Dolphins"
+  },
+  {
+    "week": 5,
+    "date": "2026-10-11",
+    "away": "Minnesota Vikings",
+    "home": "New Orleans Saints"
+  },
+  {
+    "week": 5,
+    "date": "2026-10-11",
+    "away": "Las Vegas Raiders",
+    "home": "New England Patriots"
+  },
+  {
+    "week": 5,
+    "date": "2026-10-11",
+    "away": "Cleveland Browns",
+    "home": "New York Jets"
+  },
+  {
+    "week": 5,
+    "date": "2026-10-11",
+    "away": "Houston Texans",
+    "home": "Tennessee Titans"
+  },
+  {
+    "week": 5,
+    "date": "2026-10-11",
+    "away": "Indianapolis Colts",
+    "home": "Pittsburgh Steelers"
+  },
+  {
+    "week": 5,
+    "date": "2026-10-11",
+    "away": "New York Giants",
+    "home": "Washington Commanders"
+  },
+  {
+    "week": 5,
+    "date": "2026-10-11",
+    "away": "Denver Broncos",
+    "home": "Los Angeles Chargers"
+  },
+  {
+    "week": 5,
+    "date": "2026-10-11",
+    "away": "Detroit Lions",
+    "home": "Arizona Cardinals"
+  },
+  {
+    "week": 5,
+    "date": "2026-10-11",
+    "away": "Chicago Bears",
+    "home": "Green Bay Packers"
+  },
+  {
+    "week": 5,
+    "date": "2026-10-11",
+    "away": "San Francisco 49ers",
+    "home": "Seattle Seahawks"
+  },
+  {
+    "week": 5,
+    "date": "2026-10-11",
+    "away": "Baltimore Ravens",
+    "home": "Atlanta Falcons"
+  },
+  {
+    "week": 5,
+    "date": "2026-10-12",
+    "away": "Buffalo Bills",
+    "home": "Los Angeles Rams"
+  },
+  {
+    "week": 6,
+    "date": "2026-10-15",
+    "away": "Seattle Seahawks",
+    "home": "Denver Broncos"
+  },
+  {
+    "week": 6,
+    "date": "2026-10-18",
+    "away": "Houston Texans",
+    "home": "Jacksonville Jaguars"
+  },
+  {
+    "week": 6,
+    "date": "2026-10-18",
+    "away": "Chicago Bears",
+    "home": "Atlanta Falcons"
+  },
+  {
+    "week": 6,
+    "date": "2026-10-18",
+    "away": "Baltimore Ravens",
+    "home": "Cleveland Browns"
+  },
+  {
+    "week": 6,
+    "date": "2026-10-18",
+    "away": "Tennessee Titans",
+    "home": "Indianapolis Colts"
+  },
+  {
+    "week": 6,
+    "date": "2026-10-18",
+    "away": "New York Jets",
+    "home": "New England Patriots"
+  },
+  {
+    "week": 6,
+    "date": "2026-10-18",
+    "away": "New Orleans Saints",
+    "home": "New York Giants"
+  },
+  {
+    "week": 6,
+    "date": "2026-10-18",
+    "away": "Carolina Panthers",
+    "home": "Philadelphia Eagles"
+  },
+  {
+    "week": 6,
+    "date": "2026-10-18",
+    "away": "Pittsburgh Steelers",
+    "home": "Tampa Bay Buccaneers"
+  },
+  {
+    "week": 6,
+    "date": "2026-10-18",
+    "away": "Arizona Cardinals",
+    "home": "Los Angeles Rams"
+  },
+  {
+    "week": 6,
+    "date": "2026-10-18",
+    "away": "Los Angeles Chargers",
+    "home": "Kansas City Chiefs"
+  },
+  {
+    "week": 6,
+    "date": "2026-10-18",
+    "away": "Buffalo Bills",
+    "home": "Las Vegas Raiders"
+  },
+  {
+    "week": 6,
+    "date": "2026-10-18",
+    "away": "Dallas Cowboys",
+    "home": "Green Bay Packers"
+  },
+  {
+    "week": 6,
+    "date": "2026-10-19",
+    "away": "Washington Commanders",
+    "home": "San Francisco 49ers"
+  },
+  {
+    "week": 7,
+    "date": "2026-10-22",
+    "away": "New England Patriots",
+    "home": "Chicago Bears"
+  },
+  {
+    "week": 7,
+    "date": "2026-10-25",
+    "away": "Pittsburgh Steelers",
+    "home": "New Orleans Saints"
+  },
+  {
+    "week": 7,
+    "date": "2026-10-25",
+    "away": "San Francisco 49ers",
+    "home": "Atlanta Falcons"
+  },
+  {
+    "week": 7,
+    "date": "2026-10-25",
+    "away": "Tampa Bay Buccaneers",
+    "home": "Carolina Panthers"
+  },
+  {
+    "week": 7,
+    "date": "2026-10-25",
+    "away": "New York Giants",
+    "home": "Houston Texans"
+  },
+  {
+    "week": 7,
+    "date": "2026-10-25",
+    "away": "Indianapolis Colts",
+    "home": "Minnesota Vikings"
+  },
+  {
+    "week": 7,
+    "date": "2026-10-25",
+    "away": "Miami Dolphins",
+    "home": "New York Jets"
+  },
+  {
+    "week": 7,
+    "date": "2026-10-25",
+    "away": "Cleveland Browns",
+    "home": "Tennessee Titans"
+  },
+  {
+    "week": 7,
+    "date": "2026-10-25",
+    "away": "Cincinnati Bengals",
+    "home": "Baltimore Ravens"
+  },
+  {
+    "week": 7,
+    "date": "2026-10-25",
+    "away": "Denver Broncos",
+    "home": "Arizona Cardinals"
+  },
+  {
+    "week": 7,
+    "date": "2026-10-25",
+    "away": "Green Bay Packers",
+    "home": "Detroit Lions"
+  },
+  {
+    "week": 7,
+    "date": "2026-10-25",
+    "away": "Los Angeles Rams",
+    "home": "Las Vegas Raiders"
+  },
+  {
+    "week": 7,
+    "date": "2026-10-25",
+    "away": "Kansas City Chiefs",
+    "home": "Seattle Seahawks"
+  },
+  {
+    "week": 7,
+    "date": "2026-10-26",
+    "away": "Dallas Cowboys",
+    "home": "Philadelphia Eagles"
+  },
+  {
+    "week": 8,
+    "date": "2026-10-29",
+    "away": "Carolina Panthers",
+    "home": "Green Bay Packers"
+  },
+  {
+    "week": 8,
+    "date": "2026-11-01",
+    "away": "Baltimore Ravens",
+    "home": "Buffalo Bills"
+  },
+  {
+    "week": 8,
+    "date": "2026-11-01",
+    "away": "Tennessee Titans",
+    "home": "Cincinnati Bengals"
+  },
+  {
+    "week": 8,
+    "date": "2026-11-01",
+    "away": "Arizona Cardinals",
+    "home": "Dallas Cowboys"
+  },
+  {
+    "week": 8,
+    "date": "2026-11-01",
+    "away": "Minnesota Vikings",
+    "home": "Detroit Lions"
+  },
+  {
+    "week": 8,
+    "date": "2026-11-01",
+    "away": "Indianapolis Colts",
+    "home": "Jacksonville Jaguars"
+  },
+  {
+    "week": 8,
+    "date": "2026-11-01",
+    "away": "Las Vegas Raiders",
+    "home": "New York Jets"
+  },
+  {
+    "week": 8,
+    "date": "2026-11-01",
+    "away": "Cleveland Browns",
+    "home": "Pittsburgh Steelers"
+  },
+  {
+    "week": 8,
+    "date": "2026-11-01",
+    "away": "Atlanta Falcons",
+    "home": "Tampa Bay Buccaneers"
+  },
+  {
+    "week": 8,
+    "date": "2026-11-01",
+    "away": "Los Angeles Chargers",
+    "home": "Los Angeles Rams"
+  },
+  {
+    "week": 8,
+    "date": "2026-11-01",
+    "away": "Kansas City Chiefs",
+    "home": "Denver Broncos"
+  },
+  {
+    "week": 8,
+    "date": "2026-11-01",
+    "away": "New England Patriots",
+    "home": "Miami Dolphins"
+  },
+  {
+    "week": 8,
+    "date": "2026-11-01",
+    "away": "Philadelphia Eagles",
+    "home": "Washington Commanders"
+  },
+  {
+    "week": 8,
+    "date": "2026-11-02",
+    "away": "Chicago Bears",
+    "home": "Seattle Seahawks"
+  },
+  {
+    "week": 9,
+    "date": "2026-11-05",
+    "away": "Jacksonville Jaguars",
+    "home": "Baltimore Ravens"
+  },
+  {
+    "week": 9,
+    "date": "2026-11-08",
+    "away": "Cincinnati Bengals",
+    "home": "Atlanta Falcons"
+  },
+  {
+    "week": 9,
+    "date": "2026-11-08",
+    "away": "Denver Broncos",
+    "home": "Carolina Panthers"
+  },
+  {
+    "week": 9,
+    "date": "2026-11-08",
+    "away": "Dallas Cowboys",
+    "home": "Indianapolis Colts"
+  },
+  {
+    "week": 9,
+    "date": "2026-11-08",
+    "away": "New York Jets",
+    "home": "Kansas City Chiefs"
+  },
+  {
+    "week": 9,
+    "date": "2026-11-08",
+    "away": "Detroit Lions",
+    "home": "Miami Dolphins"
+  },
+  {
+    "week": 9,
+    "date": "2026-11-08",
+    "away": "Cleveland Browns",
+    "home": "New Orleans Saints"
+  },
+  {
+    "week": 9,
+    "date": "2026-11-08",
+    "away": "New York Giants",
+    "home": "Philadelphia Eagles"
+  },
+  {
+    "week": 9,
+    "date": "2026-11-08",
+    "away": "Los Angeles Rams",
+    "home": "Washington Commanders"
+  },
+  {
+    "week": 9,
+    "date": "2026-11-08",
+    "away": "Houston Texans",
+    "home": "Los Angeles Chargers"
+  },
+  {
+    "week": 9,
+    "date": "2026-11-08",
+    "away": "Las Vegas Raiders",
+    "home": "San Francisco 49ers"
+  },
+  {
+    "week": 9,
+    "date": "2026-11-08",
+    "away": "Green Bay Packers",
+    "home": "New England Patriots"
+  },
+  {
+    "week": 9,
+    "date": "2026-11-08",
+    "away": "Arizona Cardinals",
+    "home": "Seattle Seahawks"
+  },
+  {
+    "week": 9,
+    "date": "2026-11-08",
+    "away": "Tampa Bay Buccaneers",
+    "home": "Chicago Bears"
+  },
+  {
+    "week": 9,
+    "date": "2026-11-09",
+    "away": "Buffalo Bills",
+    "home": "Minnesota Vikings"
+  },
+  {
+    "week": 10,
+    "date": "2026-11-12",
+    "away": "Washington Commanders",
+    "home": "New York Giants"
+  },
+  {
+    "week": 10,
+    "date": "2026-11-15",
+    "away": "New England Patriots",
+    "home": "Detroit Lions"
+  },
+  {
+    "week": 10,
+    "date": "2026-11-15",
+    "away": "Kansas City Chiefs",
+    "home": "Atlanta Falcons"
+  },
+  {
+    "week": 10,
+    "date": "2026-11-15",
+    "away": "Houston Texans",
+    "home": "Cleveland Browns"
+  },
+  {
+    "week": 10,
+    "date": "2026-11-15",
+    "away": "Miami Dolphins",
+    "home": "Indianapolis Colts"
+  },
+  {
+    "week": 10,
+    "date": "2026-11-15",
+    "away": "Minnesota Vikings",
+    "home": "Green Bay Packers"
+  },
+  {
+    "week": 10,
+    "date": "2026-11-15",
+    "away": "Carolina Panthers",
+    "home": "New Orleans Saints"
+  },
+  {
+    "week": 10,
+    "date": "2026-11-15",
+    "away": "Buffalo Bills",
+    "home": "New York Jets"
+  },
+  {
+    "week": 10,
+    "date": "2026-11-15",
+    "away": "Jacksonville Jaguars",
+    "home": "Tennessee Titans"
+  },
+  {
+    "week": 10,
+    "date": "2026-11-15",
+    "away": "Los Angeles Rams",
+    "home": "Arizona Cardinals"
+  },
+  {
+    "week": 10,
+    "date": "2026-11-15",
+    "away": "Seattle Seahawks",
+    "home": "Las Vegas Raiders"
+  },
+  {
+    "week": 10,
+    "date": "2026-11-15",
+    "away": "San Francisco 49ers",
+    "home": "Dallas Cowboys"
+  },
+  {
+    "week": 10,
+    "date": "2026-11-15",
+    "away": "Pittsburgh Steelers",
+    "home": "Cincinnati Bengals"
+  },
+  {
+    "week": 10,
+    "date": "2026-11-16",
+    "away": "Los Angeles Chargers",
+    "home": "Baltimore Ravens"
+  },
+  {
+    "week": 11,
+    "date": "2026-11-19",
+    "away": "Indianapolis Colts",
+    "home": "Houston Texans"
+  },
+  {
+    "week": 11,
+    "date": "2026-11-22",
+    "away": "Miami Dolphins",
+    "home": "Buffalo Bills"
+  },
+  {
+    "week": 11,
+    "date": "2026-11-22",
+    "away": "Baltimore Ravens",
+    "home": "Carolina Panthers"
+  },
+  {
+    "week": 11,
+    "date": "2026-11-22",
+    "away": "New Orleans Saints",
+    "home": "Chicago Bears"
+  },
+  {
+    "week": 11,
+    "date": "2026-11-22",
+    "away": "Tennessee Titans",
+    "home": "Dallas Cowboys"
+  },
+  {
+    "week": 11,
+    "date": "2026-11-22",
+    "away": "Tampa Bay Buccaneers",
+    "home": "Detroit Lions"
+  },
+  {
+    "week": 11,
+    "date": "2026-11-22",
+    "away": "Arizona Cardinals",
+    "home": "Kansas City Chiefs"
+  },
+  {
+    "week": 11,
+    "date": "2026-11-22",
+    "away": "Jacksonville Jaguars",
+    "home": "New York Giants"
+  },
+  {
+    "week": 11,
+    "date": "2026-11-22",
+    "away": "New York Jets",
+    "home": "Los Angeles Chargers"
+  },
+  {
+    "week": 11,
+    "date": "2026-11-22",
+    "away": "Las Vegas Raiders",
+    "home": "Denver Broncos"
+  },
+  {
+    "week": 11,
+    "date": "2026-11-22",
+    "away": "Pittsburgh Steelers",
+    "home": "Philadelphia Eagles"
+  },
+  {
+    "week": 11,
+    "date": "2026-11-22",
+    "away": "Minnesota Vikings",
+    "home": "San Francisco 49ers"
+  },
+  {
+    "week": 11,
+    "date": "2026-11-23",
+    "away": "Cincinnati Bengals",
+    "home": "Washington Commanders"
+  },
+  {
+    "week": 12,
+    "date": "2026-11-25",
+    "away": "Green Bay Packers",
+    "home": "Los Angeles Rams"
+  },
+  {
+    "week": 12,
+    "date": "2026-11-26",
+    "away": "Chicago Bears",
+    "home": "Detroit Lions"
+  },
+  {
+    "week": 12,
+    "date": "2026-11-26",
+    "away": "Philadelphia Eagles",
+    "home": "Dallas Cowboys"
+  },
+  {
+    "week": 12,
+    "date": "2026-11-26",
+    "away": "Kansas City Chiefs",
+    "home": "Buffalo Bills"
+  },
+  {
+    "week": 12,
+    "date": "2026-11-27",
+    "away": "Denver Broncos",
+    "home": "Pittsburgh Steelers"
+  },
+  {
+    "week": 12,
+    "date": "2026-11-29",
+    "away": "New Orleans Saints",
+    "home": "Cincinnati Bengals"
+  },
+  {
+    "week": 12,
+    "date": "2026-11-29",
+    "away": "Las Vegas Raiders",
+    "home": "Cleveland Browns"
+  },
+  {
+    "week": 12,
+    "date": "2026-11-29",
+    "away": "New York Giants",
+    "home": "Indianapolis Colts"
+  },
+  {
+    "week": 12,
+    "date": "2026-11-29",
+    "away": "Baltimore Ravens",
+    "home": "Houston Texans"
+  },
+  {
+    "week": 12,
+    "date": "2026-11-29",
+    "away": "New York Jets",
+    "home": "Miami Dolphins"
+  },
+  {
+    "week": 12,
+    "date": "2026-11-29",
+    "away": "Atlanta Falcons",
+    "home": "Minnesota Vikings"
+  },
+  {
+    "week": 12,
+    "date": "2026-11-29",
+    "away": "Tennessee Titans",
+    "home": "Jacksonville Jaguars"
+  },
+  {
+    "week": 12,
+    "date": "2026-11-29",
+    "away": "Washington Commanders",
+    "home": "Arizona Cardinals"
+  },
+  {
+    "week": 12,
+    "date": "2026-11-29",
+    "away": "Seattle Seahawks",
+    "home": "San Francisco 49ers"
+  },
+  {
+    "week": 12,
+    "date": "2026-11-29",
+    "away": "New England Patriots",
+    "home": "Los Angeles Chargers"
+  },
+  {
+    "week": 12,
+    "date": "2026-11-30",
+    "away": "Carolina Panthers",
+    "home": "Tampa Bay Buccaneers"
+  },
+  {
+    "week": 13,
+    "date": "2026-12-03",
+    "away": "Kansas City Chiefs",
+    "home": "Los Angeles Rams"
+  },
+  {
+    "week": 13,
+    "date": "2026-12-06",
+    "away": "Detroit Lions",
+    "home": "Atlanta Falcons"
+  },
+  {
+    "week": 13,
+    "date": "2026-12-06",
+    "away": "Jacksonville Jaguars",
+    "home": "Chicago Bears"
+  },
+  {
+    "week": 13,
+    "date": "2026-12-06",
+    "away": "Cincinnati Bengals",
+    "home": "Cleveland Browns"
+  },
+  {
+    "week": 13,
+    "date": "2026-12-06",
+    "away": "Green Bay Packers",
+    "home": "New Orleans Saints"
+  },
+  {
+    "week": 13,
+    "date": "2026-12-06",
+    "away": "San Francisco 49ers",
+    "home": "New York Giants"
+  },
+  {
+    "week": 13,
+    "date": "2026-12-06",
+    "away": "Washington Commanders",
+    "home": "Tennessee Titans"
+  },
+  {
+    "week": 13,
+    "date": "2026-12-06",
+    "away": "Los Angeles Chargers",
+    "home": "Tampa Bay Buccaneers"
+  },
+  {
+    "week": 13,
+    "date": "2026-12-06",
+    "away": "Philadelphia Eagles",
+    "home": "Arizona Cardinals"
+  },
+  {
+    "week": 13,
+    "date": "2026-12-06",
+    "away": "Miami Dolphins",
+    "home": "Denver Broncos"
+  },
+  {
+    "week": 13,
+    "date": "2026-12-06",
+    "away": "Carolina Panthers",
+    "home": "Minnesota Vikings"
+  },
+  {
+    "week": 13,
+    "date": "2026-12-06",
+    "away": "Buffalo Bills",
+    "home": "New England Patriots"
+  },
+  {
+    "week": 13,
+    "date": "2026-12-06",
+    "away": "Houston Texans",
+    "home": "Pittsburgh Steelers"
+  },
+  {
+    "week": 13,
+    "date": "2026-12-07",
+    "away": "Dallas Cowboys",
+    "home": "Seattle Seahawks"
+  },
+  {
+    "week": 14,
+    "date": "2026-12-10",
+    "away": "Minnesota Vikings",
+    "home": "New England Patriots"
+  },
+  {
+    "week": 14,
+    "date": "2026-12-13",
+    "away": "New Orleans Saints",
+    "home": "Carolina Panthers"
+  },
+  {
+    "week": 14,
+    "date": "2026-12-13",
+    "away": "Atlanta Falcons",
+    "home": "Cleveland Browns"
+  },
+  {
+    "week": 14,
+    "date": "2026-12-13",
+    "away": "Tennessee Titans",
+    "home": "Detroit Lions"
+  },
+  {
+    "week": 14,
+    "date": "2026-12-13",
+    "away": "Chicago Bears",
+    "home": "Miami Dolphins"
+  },
+  {
+    "week": 14,
+    "date": "2026-12-13",
+    "away": "Denver Broncos",
+    "home": "New York Jets"
+  },
+  {
+    "week": 14,
+    "date": "2026-12-13",
+    "away": "Indianapolis Colts",
+    "home": "Philadelphia Eagles"
+  },
+  {
+    "week": 14,
+    "date": "2026-12-13",
+    "away": "Tampa Bay Buccaneers",
+    "home": "Baltimore Ravens"
+  },
+  {
+    "week": 14,
+    "date": "2026-12-13",
+    "away": "Houston Texans",
+    "home": "Washington Commanders"
+  },
+  {
+    "week": 14,
+    "date": "2026-12-13",
+    "away": "Los Angeles Chargers",
+    "home": "Las Vegas Raiders"
+  },
+  {
+    "week": 14,
+    "date": "2026-12-13",
+    "away": "Kansas City Chiefs",
+    "home": "Cincinnati Bengals"
+  },
+  {
+    "week": 14,
+    "date": "2026-12-13",
+    "away": "New York Giants",
+    "home": "Seattle Seahawks"
+  },
+  {
+    "week": 14,
+    "date": "2026-12-13",
+    "away": "Los Angeles Rams",
+    "home": "San Francisco 49ers"
+  },
+  {
+    "week": 14,
+    "date": "2026-12-13",
+    "away": "Buffalo Bills",
+    "home": "Green Bay Packers"
+  },
+  {
+    "week": 14,
+    "date": "2026-12-14",
+    "away": "Pittsburgh Steelers",
+    "home": "Jacksonville Jaguars"
+  },
+  {
+    "week": 15,
+    "date": "2026-12-17",
+    "away": "San Francisco 49ers",
+    "home": "Los Angeles Chargers"
+  },
+  {
+    "week": 15,
+    "date": "2026-12-19",
+    "away": "Seattle Seahawks",
+    "home": "Philadelphia Eagles"
+  },
+  {
+    "week": 15,
+    "date": "2026-12-19",
+    "away": "Chicago Bears",
+    "home": "Buffalo Bills"
+  },
+  {
+    "week": 15,
+    "date": "2026-12-20",
+    "away": "Cincinnati Bengals",
+    "home": "Carolina Panthers"
+  },
+  {
+    "week": 15,
+    "date": "2026-12-20",
+    "away": "Miami Dolphins",
+    "home": "Green Bay Packers"
+  },
+  {
+    "week": 15,
+    "date": "2026-12-20",
+    "away": "Jacksonville Jaguars",
+    "home": "Houston Texans"
+  },
+  {
+    "week": 15,
+    "date": "2026-12-20",
+    "away": "Cleveland Browns",
+    "home": "New York Giants"
+  },
+  {
+    "week": 15,
+    "date": "2026-12-20",
+    "away": "Indianapolis Colts",
+    "home": "Tennessee Titans"
+  },
+  {
+    "week": 15,
+    "date": "2026-12-20",
+    "away": "Baltimore Ravens",
+    "home": "Pittsburgh Steelers"
+  },
+  {
+    "week": 15,
+    "date": "2026-12-20",
+    "away": "New Orleans Saints",
+    "home": "Tampa Bay Buccaneers"
+  },
+  {
+    "week": 15,
+    "date": "2026-12-20",
+    "away": "Atlanta Falcons",
+    "home": "Washington Commanders"
+  },
+  {
+    "week": 15,
+    "date": "2026-12-20",
+    "away": "New York Jets",
+    "home": "Arizona Cardinals"
+  },
+  {
+    "week": 15,
+    "date": "2026-12-20",
+    "away": "Denver Broncos",
+    "home": "Las Vegas Raiders"
+  },
+  {
+    "week": 15,
+    "date": "2026-12-20",
+    "away": "Dallas Cowboys",
+    "home": "Los Angeles Rams"
+  },
+  {
+    "week": 15,
+    "date": "2026-12-20",
+    "away": "Detroit Lions",
+    "home": "Minnesota Vikings"
+  },
+  {
+    "week": 15,
+    "date": "2026-12-21",
+    "away": "New England Patriots",
+    "home": "Kansas City Chiefs"
+  },
+  {
+    "week": 16,
+    "date": "2026-12-24",
+    "away": "Houston Texans",
+    "home": "Philadelphia Eagles"
+  },
+  {
+    "week": 16,
+    "date": "2026-12-25",
+    "away": "Green Bay Packers",
+    "home": "Chicago Bears"
+  },
+  {
+    "week": 16,
+    "date": "2026-12-25",
+    "away": "Buffalo Bills",
+    "home": "Denver Broncos"
+  },
+  {
+    "week": 16,
+    "date": "2026-12-25",
+    "away": "Los Angeles Rams",
+    "home": "Seattle Seahawks"
+  },
+  {
+    "week": 16,
+    "date": "2026-12-27",
+    "away": "Tampa Bay Buccaneers",
+    "home": "Atlanta Falcons"
+  },
+  {
+    "week": 16,
+    "date": "2026-12-27",
+    "away": "Cincinnati Bengals",
+    "home": "Indianapolis Colts"
+  },
+  {
+    "week": 16,
+    "date": "2026-12-27",
+    "away": "Los Angeles Chargers",
+    "home": "Miami Dolphins"
+  },
+  {
+    "week": 16,
+    "date": "2026-12-27",
+    "away": "Washington Commanders",
+    "home": "Minnesota Vikings"
+  },
+  {
+    "week": 16,
+    "date": "2026-12-27",
+    "away": "Arizona Cardinals",
+    "home": "New Orleans Saints"
+  },
+  {
+    "week": 16,
+    "date": "2026-12-27",
+    "away": "New England Patriots",
+    "home": "New York Jets"
+  },
+  {
+    "week": 16,
+    "date": "2026-12-27",
+    "away": "Carolina Panthers",
+    "home": "Pittsburgh Steelers"
+  },
+  {
+    "week": 16,
+    "date": "2026-12-27",
+    "away": "Cleveland Browns",
+    "home": "Baltimore Ravens"
+  },
+  {
+    "week": 16,
+    "date": "2026-12-27",
+    "away": "Tennessee Titans",
+    "home": "Las Vegas Raiders"
+  },
+  {
+    "week": 16,
+    "date": "2026-12-27",
+    "away": "San Francisco 49ers",
+    "home": "Kansas City Chiefs"
+  },
+  {
+    "week": 16,
+    "date": "2026-12-27",
+    "away": "Jacksonville Jaguars",
+    "home": "Dallas Cowboys"
+  },
+  {
+    "week": 16,
+    "date": "2026-12-28",
+    "away": "New York Giants",
+    "home": "Detroit Lions"
+  },
+  {
+    "week": 17,
+    "date": "2026-12-31",
+    "away": "Baltimore Ravens",
+    "home": "Cincinnati Bengals"
+  },
+  {
+    "week": 17,
+    "date": "2027-01-03",
+    "away": "New Orleans Saints",
+    "home": "Atlanta Falcons"
+  },
+  {
+    "week": 17,
+    "date": "2027-01-03",
+    "away": "Seattle Seahawks",
+    "home": "Carolina Panthers"
+  },
+  {
+    "week": 17,
+    "date": "2027-01-03",
+    "away": "Indianapolis Colts",
+    "home": "Cleveland Browns"
+  },
+  {
+    "week": 17,
+    "date": "2027-01-03",
+    "away": "New York Giants",
+    "home": "Dallas Cowboys"
+  },
+  {
+    "week": 17,
+    "date": "2027-01-03",
+    "away": "Washington Commanders",
+    "home": "Jacksonville Jaguars"
+  },
+  {
+    "week": 17,
+    "date": "2027-01-03",
+    "away": "Buffalo Bills",
+    "home": "Miami Dolphins"
+  },
+  {
+    "week": 17,
+    "date": "2027-01-03",
+    "away": "Denver Broncos",
+    "home": "New England Patriots"
+  },
+  {
+    "week": 17,
+    "date": "2027-01-03",
+    "away": "Minnesota Vikings",
+    "home": "New York Jets"
+  },
+  {
+    "week": 17,
+    "date": "2027-01-03",
+    "away": "Pittsburgh Steelers",
+    "home": "Tennessee Titans"
+  },
+  {
+    "week": 17,
+    "date": "2027-01-03",
+    "away": "Kansas City Chiefs",
+    "home": "Los Angeles Chargers"
+  },
+  {
+    "week": 17,
+    "date": "2027-01-03",
+    "away": "Los Angeles Rams",
+    "home": "Tampa Bay Buccaneers"
+  },
+  {
+    "week": 17,
+    "date": "2027-01-03",
+    "away": "Las Vegas Raiders",
+    "home": "Arizona Cardinals"
+  },
+  {
+    "week": 17,
+    "date": "2027-01-03",
+    "away": "Detroit Lions",
+    "home": "Chicago Bears"
+  },
+  {
+    "week": 17,
+    "date": "2027-01-03",
+    "away": "Philadelphia Eagles",
+    "home": "San Francisco 49ers"
+  },
+  {
+    "week": 17,
+    "date": "2027-01-04",
+    "away": "Houston Texans",
+    "home": "Green Bay Packers"
+  },
+  {
+    "week": 18,
+    "date": "2027-01-10",
+    "away": "New York Jets",
+    "home": "Buffalo Bills"
+  },
+  {
+    "week": 18,
+    "date": "2027-01-10",
+    "away": "Atlanta Falcons",
+    "home": "Carolina Panthers"
+  },
+  {
+    "week": 18,
+    "date": "2027-01-10",
+    "away": "Cleveland Browns",
+    "home": "Cincinnati Bengals"
+  },
+  {
+    "week": 18,
+    "date": "2027-01-10",
+    "away": "Jacksonville Jaguars",
+    "home": "Indianapolis Colts"
+  },
+  {
+    "week": 18,
+    "date": "2027-01-10",
+    "away": "San Francisco 49ers",
+    "home": "Arizona Cardinals"
+  },
+  {
+    "week": 18,
+    "date": "2027-01-10",
+    "away": "Los Angeles Chargers",
+    "home": "Denver Broncos"
+  },
+  {
+    "week": 18,
+    "date": "2027-01-10",
+    "away": "Detroit Lions",
+    "home": "Green Bay Packers"
+  },
+  {
+    "week": 18,
+    "date": "2027-01-10",
+    "away": "Tennessee Titans",
+    "home": "Houston Texans"
+  },
+  {
+    "week": 18,
+    "date": "2027-01-10",
+    "away": "Las Vegas Raiders",
+    "home": "Kansas City Chiefs"
+  },
+  {
+    "week": 18,
+    "date": "2027-01-10",
+    "away": "Chicago Bears",
+    "home": "Minnesota Vikings"
+  },
+  {
+    "week": 18,
+    "date": "2027-01-10",
+    "away": "Tampa Bay Buccaneers",
+    "home": "New Orleans Saints"
+  },
+  {
+    "week": 18,
+    "date": "2027-01-10",
+    "away": "Miami Dolphins",
+    "home": "New England Patriots"
+  },
+  {
+    "week": 18,
+    "date": "2027-01-10",
+    "away": "Philadelphia Eagles",
+    "home": "New York Giants"
+  },
+  {
+    "week": 18,
+    "date": "2027-01-10",
+    "away": "Seattle Seahawks",
+    "home": "Los Angeles Rams"
+  },
+  {
+    "week": 18,
+    "date": "2027-01-10",
+    "away": "Pittsburgh Steelers",
+    "home": "Baltimore Ravens"
+  },
+  {
+    "week": 18,
+    "date": "2027-01-10",
+    "away": "Dallas Cowboys",
+    "home": "Washington Commanders"
+  }
+]
