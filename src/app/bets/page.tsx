@@ -356,23 +356,21 @@ export default function BetsPage() {
 
         {!loading && !error && (
           <div className="space-y-4">
-            {existingPersonas.length > 1 && (
-              <label className="flex items-center gap-2 text-xs text-muted">
-                Persona
-                <select
-                  value={personaFilter}
-                  onChange={(e) => setPersonaFilter(e.target.value)}
-                  className="rounded-lg border border-border bg-surface-2 px-2 py-1 text-sm text-foreground outline-none focus:border-accent"
-                >
-                  <option value="All">All personas</option>
-                  {existingPersonas.map((p) => (
-                    <option key={p} value={p}>
-                      {p}
-                    </option>
-                  ))}
-                </select>
-              </label>
-            )}
+            <label className="flex items-center gap-2 text-xs text-muted">
+              Persona
+              <select
+                value={personaFilter}
+                onChange={(e) => setPersonaFilter(e.target.value)}
+                className="rounded-lg border border-border bg-surface-2 px-2 py-1 text-sm text-foreground outline-none focus:border-accent"
+              >
+                <option value="All">All personas</option>
+                {existingPersonas.map((p) => (
+                  <option key={p} value={p}>
+                    {p}
+                  </option>
+                ))}
+              </select>
+            </label>
 
             <div className="grid grid-cols-2 gap-2">
               <SummaryCard
@@ -389,9 +387,9 @@ export default function BetsPage() {
               <SummaryCard label="Total Bets" value={`${filteredRows.length}`} sub="this season" />
             </div>
 
-            {chartData.length > 0 && (
-              <div className="rounded-2xl border border-border bg-surface p-3">
-                <p className="mb-1 px-1 text-sm font-semibold">Cumulative units</p>
+            <div className="rounded-2xl border border-border bg-surface p-3">
+              <p className="mb-1 px-1 text-sm font-semibold">Cumulative units</p>
+              {chartData.length > 0 ? (
                 <div className="h-56 w-full">
                   <ResponsiveContainer width="100%" height="100%">
                     <LineChart data={chartData} margin={{ top: 8, right: 8, left: -16, bottom: 0 }}>
@@ -429,8 +427,13 @@ export default function BetsPage() {
                     </LineChart>
                   </ResponsiveContainer>
                 </div>
-              </div>
-            )}
+              ) : (
+                <p className="px-1 py-6 text-center text-xs text-muted">
+                  No graded bets yet for {personaFilter === "All" ? "any persona" : personaFilter} - this chart
+                  fills in once games finish.
+                </p>
+              )}
+            </div>
 
             <AddBetForm teamOptions={teamOptions} existingPersonas={existingPersonas} onCreated={reload} />
 
@@ -468,11 +471,9 @@ export default function BetsPage() {
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
-                      {existingPersonas.length > 1 && (
-                        <span className="rounded-full bg-surface-2 px-2 py-0.5 text-[11px] text-muted">
-                          {b.persona}
-                        </span>
-                      )}
+                      <span className="rounded-full bg-surface-2 px-2 py-0.5 text-[11px] text-muted">
+                        {b.persona}
+                      </span>
                       {resultBadge(b)}
                       <button
                         onClick={() => handleDelete(b.id)}
