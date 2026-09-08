@@ -268,7 +268,7 @@ function FuturesTable({
       <table className="w-full min-w-[480px] border-collapse text-xs">
         <thead>
           <tr className="border-b border-border">
-            <th className="sticky left-0 z-10 bg-surface px-2 py-2 text-left font-semibold">
+            <th className="sticky left-0 z-10 w-20 min-w-[80px] max-w-[80px] bg-surface px-2 py-2 text-left font-semibold">
               Category
             </th>
             {personas.map((p) => (
@@ -291,7 +291,7 @@ function FuturesTable({
               </tr>
               {FUTURE_CATEGORIES.filter((c) => c.group === group).map((cat) => (
                 <tr key={cat.key} className="border-b border-border last:border-0">
-                  <td className="sticky left-0 z-10 bg-surface px-2 py-1.5 text-muted">
+                  <td className="sticky left-0 z-10 w-20 min-w-[80px] max-w-[80px] break-words bg-surface px-2 py-1.5 text-[11px] text-muted">
                     {cat.label}
                   </td>
                   {personas.map((p) => {
