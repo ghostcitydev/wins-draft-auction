@@ -173,6 +173,7 @@ async function main() {
   for (const b of betsWeek1 as Array<{
     week: number;
     abbr: string;
+    persona: string;
     spread: number;
     juice: number;
     units: number;
@@ -186,9 +187,24 @@ async function main() {
     const existingBet = await db
       .select()
       .from(bets)
-      .where(and(eq(bets.season, season), eq(bets.week, b.week), eq(bets.teamId, team.id)));
+      .where(
+        and(
+          eq(bets.season, season),
+          eq(bets.week, b.week),
+          eq(bets.teamId, team.id),
+          eq(bets.persona, b.persona)
+        )
+      );
 
-    const values = { season, week: b.week, teamId: team.id, spread: b.spread, juice: b.juice, units: b.units };
+    const values = {
+      season,
+      week: b.week,
+      teamId: team.id,
+      persona: b.persona,
+      spread: b.spread,
+      juice: b.juice,
+      units: b.units,
+    };
 
     if (existingBet.length) {
       await db.update(bets).set(values).where(eq(bets.id, existingBet[0].id));

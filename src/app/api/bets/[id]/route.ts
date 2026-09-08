@@ -6,6 +6,7 @@ import { bets } from "@/db/schema";
 export const dynamic = "force-dynamic";
 
 interface UpdateBetPayload {
+  persona?: string;
   spread?: number;
   juice?: number;
   units?: number;
@@ -19,6 +20,7 @@ export async function PATCH(req: NextRequest, { params }: { params: Promise<{ id
     const body: UpdateBetPayload = await req.json();
 
     const set: Partial<typeof bets.$inferInsert> = {};
+    if (body.persona !== undefined && body.persona.trim()) set.persona = body.persona.trim();
     if (body.spread !== undefined) set.spread = body.spread;
     if (body.juice !== undefined) set.juice = body.juice;
     if (body.units !== undefined) set.units = body.units;

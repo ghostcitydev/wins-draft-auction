@@ -6,6 +6,7 @@ export interface BetRow {
   id: string;
   season: number;
   week: number;
+  persona: string;
   teamId: string;
   teamAbbr: string;
   teamName: string;
@@ -98,6 +99,7 @@ export async function getBetRows(season: number): Promise<BetRow[]> {
       id: b.id,
       season: b.season,
       week: b.week,
+      persona: b.persona,
       teamId: b.teamId,
       teamAbbr: team.abbr,
       teamName: team.name,

@@ -115,6 +115,10 @@ export const bets = pgTable(
     season: integer("season").notNull(),
     week: integer("week").notNull(),
     teamId: text("team_id").notNull().references(() => teams.id),
+    // Free-text label for who/what strategy is being tracked (e.g. a person's
+    // name or a betting persona/alias) - lets more than one "bettor" log a
+    // bet on the same team/week and be tracked separately.
+    persona: text("persona").notNull().default("Datong Dave"),
     spread: real("spread").notNull(),
     juice: integer("juice").notNull().default(-107),
     units: real("units").notNull().default(1),
@@ -122,7 +126,7 @@ export const bets = pgTable(
     notes: text("notes"),
     createdAt: timestamp("created_at").defaultNow().notNull(),
   },
-  (table) => [uniqueIndex("bets_unique").on(table.season, table.week, table.teamId)]
+  (table) => [uniqueIndex("bets_unique").on(table.season, table.week, table.teamId, table.persona)]
 );
 
 export const syncLog = pgTable("sync_log", {

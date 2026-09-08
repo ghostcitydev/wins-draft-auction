@@ -56,16 +56,22 @@ function SummaryCard({ label, value, sub }: { label: string; value: string; sub?
   );
 }
 
+const NEW_PERSONA = "__new__";
+
 function AddBetForm({
   teamOptions,
+  existingPersonas,
   onCreated,
 }: {
   teamOptions: { abbr: string; shortName: string }[];
+  existingPersonas: string[];
   onCreated: () => void;
 }) {
   const [open, setOpen] = useState(false);
   const [week, setWeek] = useState("1");
   const [teamAbbr, setTeamAbbr] = useState(teamOptions[0]?.abbr ?? "");
+  const [personaChoice, setPersonaChoice] = useState(existingPersonas[0] ?? "Datong Dave");
+  const [newPersona, setNewPersona] = useState("");
   const [spread, setSpread] = useState("");
   const [juice, setJuice] = useState("-107");
   const [units, setUnits] = useState("1");
@@ -78,6 +84,11 @@ function AddBetForm({
       setError("Enter a spread");
       return;
     }
+    const persona = personaChoice === NEW_PERSONA ? newPersona.trim() : personaChoice;
+    if (!persona) {
+      setError("Enter a persona name");
+      return;
+    }
     setSaving(true);
     try {
       const res = await fetch("/api/bets", {
@@ -86,6 +97,7 @@ function AddBetForm({
         body: JSON.stringify({
           week: Number(week),
           teamAbbr,
+          persona,
           spread: Number(spread),
           juice: Number(juice),
           units: Number(units),
@@ -94,6 +106,7 @@ function AddBetForm({
       const data = await res.json().catch(() => null);
       if (!res.ok) throw new Error(data?.error ?? "Failed to add bet");
       setSpread("");
+      setNewPersona("");
       onCreated();
     } catch (err) {
       setError(err instanceof Error ? err.message : "Failed to add bet");
@@ -138,6 +151,30 @@ function AddBetForm({
               </option>
             ))}
           </select>
+        </label>
+        <label className="col-span-2 text-xs text-muted">
+          Persona
+          <select
+            value={personaChoice}
+            onChange={(e) => setPersonaChoice(e.target.value)}
+            className="mt-1 w-full rounded-lg border border-border bg-surface-2 px-2 py-1.5 text-sm outline-none focus:border-accent"
+          >
+            {existingPersonas.map((p) => (
+              <option key={p} value={p}>
+                {p}
+              </option>
+            ))}
+            <option value={NEW_PERSONA}>+ New persona…</option>
+          </select>
+          {personaChoice === NEW_PERSONA && (
+            <input
+              type="text"
+              placeholder="Persona name"
+              value={newPersona}
+              onChange={(e) => setNewPersona(e.target.value)}
+              className="mt-1.5 w-full rounded-lg border border-border bg-surface-2 px-2 py-1.5 text-sm outline-none focus:border-accent"
+            />
+          )}
         </label>
         <label className="text-xs text-muted">
           Spread
@@ -243,14 +280,32 @@ export default function BetsPage() {
     [teams]
   );
 
-  const graded = useMemo(() => (betRows ?? []).filter((b) => b.result !== null), [betRows]);
+  // All personas seen across every bet (not filtered), used to populate the
+  // AddBetForm's persona picker and the filter control below - always
+  // includes the "Datong Dave" default even before any bets exist for it.
+  const existingPersonas = useMemo(() => {
+    const set = new Set<string>(["Datong Dave"]);
+    for (const b of betRows ?? []) set.add(b.persona);
+    return [...set].sort();
+  }, [betRows]);
+
+  const [personaFilter, setPersonaFilter] = useState<string>("All");
+
+  // Everything below (summary cards, chart, bet list) tracks the selected
+  // persona so each bettor's record can be reviewed independently.
+  const filteredRows = useMemo(
+    () => (personaFilter === "All" ? betRows ?? [] : (betRows ?? []).filter((b) => b.persona === personaFilter)),
+    [betRows, personaFilter]
+  );
+
+  const graded = useMemo(() => filteredRows.filter((b) => b.result !== null), [filteredRows]);
   const wins = graded.filter((b) => b.result === "win").length;
   const losses = graded.filter((b) => b.result === "loss").length;
   const pushes = graded.filter((b) => b.result === "push").length;
   const decided = wins + losses;
   const winPct = decided > 0 ? wins / decided : null;
   const netUnits = graded.reduce((s, b) => s + (b.unitsResult ?? 0), 0);
-  const withClosing = useMemo(() => (betRows ?? []).filter((b) => b.clv !== null), [betRows]);
+  const withClosing = useMemo(() => filteredRows.filter((b) => b.clv !== null), [filteredRows]);
   const avgClv = withClosing.length
     ? withClosing.reduce((s, b) => s + (b.clv ?? 0), 0) / withClosing.length
     : null;
@@ -301,6 +356,24 @@ export default function BetsPage() {
 
         {!loading && !error && (
           <div className="space-y-4">
+            {existingPersonas.length > 1 && (
+              <label className="flex items-center gap-2 text-xs text-muted">
+                Persona
+                <select
+                  value={personaFilter}
+                  onChange={(e) => setPersonaFilter(e.target.value)}
+                  className="rounded-lg border border-border bg-surface-2 px-2 py-1 text-sm text-foreground outline-none focus:border-accent"
+                >
+                  <option value="All">All personas</option>
+                  {existingPersonas.map((p) => (
+                    <option key={p} value={p}>
+                      {p}
+                    </option>
+                  ))}
+                </select>
+              </label>
+            )}
+
             <div className="grid grid-cols-2 gap-2">
               <SummaryCard
                 label="Record (ATS)"
@@ -313,7 +386,7 @@ export default function BetsPage() {
                 value={avgClv !== null ? `${fmtClv(avgClv)} pts` : "—"}
                 sub={`${withClosing.length} w/ closing line`}
               />
-              <SummaryCard label="Total Bets" value={`${betRows?.length ?? 0}`} sub="this season" />
+              <SummaryCard label="Total Bets" value={`${filteredRows.length}`} sub="this season" />
             </div>
 
             {chartData.length > 0 && (
@@ -359,7 +432,7 @@ export default function BetsPage() {
               </div>
             )}
 
-            <AddBetForm teamOptions={teamOptions} onCreated={reload} />
+            <AddBetForm teamOptions={teamOptions} existingPersonas={existingPersonas} onCreated={reload} />
 
             {betRows?.length === 0 && (
               <div className="rounded-2xl border border-border bg-surface p-4 text-center text-sm text-muted">
@@ -367,8 +440,14 @@ export default function BetsPage() {
               </div>
             )}
 
+            {(betRows?.length ?? 0) > 0 && filteredRows.length === 0 && (
+              <div className="rounded-2xl border border-border bg-surface p-4 text-center text-sm text-muted">
+                No bets for {personaFilter} yet.
+              </div>
+            )}
+
             <div className="space-y-2">
-              {betRows?.map((b) => (
+              {filteredRows.map((b) => (
                 <div key={b.id} className="rounded-2xl border border-border bg-surface p-3">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
@@ -389,6 +468,11 @@ export default function BetsPage() {
                       </div>
                     </div>
                     <div className="flex items-center gap-2">
+                      {existingPersonas.length > 1 && (
+                        <span className="rounded-full bg-surface-2 px-2 py-0.5 text-[11px] text-muted">
+                          {b.persona}
+                        </span>
+                      )}
                       {resultBadge(b)}
                       <button
                         onClick={() => handleDelete(b.id)}

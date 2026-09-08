@@ -25,6 +25,7 @@ interface CreateBetPayload {
   week: number;
   teamAbbr: string;
   spread: number;
+  persona?: string;
   juice?: number;
   units?: number;
   notes?: string | null;
@@ -47,13 +48,19 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: `Unknown team abbreviation "${teamAbbr}"` }, { status: 400 });
     }
 
+    const persona = body.persona?.trim() || "Datong Dave";
+
     const existing = await db
       .select()
       .from(bets)
-      .where(and(eq(bets.season, season), eq(bets.week, week), eq(bets.teamId, team.id)));
+      .where(
+        and(eq(bets.season, season), eq(bets.week, week), eq(bets.teamId, team.id), eq(bets.persona, persona))
+      );
     if (existing.length) {
       return NextResponse.json(
-        { error: `Already have a bet on ${team.abbr} for week ${week} - edit or delete it instead.` },
+        {
+          error: `${persona} already has a bet on ${team.abbr} for week ${week} - edit or delete it instead.`,
+        },
         { status: 409 }
       );
     }
@@ -64,6 +71,7 @@ export async function POST(req: NextRequest) {
         season,
         week,
         teamId: team.id,
+        persona,
         spread,
         juice: body.juice ?? -107,
         units: body.units ?? 1,

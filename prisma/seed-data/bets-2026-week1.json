@@ -1,12 +1,12 @@
 [
-  { "week": 1, "abbr": "CAR", "spread": 2.5, "juice": -107, "units": 1 },
-  { "week": 1, "abbr": "ARI", "spread": 10, "juice": -107, "units": 1 },
-  { "week": 1, "abbr": "TB", "spread": 3.5, "juice": -107, "units": 1 },
-  { "week": 1, "abbr": "DET", "spread": -6.5, "juice": -107, "units": 1 },
-  { "week": 1, "abbr": "MIN", "spread": -1.5, "juice": -107, "units": 1 },
-  { "week": 1, "abbr": "WAS", "spread": 5.5, "juice": -107, "units": 1 },
-  { "week": 1, "abbr": "NE", "spread": 3.5, "juice": -107, "units": 1 },
-  { "week": 1, "abbr": "SF", "spread": 3.5, "juice": -107, "units": 1 },
-  { "week": 1, "abbr": "MIA", "spread": 3.5, "juice": -107, "units": 1 },
-  { "week": 1, "abbr": "DEN", "spread": 2.5, "juice": -107, "units": 1 }
+  { "week": 1, "abbr": "CAR", "persona": "Datong Dave", "spread": 2.5, "juice": -107, "units": 1 },
+  { "week": 1, "abbr": "ARI", "persona": "Datong Dave", "spread": 10, "juice": -107, "units": 1 },
+  { "week": 1, "abbr": "TB", "persona": "Datong Dave", "spread": 3.5, "juice": -107, "units": 1 },
+  { "week": 1, "abbr": "DET", "persona": "Datong Dave", "spread": -6.5, "juice": -107, "units": 1 },
+  { "week": 1, "abbr": "MIN", "persona": "Datong Dave", "spread": -1.5, "juice": -107, "units": 1 },
+  { "week": 1, "abbr": "WAS", "persona": "Datong Dave", "spread": 5.5, "juice": -107, "units": 1 },
+  { "week": 1, "abbr": "NE", "persona": "Datong Dave", "spread": 3.5, "juice": -107, "units": 1 },
+  { "week": 1, "abbr": "SF", "persona": "Datong Dave", "spread": 3.5, "juice": -107, "units": 1 },
+  { "week": 1, "abbr": "MIA", "persona": "Datong Dave", "spread": 3.5, "juice": -107, "units": 1 },
+  { "week": 1, "abbr": "DEN", "persona": "Datong Dave", "spread": 2.5, "juice": -107, "units": 1 }
 ]
