@@ -54,19 +54,19 @@ const COLUMNS: {
   {
     key: "pastSched",
     label: "P.Sch",
-    format: (g) => fmtSignedPct(g.avgPastOpponentEpa),
+    format: (g) => fmtSignedPct(g.avgPastOpponentEpa, 0),
     value: (g) => g.avgPastOpponentEpa ?? 0,
   },
   {
     key: "futureSched",
     label: "F.Sch",
-    format: (g) => fmtSignedPct(g.avgFutureOpponentEpa),
+    format: (g) => fmtSignedPct(g.avgFutureOpponentEpa, 0),
     value: (g) => g.avgFutureOpponentEpa ?? 0,
   },
   {
     key: "epa",
     label: "EPA",
-    format: (g) => fmtSignedPct(g.avgEpa),
+    format: (g) => fmtSignedPct(g.avgEpa, 0),
     value: (g) => g.avgEpa,
     positive: (g) => g.avgEpa > 0,
   },

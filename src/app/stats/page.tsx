@@ -13,7 +13,7 @@ import { fmtSignedPct, fmtNum, fmtPct } from "@/lib/format";
 // Team-level EPA/play splits run roughly ±0.03-0.15 - 1 decimal on the
 // percentage keeps the same digit count as how they're shown elsewhere
 // in the app (e.g. Standings' EPA column).
-const teamPctFmt = (n: number) => fmtSignedPct(n, 1);
+const teamPctFmt = (n: number) => fmtSignedPct(n, 0);
 // QB EPA/play as a whole-number percentage (67%, not 67.1% or 0.67).
 const qbEpaFmt = (n: number) => fmtPct(n, 0);
 const anyAFmt = (n: number) => fmtNum(n, 1);

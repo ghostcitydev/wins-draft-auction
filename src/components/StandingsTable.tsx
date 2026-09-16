@@ -32,11 +32,11 @@ const COLUMNS: {
   // Avg EPA/play of opponents already played / still to come - see
   // src/lib/team-stats.ts. Shown just left of EPA since they're the same
   // underlying stat (EPA/play), just measured on the opponent side.
-  { label: "P.Sch", format: (r) => fmtSignedPct(r.pastOpponentEpa) },
-  { label: "F.Sch", format: (r) => fmtSignedPct(r.futureOpponentEpa) },
+  { label: "P.Sch", format: (r) => fmtSignedPct(r.pastOpponentEpa, 0) },
+  { label: "F.Sch", format: (r) => fmtSignedPct(r.futureOpponentEpa, 0) },
   {
     label: "EPA",
-    format: (r) => fmtSignedPct(r.epa),
+    format: (r) => fmtSignedPct(r.epa, 0),
     positive: (r) => r.epa > 0,
     placeholder: (r) => r.epaIsPlaceholder,
   },
