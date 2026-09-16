@@ -101,6 +101,67 @@ export const teamRatings = pgTable(
 );
 
 /**
+ * A weekly snapshot of a QB's efficiency stats (nfelo.com's "Live QB EPA
+ * Leaders" export - no public API, so these rows come from the commissioner
+ * pasting/uploading that export into /admin each week, same pattern as
+ * `teamRatings`). Keyed by name (not teamId) since backups without a
+ * resolvable team are still worth keeping - `teamId` is null until the name
+ * matches a known QB->team mapping.
+ */
+export const qbRatings = pgTable(
+  "qb_ratings",
+  {
+    id: text("id").primaryKey().$defaultFn(() => createId()),
+    season: integer("season").notNull(),
+    week: integer("week").notNull(),
+    name: text("name").notNull(),
+    teamId: text("team_id").references(() => teams.id),
+    source: text("source").notNull().default("nfelo"),
+    epaPlay: real("epa_play"),
+    anyA: real("any_a"),
+    totalYds: real("total_yds"),
+    totalTd: real("total_td"),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+  },
+  (table) => [uniqueIndex("qb_ratings_unique").on(table.season, table.week, table.name)]
+);
+
+/**
+ * A weekly snapshot of FTN Fantasy's DVOA/playoff-odds report for one team
+ * (record, DAVE, mean projected wins, and playoff/seed probabilities from
+ * their 25,000-simulation model). No public API - pasted into /admin each
+ * week same as `teamRatings`/`qbRatings`. `seed1`..`seed7` are the odds of
+ * landing each of the 7 playoff seeds; `tot` is the overall make-the-playoffs
+ * probability.
+ */
+export const teamPlayoffOdds = pgTable(
+  "team_playoff_odds",
+  {
+    id: text("id").primaryKey().$defaultFn(() => createId()),
+    season: integer("season").notNull(),
+    week: integer("week").notNull(),
+    teamId: text("team_id").notNull().references(() => teams.id),
+    source: text("source").notNull().default("ftn"),
+    wins: integer("wins"),
+    losses: integer("losses"),
+    dave: real("dave"),
+    meanWins: real("mean_wins"),
+    tot: real("tot"),
+    div: real("div"),
+    wc: real("wc"),
+    seed1: real("seed1"),
+    seed2: real("seed2"),
+    seed3: real("seed3"),
+    seed4: real("seed4"),
+    seed5: real("seed5"),
+    seed6: real("seed6"),
+    seed7: real("seed7"),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+  },
+  (table) => [uniqueIndex("team_playoff_odds_unique").on(table.season, table.week, table.teamId)]
+);
+
+/**
  * A single spread bet placed on a real game. Grading (win/loss/push, units
  * won/lost) is computed live from the real synced score in `games` (see
  * src/lib/bets.ts) rather than stored here - so it's never stale and never

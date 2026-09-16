@@ -47,6 +47,14 @@ export interface TeamRow {
   pastOpponentEpa: number | null;
   futureOpponentEpa: number | null;
   scheduleIsPreseason: boolean;
+  // FTN Fantasy DVOA/playoff-odds snapshot (see /api/admin/team-dvoa) - all
+  // null until the commissioner has pasted at least one week's report.
+  dave: number | null;
+  meanWins: number | null;
+  playoffTot: number | null;
+  playoffDiv: number | null;
+  playoffWc: number | null;
+  playoffSeeds: (number | null)[];
   // `value` = currentValue - paid (this team's auction P&L). `currentValue`
   // = the raw dollar worth its wins are worth in the pool right now.
   value: number | null;

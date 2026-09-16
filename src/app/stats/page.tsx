@@ -2,24 +2,13 @@
 
 import { useMemo } from "react";
 import TopBar from "@/components/TopBar";
-import LogoScatterChart, { ScatterPoint } from "@/components/LogoScatterChart";
+import LogoScatterChart, { ScatterPoint, DiagonalLine } from "@/components/LogoScatterChart";
 import TeamRankingsTable from "@/components/TeamRankingsTable";
+import PlayoffOddsTable from "@/components/PlayoffOddsTable";
 import QBStatsTable from "@/components/QBStatsTable";
 import { useTeams } from "@/lib/useTeams";
+import { useQbStats } from "@/lib/useQbStats";
 import { fmtSignedPct, fmtNum } from "@/lib/format";
-import qbStats from "../../../prisma/seed-data/qb-stats-2025.json";
-
-interface QBStat {
-  rank: number;
-  name: string;
-  abbr: string;
-  season: number;
-  epaPlay: number;
-  wpa: number;
-  cpoe: number;
-  anyA: number;
-  successRate: number;
-}
 
 // Team-level EPA/play splits run roughly ±0.03-0.15 - 1 decimal on the
 // percentage keeps the same digit count as how they're shown elsewhere
@@ -30,8 +19,43 @@ const teamPctFmt = (n: number) => fmtSignedPct(n, 1);
 const qbEpaPctFmt = (n: number) => fmtSignedPct(n, 2);
 const anyAFmt = (n: number) => fmtNum(n, 1);
 
+// Computes p10/p25/median/p75/p90 diagonal reference lines for a "quality"
+// scatter where quality = x - y (offense EPA/play minus defensive EPA/play
+// allowed - lower/more-negative y is better, so this is a same-direction
+// combined score). These are this week's percentiles across the teams
+// actually plotted, not nfelo's own historical/multi-season EPA Tiers
+// benchmarks - we don't have access to that proprietary reference set, so we
+// don't claim to reproduce it exactly.
+function quotientPercentileLines(
+  points: { x: number; y: number }[],
+  labels: { p: number; label: string }[]
+): DiagonalLine[] {
+  if (points.length < 2) return [];
+  const qualities = points.map((p) => p.x - p.y).sort((a, b) => a - b);
+  const xs = points.map((p) => p.x);
+  const xMin = Math.min(...xs);
+  const xMax = Math.max(...xs);
+  const percentile = (p: number) => {
+    const idx = Math.min(qualities.length - 1, Math.max(0, Math.round((p / 100) * (qualities.length - 1))));
+    return qualities[idx];
+  };
+  return labels.map(({ p, label }) => {
+    const c = percentile(p);
+    return { label, x1: xMin, y1: xMin - c, x2: xMax, y2: xMax - c };
+  });
+}
+
+const PERCENTILE_LABELS = [
+  { p: 90, label: "p90" },
+  { p: 75, label: "p75" },
+  { p: 50, label: "Median" },
+  { p: 25, label: "p25" },
+  { p: 10, label: "p10" },
+];
+
 export default function StatsPage() {
   const { teams, loading, error } = useTeams();
+  const { qbs: liveQbs } = useQbStats();
 
   const isPlaceholder = useMemo(() => teams?.some((t) => t.epaIsPlaceholder) ?? false, [teams]);
   const placeholderSeason = useMemo(
@@ -75,16 +99,24 @@ export default function StatsPage() {
     [teams]
   );
 
-  const mvpPoints: ScatterPoint[] = useMemo(() => {
-    const logoByAbbr = new Map((teams ?? []).map((t) => [t.abbr, t.logoUrl]));
-    return (qbStats as QBStat[]).map((q) => ({
-      key: `${q.abbr}-${q.name}`,
-      label: `${q.name} (${q.abbr})`,
-      logoUrl: logoByAbbr.get(q.abbr) ?? `/logos/${q.abbr}.png`,
-      x: q.epaPlay,
-      y: q.anyA,
-    }));
-  }, [teams]);
+  const mvpPoints: ScatterPoint[] = useMemo(
+    () =>
+      (liveQbs ?? [])
+        .filter((q) => q.epaPlay !== null && q.anyA !== null)
+        .map((q) => ({
+          key: `${q.abbr ?? "FA"}-${q.name}`,
+          label: q.abbr ? `${q.name} (${q.abbr})` : q.name,
+          logoUrl: q.logoUrl,
+          x: q.epaPlay as number,
+          y: q.anyA as number,
+        })),
+    [liveQbs]
+  );
+
+  const totalEpaDiagonals = useMemo(
+    () => quotientPercentileLines(totalEpaPoints, PERCENTILE_LABELS),
+    [totalEpaPoints]
+  );
 
   const schedulePoints: ScatterPoint[] = useMemo(
     () =>
@@ -131,14 +163,17 @@ export default function StatsPage() {
 
             <TeamRankingsTable teams={teams} />
 
+            <PlayoffOddsTable teams={teams} />
+
             <LogoScatterChart
-              title={`Total EPA${isPlaceholder ? "*" : ""}`}
+              title={`Total EPA${isPlaceholder ? "*" : ""} (EPA Tiers)`}
               xLabel="Off EPA/play"
               yLabel="Def EPA/play"
               points={totalEpaPoints}
               xFmt={teamPctFmt}
               yFmt={teamPctFmt}
-              note="Negative defensive EPA/play is better. Top-right = strong offense, weak defense."
+              diagonalLines={totalEpaDiagonals}
+              note="Negative defensive EPA/play is better. Top-right = strong offense, weak defense. Dashed lines are this week's p10/p25/median/p75/p90 of off-minus-def EPA/play across the league (not nfelo's own historical EPA Tiers benchmarks)."
             />
 
             <LogoScatterChart
@@ -185,13 +220,13 @@ export default function StatsPage() {
             )}
 
             <LogoScatterChart
-              title="MVP Watch*"
+              title="MVP Watch"
               xLabel="EPA/play"
               yLabel="ANY/A"
               points={mvpPoints}
               xFmt={qbEpaPctFmt}
               yFmt={anyAFmt}
-              note="* Using ANY/A in place of passing yards - yards weren't available from a source we could reliably parse. 2025 season stats."
+              note="Live QB EPA Leaders export, latest logged week."
             />
 
             <QBStatsTable />

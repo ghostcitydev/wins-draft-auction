@@ -19,6 +19,14 @@ export interface ScatterPoint {
   y: number;
 }
 
+export interface DiagonalLine {
+  label: string;
+  x1: number;
+  y1: number;
+  x2: number;
+  y2: number;
+}
+
 interface DotProps {
   cx?: number;
   cy?: number;
@@ -74,6 +82,7 @@ export default function LogoScatterChart({
   xFmt = (n: number) => n.toFixed(1),
   yFmt = xFmt,
   height = 260,
+  diagonalLines = [],
 }: {
   title: string;
   note?: string;
@@ -83,6 +92,7 @@ export default function LogoScatterChart({
   xFmt?: (n: number) => string;
   yFmt?: (n: number) => string;
   height?: number;
+  diagonalLines?: DiagonalLine[];
 }) {
   return (
     <div className="rounded-2xl border border-border bg-surface p-3">
@@ -115,6 +125,24 @@ export default function LogoScatterChart({
             />
             <ReferenceLine x={0} stroke="var(--border)" />
             <ReferenceLine y={0} stroke="var(--border)" />
+            {diagonalLines.map((d) => (
+              <ReferenceLine
+                key={d.label}
+                segment={[
+                  { x: d.x1, y: d.y1 },
+                  { x: d.x2, y: d.y2 },
+                ]}
+                stroke="var(--muted)"
+                strokeDasharray="4 3"
+                ifOverflow="extendDomain"
+                label={{
+                  value: d.label,
+                  position: "insideTopRight",
+                  fill: "var(--muted)",
+                  fontSize: 9,
+                }}
+              />
+            ))}
             <Tooltip
               content={<ChartTooltip xLabel={xLabel} yLabel={yLabel} xFmt={xFmt} yFmt={yFmt} />}
               cursor={{ stroke: "var(--border)" }}

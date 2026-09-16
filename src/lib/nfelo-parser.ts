@@ -96,6 +96,14 @@ export function parseNfeloPaste(raw: string): NfeloParseResult {
       const bySpaces = line.split(/\s{2,}/).map((c) => c.trim()).filter((c) => c.length > 0);
       if (bySpaces.length > cells.length) cells = bySpaces;
     }
+    if (cells.length < NUMERIC_FIELD_ORDER.length + 1 && line.includes(",")) {
+      // Fall back to comma-splitting - lets nfeloapp's "Team Season Power
+      // Ratings" CSV export be pasted in directly (Team,Season,<19 numeric
+      // fields in the same NUMERIC_FIELD_ORDER order> per row) instead of
+      // requiring a copy/paste from the site's HTML table.
+      const byCommas = line.split(",").map((c) => c.trim()).filter((c) => c.length > 0);
+      if (byCommas.length > cells.length) cells = byCommas;
+    }
 
     if (cells.length < NUMERIC_FIELD_ORDER.length + 1) {
       errors.push(`Couldn't split into enough columns: "${line.slice(0, 80)}"`);

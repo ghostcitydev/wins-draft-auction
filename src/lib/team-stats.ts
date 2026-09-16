@@ -1,6 +1,6 @@
 import { and, eq } from "drizzle-orm";
 import { db } from "@/db";
-import { teams, draftPicks, players, games, teamRatings, appConfig } from "@/db/schema";
+import { teams, draftPicks, players, games, teamRatings, teamPlayoffOdds, appConfig } from "@/db/schema";
 import {
   winPct,
   projectedWins,
@@ -12,17 +12,27 @@ export { groupByPlayer } from "./team-types";
 
 export async function getTeamRows(season: number): Promise<TeamRow[]> {
   const prevSeason = season - 1;
-  const [allTeams, allDraftPicks, allPlayers, config, allGames, prevSeasonCompletedGames, allRatings, prevRatings] =
-    await Promise.all([
-      db.select().from(teams),
-      db.select().from(draftPicks).where(eq(draftPicks.season, season)),
-      db.select().from(players),
-      db.select().from(appConfig).where(eq(appConfig.id, "singleton")),
-      db.select().from(games).where(eq(games.season, season)),
-      db.select().from(games).where(and(eq(games.season, prevSeason), eq(games.completed, true))),
-      db.select().from(teamRatings).where(eq(teamRatings.season, season)),
-      db.select().from(teamRatings).where(eq(teamRatings.season, prevSeason)),
-    ]);
+  const [
+    allTeams,
+    allDraftPicks,
+    allPlayers,
+    config,
+    allGames,
+    prevSeasonCompletedGames,
+    allRatings,
+    prevRatings,
+    allPlayoffOdds,
+  ] = await Promise.all([
+    db.select().from(teams),
+    db.select().from(draftPicks).where(eq(draftPicks.season, season)),
+    db.select().from(players),
+    db.select().from(appConfig).where(eq(appConfig.id, "singleton")),
+    db.select().from(games).where(eq(games.season, season)),
+    db.select().from(games).where(and(eq(games.season, prevSeason), eq(games.completed, true))),
+    db.select().from(teamRatings).where(eq(teamRatings.season, season)),
+    db.select().from(teamRatings).where(eq(teamRatings.season, prevSeason)),
+    db.select().from(teamPlayoffOdds).where(eq(teamPlayoffOdds.season, season)),
+  ]);
 
   // Has this season actually started? Used to decide whether "past/future
   // opponent strength" should use this season's real completed/remaining
@@ -40,6 +50,16 @@ export async function getTeamRows(season: number): Promise<TeamRow[]> {
   );
   const prevRatingsByTeam = new Map(
     prevRatings.filter((r) => r.week === prevWeek).map((r) => [r.teamId, r])
+  );
+
+  // FTN DVOA/playoff-odds are also pasted in weekly - same "latest week wins"
+  // rule as the nfelo ratings above, but no prior-season fallback since a
+  // missing snapshot should just show as null rather than borrow last year's.
+  const latestPlayoffWeek = allPlayoffOdds.length
+    ? Math.max(...allPlayoffOdds.map((r) => r.week))
+    : null;
+  const playoffOddsByTeam = new Map(
+    allPlayoffOdds.filter((r) => r.week === latestPlayoffWeek).map((r) => [r.teamId, r])
   );
 
   // Same current-season/prior-season fallback used for `epa` above, exposed
@@ -142,6 +162,8 @@ export async function getTeamRows(season: number): Promise<TeamRow[]> {
     const pastOpponentEpa = avgOpponentEpa(pastOppGames.map(opponentIdOf));
     const futureOpponentEpa = avgOpponentEpa(futureOppGames.map(opponentIdOf));
 
+    const playoffOdds = playoffOddsByTeam.get(team.id);
+
     return {
       id: team.id,
       name: team.name,
@@ -182,6 +204,22 @@ export async function getTeamRows(season: number): Promise<TeamRow[]> {
       pastOpponentEpa,
       futureOpponentEpa,
       scheduleIsPreseason: !seasonHasStarted,
+      dave: playoffOdds?.dave ?? null,
+      meanWins: playoffOdds?.meanWins ?? null,
+      playoffTot: playoffOdds?.tot ?? null,
+      playoffDiv: playoffOdds?.div ?? null,
+      playoffWc: playoffOdds?.wc ?? null,
+      playoffSeeds: playoffOdds
+        ? [
+            playoffOdds.seed1,
+            playoffOdds.seed2,
+            playoffOdds.seed3,
+            playoffOdds.seed4,
+            playoffOdds.seed5,
+            playoffOdds.seed6,
+            playoffOdds.seed7,
+          ]
+        : [null, null, null, null, null, null, null],
       value: null,
       vor: null,
       currentValue: null,

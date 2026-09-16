@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import TopBar from "@/components/TopBar";
+import WeeklyPasteAdmin from "@/components/admin/WeeklyPasteAdmin";
 
 interface AdminTeam {
   id: string;
@@ -317,7 +318,9 @@ export default function AdminPage() {
             </a>
             , select and copy the ratings table, and paste it below. This feeds EPA and
             Pythagorean wins - nfelo has no public API, so this replaces last week&apos;s snapshot
-            for every team in one paste.
+            for every team in one paste. You can also paste the &quot;Team Season Power
+            Ratings&quot; CSV export directly (open it in a text editor and paste the whole
+            thing) - both formats parse the same way.
           </p>
 
           {ratingsSummary && (
@@ -379,6 +382,55 @@ export default function AdminPage() {
             </div>
           )}
         </div>
+
+        <WeeklyPasteAdmin
+          title="Weekly QB EPA leaders"
+          apiPath="/api/admin/qb-ratings"
+          secret={secret}
+          rowNoun="QB rows"
+          placeholder="Paste the nfelo Live QB EPA Leaders CSV/table here…"
+          instructions={
+            <p>
+              Each week, export{" "}
+              <a
+                href="https://www.nfeloapp.com/live/qb-epa/"
+                target="_blank"
+                rel="noreferrer"
+                className="underline"
+              >
+                nfelo&apos;s Live QB EPA Leaders
+              </a>{" "}
+              (or copy its table) and paste it below. Feeds the stats page&apos;s QB table and MVP
+              Watch chart. The export has no team column - names are matched against a
+              hand-verified list in <code>src/lib/qb-epa-parser.ts</code>; a new starter who isn&apos;t
+              in it yet will show up under &quot;Unmatched&quot; below until that list is updated.
+            </p>
+          }
+        />
+
+        <WeeklyPasteAdmin
+          title="Weekly DVOA / playoff odds"
+          apiPath="/api/admin/team-dvoa"
+          secret={secret}
+          rowNoun="team rows"
+          placeholder="Paste FTN's DVOA/playoff-odds table here (one or all 8 divisions)…"
+          instructions={
+            <p>
+              Each week, open{" "}
+              <a
+                href="https://ftnfantasy.com/nfl/dvoa-playoff-odds"
+                target="_blank"
+                rel="noreferrer"
+                className="underline"
+              >
+                ftnfantasy.com/nfl/dvoa-playoff-odds
+              </a>
+              , select and copy a division&apos;s table (or the whole page), and paste it below.
+              Feeds the stats page&apos;s DVOA &amp; playoff odds table - division headers and repeated
+              header rows are skipped automatically, so pasting the whole page at once is fine.
+            </p>
+          }
+        />
       </main>
     </>
   );
