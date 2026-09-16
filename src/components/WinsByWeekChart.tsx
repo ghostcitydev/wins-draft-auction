@@ -70,8 +70,11 @@ export default function WinsByWeekChart() {
     );
   }
 
-  const rows = Array.from({ length: data.maxWeek }, (_, i) => {
-    const week = i + 1;
+  // Start every line at week 0 with 0 wins (nobody has a point logged there
+  // already) so the chart reads as a climb from a shared origin instead of
+  // jumping straight to each player's week-1 total.
+  const rows = Array.from({ length: data.maxWeek + 1 }, (_, i) => {
+    const week = i;
     const row: Record<string, number> = { week };
     for (const s of data.series) {
       row[s.playerName] = s.points.find((p) => p.week === week)?.wins ?? 0;

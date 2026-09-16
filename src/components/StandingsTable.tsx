@@ -15,7 +15,7 @@ const COLUMNS: {
 }[] = [
   { label: "W", format: (r) => `${r.wins}` },
   { label: "L", format: (r) => `${r.losses}` },
-  { label: "PCT", format: (r) => fmtPct(r.winPct) },
+  { label: "PCT", format: (r) => fmtPct(r.winPct, 0) },
   { label: "O/U", format: (r) => fmtNum(r.preseasonOU) },
   { label: "Paid", format: (r) => fmtMoney(r.paid) },
   // Value = the raw auction dollar value this team's wins are worth right
@@ -29,6 +29,11 @@ const COLUMNS: {
     format: (r) => fmtNum(r.pythagoreanWins),
     placeholder: (r) => r.pythagoreanIsPlaceholder,
   },
+  // Avg EPA/play of opponents already played / still to come - see
+  // src/lib/team-stats.ts. Shown just left of EPA since they're the same
+  // underlying stat (EPA/play), just measured on the opponent side.
+  { label: "P.Sch", format: (r) => fmtSignedPct(r.pastOpponentEpa) },
+  { label: "F.Sch", format: (r) => fmtSignedPct(r.futureOpponentEpa) },
   {
     label: "EPA",
     format: (r) => fmtSignedPct(r.epa),

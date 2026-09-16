@@ -83,6 +83,7 @@ export default function LogoScatterChart({
   yFmt = xFmt,
   height = 260,
   diagonalLines = [],
+  yReversed = false,
 }: {
   title: string;
   note?: string;
@@ -93,6 +94,11 @@ export default function LogoScatterChart({
   yFmt?: (n: number) => string;
   height?: number;
   diagonalLines?: DiagonalLine[];
+  // Flips the Y axis's visual direction (top<->bottom) without touching the
+  // underlying data or its sign convention - e.g. defensive EPA/play where
+  // negative is genuinely better, but "up = better" should still read the
+  // same as every other axis in the app.
+  yReversed?: boolean;
 }) {
   return (
     <div className="rounded-2xl border border-border bg-surface p-3">
@@ -117,6 +123,7 @@ export default function LogoScatterChart({
               type="number"
               dataKey="y"
               name={yLabel}
+              reversed={yReversed}
               tick={{ fontSize: 10, fill: "var(--muted)" }}
               tickLine={false}
               axisLine={false}

@@ -13,11 +13,11 @@ interface RankColumn {
 }
 
 const COLUMNS: RankColumn[] = [
+  { label: "Total EPA", direction: "desc", value: (t) => t.epa },
   { label: "Pass Off", direction: "desc", value: (t) => t.offPassEpa },
   { label: "Rush Off", direction: "desc", value: (t) => t.offRushEpa },
   { label: "Pass Def", direction: "asc", value: (t) => t.defPassEpa },
   { label: "Rush Def", direction: "asc", value: (t) => t.defRushEpa },
-  { label: "Total EPA", direction: "desc", value: (t) => t.epa },
 ];
 
 // Same digit-shift convention as the scatter charts - team EPA/play splits
@@ -38,13 +38,19 @@ export default function TeamRankingsTable({ teams }: { teams: TeamRow[] }) {
   return (
     <div className="rounded-2xl border border-border bg-surface p-3">
       <p className="mb-2 px-1 text-sm font-semibold">Team rankings</p>
-      <div className="max-h-[420px] overflow-auto rounded-xl border border-border">
-        <table className="text-sm">
+      <div className="max-h-[420px] overflow-y-auto rounded-xl border border-border">
+        <table className="w-full table-fixed text-sm">
+          <colgroup>
+            <col style={{ width: "7%" }} />
+            {COLUMNS.map((c) => (
+              <col key={c.label} style={{ width: `${93 / COLUMNS.length}%` }} />
+            ))}
+          </colgroup>
           <thead className="sticky top-0 z-10 bg-surface">
             <tr className="border-b border-border text-xs text-muted">
-              <th className="w-7 px-1 py-1.5 text-center font-semibold">#</th>
+              <th className="px-1 py-1.5 text-center font-semibold">#</th>
               {COLUMNS.map((c) => (
-                <th key={c.label} className="whitespace-nowrap px-2.5 py-1.5 text-left font-semibold">
+                <th key={c.label} className="truncate px-1 py-1.5 text-center font-semibold">
                   {c.label}
                 </th>
               ))}
@@ -57,13 +63,20 @@ export default function TeamRankingsTable({ teams }: { teams: TeamRow[] }) {
                 {ranked.map(({ col, sorted }) => {
                   const t = sorted[i];
                   return (
-                    <td key={col.label} className="whitespace-nowrap px-2.5 py-1.5">
-                      <div className="flex items-center gap-1.5">
-                        <Image src={t.logoUrl} alt={t.abbr} width={16} height={16} unoptimized />
-                        <span className="text-[12px] font-medium">{t.abbr}</span>
-                        <span className="ml-auto pl-2 text-[11px] tabular-nums text-muted">
-                          {fmt(col.value(t))}
-                        </span>
+                    <td key={col.label} className="px-1 py-1.5">
+                      <div className="flex flex-col items-center gap-0.5">
+                        <div className="flex min-w-0 items-center gap-1">
+                          <Image
+                            src={t.logoUrl}
+                            alt={t.abbr}
+                            width={14}
+                            height={14}
+                            unoptimized
+                            className="flex-shrink-0"
+                          />
+                          <span className="truncate text-[11px] font-medium">{t.abbr}</span>
+                        </div>
+                        <span className="text-[10px] tabular-nums text-muted">{fmt(col.value(t))}</span>
                       </div>
                     </td>
                   );

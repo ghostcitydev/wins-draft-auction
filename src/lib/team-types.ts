@@ -79,6 +79,17 @@ export interface PlayerGroup {
   totalProjected: number;
   totalPythagoreanWins: number;
   avgEpa: number;
+  // Avg past/future opponent EPA/play across this player's teams - null
+  // for any team not yet reflected here (see TeamRow.pastOpponentEpa) are
+  // excluded from the average rather than treated as 0.
+  avgPastOpponentEpa: number | null;
+  avgFutureOpponentEpa: number | null;
+}
+
+function avgNonNull(values: (number | null)[]): number | null {
+  const present = values.filter((v): v is number => v !== null);
+  if (!present.length) return null;
+  return present.reduce((a, b) => a + b, 0) / present.length;
 }
 
 export function groupByPlayer(rows: TeamRow[]): PlayerGroup[] {
@@ -113,6 +124,8 @@ export function groupByPlayer(rows: TeamRow[]): PlayerGroup[] {
       totalProjected: teams.reduce((s, t) => s + (t.projected ?? 0), 0),
       totalPythagoreanWins: teams.reduce((s, t) => s + t.pythagoreanWins, 0),
       avgEpa: teams.reduce((s, t) => s + t.epa, 0) / n,
+      avgPastOpponentEpa: avgNonNull(teams.map((t) => t.pastOpponentEpa)),
+      avgFutureOpponentEpa: avgNonNull(teams.map((t) => t.futureOpponentEpa)),
     };
   });
 

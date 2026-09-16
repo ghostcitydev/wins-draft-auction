@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 import TopBar from "@/components/TopBar";
-import LogoScatterChart, { ScatterPoint, DiagonalLine } from "@/components/LogoScatterChart";
+import LogoScatterChart, { ScatterPoint } from "@/components/LogoScatterChart";
 import TeamRankingsTable from "@/components/TeamRankingsTable";
 import PlayoffOddsTable from "@/components/PlayoffOddsTable";
 import QBStatsTable from "@/components/QBStatsTable";
@@ -14,44 +14,10 @@ import { fmtSignedPct, fmtNum } from "@/lib/format";
 // percentage keeps the same digit count as how they're shown elsewhere
 // in the app (e.g. Standings' EPA column).
 const teamPctFmt = (n: number) => fmtSignedPct(n, 1);
-// QB EPA/play is an order of magnitude smaller (±0.001-0.02), so it needs
-// an extra decimal to preserve the same precision once shifted to a percent.
-const qbEpaPctFmt = (n: number) => fmtSignedPct(n, 2);
+// QB EPA/play is shown as the plain per-play decimal (0.69, 0.67, ...), not
+// shifted into a percentage like team-level EPA/play.
+const qbEpaFmt = (n: number) => fmtNum(n, 2);
 const anyAFmt = (n: number) => fmtNum(n, 1);
-
-// Computes p10/p25/median/p75/p90 diagonal reference lines for a "quality"
-// scatter where quality = x - y (offense EPA/play minus defensive EPA/play
-// allowed - lower/more-negative y is better, so this is a same-direction
-// combined score). These are this week's percentiles across the teams
-// actually plotted, not nfelo's own historical/multi-season EPA Tiers
-// benchmarks - we don't have access to that proprietary reference set, so we
-// don't claim to reproduce it exactly.
-function quotientPercentileLines(
-  points: { x: number; y: number }[],
-  labels: { p: number; label: string }[]
-): DiagonalLine[] {
-  if (points.length < 2) return [];
-  const qualities = points.map((p) => p.x - p.y).sort((a, b) => a - b);
-  const xs = points.map((p) => p.x);
-  const xMin = Math.min(...xs);
-  const xMax = Math.max(...xs);
-  const percentile = (p: number) => {
-    const idx = Math.min(qualities.length - 1, Math.max(0, Math.round((p / 100) * (qualities.length - 1))));
-    return qualities[idx];
-  };
-  return labels.map(({ p, label }) => {
-    const c = percentile(p);
-    return { label, x1: xMin, y1: xMin - c, x2: xMax, y2: xMax - c };
-  });
-}
-
-const PERCENTILE_LABELS = [
-  { p: 90, label: "p90" },
-  { p: 75, label: "p75" },
-  { p: 50, label: "Median" },
-  { p: 25, label: "p25" },
-  { p: 10, label: "p10" },
-];
 
 export default function StatsPage() {
   const { teams, loading, error } = useTeams();
@@ -113,11 +79,6 @@ export default function StatsPage() {
     [liveQbs]
   );
 
-  const totalEpaDiagonals = useMemo(
-    () => quotientPercentileLines(totalEpaPoints, PERCENTILE_LABELS),
-    [totalEpaPoints]
-  );
-
   const schedulePoints: ScatterPoint[] = useMemo(
     () =>
       (teams ?? [])
@@ -166,14 +127,14 @@ export default function StatsPage() {
             <PlayoffOddsTable teams={teams} />
 
             <LogoScatterChart
-              title={`Total EPA${isPlaceholder ? "*" : ""} (EPA Tiers)`}
+              title={`Total EPA${isPlaceholder ? "*" : ""}`}
               xLabel="Off EPA/play"
               yLabel="Def EPA/play"
               points={totalEpaPoints}
               xFmt={teamPctFmt}
               yFmt={teamPctFmt}
-              diagonalLines={totalEpaDiagonals}
-              note="Negative defensive EPA/play is better. Top-right = strong offense, weak defense. Dashed lines are this week's p10/p25/median/p75/p90 of off-minus-def EPA/play across the league (not nfelo's own historical EPA Tiers benchmarks)."
+              yReversed
+              note="Def EPA/play axis is flipped so up = better defense, same as every other axis - the underlying number is still negative-is-good. Top-right = best teams overall."
             />
 
             <LogoScatterChart
@@ -224,7 +185,7 @@ export default function StatsPage() {
               xLabel="EPA/play"
               yLabel="ANY/A"
               points={mvpPoints}
-              xFmt={qbEpaPctFmt}
+              xFmt={qbEpaFmt}
               yFmt={anyAFmt}
               note="Live QB EPA Leaders export, latest logged week."
             />

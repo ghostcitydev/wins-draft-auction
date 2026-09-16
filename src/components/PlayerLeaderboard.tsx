@@ -6,7 +6,20 @@ import clsx from "clsx";
 import type { PlayerGroup } from "@/lib/team-types";
 import { fmtNum, fmtMoney, fmtSignedMoney, fmtPct, fmtSignedPct } from "@/lib/format";
 
-type SortKey = "player" | "w" | "l" | "pct" | "ou" | "paid" | "value" | "diff" | "proj" | "pyth" | "epa";
+type SortKey =
+  | "player"
+  | "w"
+  | "l"
+  | "pct"
+  | "ou"
+  | "paid"
+  | "value"
+  | "diff"
+  | "proj"
+  | "pyth"
+  | "pastSched"
+  | "futureSched"
+  | "epa";
 
 const COLUMNS: {
   key: SortKey;
@@ -17,7 +30,7 @@ const COLUMNS: {
 }[] = [
   { key: "w", label: "W", format: (g) => `${g.totalWins}`, value: (g) => g.totalWins },
   { key: "l", label: "L", format: (g) => `${g.totalLosses}`, value: (g) => g.totalLosses },
-  { key: "pct", label: "PCT", format: (g) => fmtPct(g.winPct), value: (g) => g.winPct },
+  { key: "pct", label: "PCT", format: (g) => fmtPct(g.winPct, 0), value: (g) => g.winPct },
   { key: "ou", label: "O/U", format: (g) => fmtNum(g.totalPreseasonOU), value: (g) => g.totalPreseasonOU },
   { key: "paid", label: "Paid", format: (g) => fmtMoney(g.totalPaid), value: (g) => g.totalPaid },
   // Value = raw auction dollar value this player's teams are worth right
@@ -38,6 +51,18 @@ const COLUMNS: {
   },
   { key: "proj", label: "Proj", format: (g) => fmtNum(g.totalProjected), value: (g) => g.totalProjected },
   { key: "pyth", label: "Pyth", format: (g) => fmtNum(g.totalPythagoreanWins), value: (g) => g.totalPythagoreanWins },
+  {
+    key: "pastSched",
+    label: "P.Sch",
+    format: (g) => fmtSignedPct(g.avgPastOpponentEpa),
+    value: (g) => g.avgPastOpponentEpa ?? 0,
+  },
+  {
+    key: "futureSched",
+    label: "F.Sch",
+    format: (g) => fmtSignedPct(g.avgFutureOpponentEpa),
+    value: (g) => g.avgFutureOpponentEpa ?? 0,
+  },
   {
     key: "epa",
     label: "EPA",

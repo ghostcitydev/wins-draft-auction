@@ -1,13 +1,12 @@
 "use client";
 
 import Image from "next/image";
-import { fmtNum, fmtSignedPct } from "@/lib/format";
+import { fmtNum } from "@/lib/format";
 import { useQbStats } from "@/lib/useQbStats";
 
-// Same digit-shift convention as the team EPA scatter charts, but QB EPA/play
-// runs an order of magnitude smaller than team EPA/play, so it needs an
-// extra decimal to preserve precision once shifted to a percent.
-const qbEpaPctFmt = (n: number | null) => fmtSignedPct(n, 2);
+// QB EPA/play is shown as the plain per-play decimal (0.69, 0.67, ...), not
+// shifted into a percentage like team-level EPA/play.
+const qbEpaFmt = (n: number | null) => fmtNum(n, 2);
 
 export default function QBStatsTable() {
   const { qbs, week, loading, error } = useQbStats();
@@ -66,7 +65,7 @@ export default function QBStatsTable() {
                     </div>
                   </td>
                   <td className="px-1 py-1.5 text-center tabular-nums text-[11px] text-muted">
-                    {qbEpaPctFmt(q.epaPlay)}
+                    {qbEpaFmt(q.epaPlay)}
                   </td>
                   <td className="px-1 py-1.5 text-center tabular-nums text-[11px] text-muted">
                     {fmtNum(q.anyA, 1)}
