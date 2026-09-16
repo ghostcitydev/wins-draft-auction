@@ -8,15 +8,14 @@ import PlayoffOddsTable from "@/components/PlayoffOddsTable";
 import QBStatsTable from "@/components/QBStatsTable";
 import { useTeams } from "@/lib/useTeams";
 import { useQbStats } from "@/lib/useQbStats";
-import { fmtSignedPct, fmtNum } from "@/lib/format";
+import { fmtSignedPct, fmtNum, fmtPct } from "@/lib/format";
 
 // Team-level EPA/play splits run roughly ±0.03-0.15 - 1 decimal on the
 // percentage keeps the same digit count as how they're shown elsewhere
 // in the app (e.g. Standings' EPA column).
 const teamPctFmt = (n: number) => fmtSignedPct(n, 1);
-// QB EPA/play is shown as the plain per-play decimal (0.69, 0.67, ...), not
-// shifted into a percentage like team-level EPA/play.
-const qbEpaFmt = (n: number) => fmtNum(n, 2);
+// QB EPA/play as a whole-number percentage (67%, not 67.1% or 0.67).
+const qbEpaFmt = (n: number) => fmtPct(n, 0);
 const anyAFmt = (n: number) => fmtNum(n, 1);
 
 export default function StatsPage() {

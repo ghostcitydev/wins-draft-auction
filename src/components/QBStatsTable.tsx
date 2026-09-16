@@ -1,12 +1,11 @@
 "use client";
 
 import Image from "next/image";
-import { fmtNum } from "@/lib/format";
+import { fmtNum, fmtPct } from "@/lib/format";
 import { useQbStats } from "@/lib/useQbStats";
 
-// QB EPA/play is shown as the plain per-play decimal (0.69, 0.67, ...), not
-// shifted into a percentage like team-level EPA/play.
-const qbEpaFmt = (n: number | null) => fmtNum(n, 2);
+// Whole-number percentage (67%, not 67.1% or 0.67).
+const qbEpaFmt = (n: number | null) => fmtPct(n, 0);
 
 export default function QBStatsTable() {
   const { qbs, week, loading, error } = useQbStats();
