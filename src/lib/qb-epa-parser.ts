@@ -70,6 +70,11 @@ export const QB_TEAM_ABBR: Record<string, string> = {
   "C.Rush": "ATL",
   "B.Nix": "DEN",
   "M.Stafford": "LAR",
+  // Confirmed by the commissioner on 2026-10-06.
+  "M.Mariota": "WAS",
+  "M.Penix": "ATL",
+  "C.Keenum": "CHI",
+  "J.Winston": "NYG",
 };
 
 function normalizeAbbr(raw: string): string {

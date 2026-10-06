@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import {
   CartesianGrid,
   ReferenceLine,
@@ -33,12 +34,29 @@ interface DotProps {
   payload?: ScatterPoint;
 }
 
+// Logo URLs that failed to load, remembered across re-renders so a missing
+// logo stays a plain circle instead of flashing a broken-image icon.
+const failedLogos = new Set<string>();
+
 function LogoDot({ cx, cy, payload }: DotProps) {
+  const [failed, setFailed] = useState(() => !!payload && failedLogos.has(payload.logoUrl));
   if (cx === undefined || cy === undefined || !payload) return null;
   return (
     <g>
       <circle cx={cx} cy={cy} r={10} fill="var(--surface)" stroke="var(--border)" />
-      <image href={payload.logoUrl} x={cx - 9} y={cy - 9} width={18} height={18} />
+      {!failed && (
+        <image
+          href={payload.logoUrl}
+          x={cx - 9}
+          y={cy - 9}
+          width={18}
+          height={18}
+          onError={() => {
+            failedLogos.add(payload.logoUrl);
+            setFailed(true);
+          }}
+        />
+      )}
     </g>
   );
 }
