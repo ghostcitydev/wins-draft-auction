@@ -139,8 +139,9 @@ interface ColumnMap {
   name: number;
   epaPlay: number;
   anyA: number;
-  // Summed when there's more than one (the QB stats table has separate
-  // passing and rushing Yards/TDs columns and no combined total).
+  // Summed when there's more than one. The QB stats table has no combined
+  // total, so only its first (passing) Yards/TDs columns are used - the
+  // one-QB-per-team pick goes by passing yards.
   totalYds: number[];
   totalTd: number[];
 }
@@ -172,8 +173,8 @@ function columnsFromHeader(cells: string[]): ColumnMap | null {
     name,
     epaPlay,
     anyA,
-    totalYds: totalYds !== -1 ? [totalYds] : findAll("yds", "yards"),
-    totalTd: totalTd !== -1 ? [totalTd] : findAll("td", "tds"),
+    totalYds: totalYds !== -1 ? [totalYds] : findAll("yds", "yards").slice(0, 1),
+    totalTd: totalTd !== -1 ? [totalTd] : findAll("td", "tds").slice(0, 1),
   };
 }
 
