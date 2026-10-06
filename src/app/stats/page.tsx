@@ -8,15 +8,15 @@ import PlayoffOddsTable from "@/components/PlayoffOddsTable";
 import QBStatsTable from "@/components/QBStatsTable";
 import { useTeams } from "@/lib/useTeams";
 import { useQbStats } from "@/lib/useQbStats";
-import { fmtSignedPct, fmtNum } from "@/lib/format";
+import { fmtSignedPct, fmtNum, fmtPct } from "@/lib/format";
 
 // Team-level EPA/play splits run roughly ±0.03-0.15 - 1 decimal on the
 // percentage keeps the same digit count as how they're shown elsewhere
 // in the app (e.g. Standings' EPA column).
 const teamPctFmt = (n: number) => fmtSignedPct(n, 0);
 // QB EPA/play as a whole-number percentage (67%, not 67.1% or 0.67).
+const qbEpaFmt = (n: number) => fmtPct(n, 0);
 const passYdsFmt = (n: number) => fmtNum(n, 0);
-const anyAFmt = (n: number) => fmtNum(n, 1);
 
 export default function StatsPage() {
   const { teams, loading, error } = useTeams();
@@ -67,13 +67,13 @@ export default function StatsPage() {
   const mvpPoints: ScatterPoint[] = useMemo(
     () =>
       (liveQbs ?? [])
-        .filter((q) => q.totalYds !== null && q.anyA !== null)
+        .filter((q) => q.totalYds !== null && q.epaPlay !== null)
         .map((q) => ({
           key: `${q.abbr ?? "FA"}-${q.name}`,
           label: q.abbr ? `${q.name} (${q.abbr})` : q.name,
           logoUrl: q.logoUrl,
           x: q.totalYds as number,
-          y: q.anyA as number,
+          y: q.epaPlay as number,
         })),
     [liveQbs]
   );
@@ -182,10 +182,10 @@ export default function StatsPage() {
             <LogoScatterChart
               title="MVP Watch"
               xLabel="Passing yards"
-              yLabel="ANY/A"
+              yLabel="EPA/play"
               points={mvpPoints}
               xFmt={passYdsFmt}
-              yFmt={anyAFmt}
+              yFmt={qbEpaFmt}
               note="nfelo QB stats, latest logged week."
             />
 
