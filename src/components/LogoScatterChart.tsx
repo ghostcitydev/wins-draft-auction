@@ -57,22 +57,23 @@ export function snugAxis(
     hi = center + minSpan / 2;
   }
   // Keep the 0 reference line on the chart when it's close to the data.
-  const nearZero = (hi - lo) * 0.25;
+  const nearZero = (hi - lo) * 0.15;
   if (lo > 0 && lo <= nearZero) lo = 0;
   if (hi < 0 && -hi <= nearZero) hi = 0;
   // Round away float noise (e.g. 0.30000000000000004) so ticks format cleanly.
   const snap = (n: number) => Math.round(n * 1e9) / 1e9;
-  // Pick the nice 1/2/2.5/5 x 10^k step whose outward-rounded domain wastes
-  // the least space while keeping a readable 4-7 tick intervals.
+  // Pick the nice 1/2/5 x 10^k step whose outward-rounded domain wastes the
+  // least space while keeping a readable 4-9 tick intervals. (No 2.5 steps -
+  // they'd show as rounded labels like "-8%" for -7.5% on whole-% axes.)
   const mag = Math.pow(10, Math.floor(Math.log10((hi - lo) / 5)));
   let best: { lo: number; hi: number; step: number } | undefined;
   for (const m of [mag / 10, mag, mag * 10]) {
-    for (const n of [1, 2, 2.5, 5]) {
+    for (const n of [1, 2, 5]) {
       const step = n * m;
       const l = snap(Math.floor(snap(lo / step)) * step);
       const h = snap(Math.ceil(snap(hi / step)) * step);
       const intervals = Math.round((h - l) / step);
-      if (intervals < 4 || intervals > 7) continue;
+      if (intervals < 4 || intervals > 9) continue;
       if (!best || h - l < best.hi - best.lo - 1e-9) best = { lo: l, hi: h, step };
     }
   }
@@ -169,14 +170,17 @@ export default function LogoScatterChart({
   // negative is genuinely better, but "up = better" should still read the
   // same as every other axis in the app.
   yReversed?: boolean;
-  // When set, both axes fit the data snugly (see snugAxis) with at least this
-  // much span each, instead of Recharts' wide auto-rounded domains.
-  fitMinSpan?: number;
+  // When set, the axes fit the data snugly (see snugAxis) with at least this
+  // much span - one number for both axes, or [x, y] when their units differ -
+  // instead of Recharts' wide auto-rounded domains.
+  fitMinSpan?: number | [number, number];
 }) {
+  const [xMinSpan, yMinSpan] =
+    typeof fitMinSpan === "number" ? [fitMinSpan, fitMinSpan] : fitMinSpan ?? [];
   const xFit =
-    fitMinSpan !== undefined ? snugAxis(points.map((p) => p.x), fitMinSpan) : undefined;
+    xMinSpan !== undefined ? snugAxis(points.map((p) => p.x), xMinSpan) : undefined;
   const yFit =
-    fitMinSpan !== undefined ? snugAxis(points.map((p) => p.y), fitMinSpan) : undefined;
+    yMinSpan !== undefined ? snugAxis(points.map((p) => p.y), yMinSpan) : undefined;
   return (
     <div className="rounded-2xl border border-border bg-surface p-3">
       <p className="px-1 text-sm font-semibold">{title}</p>

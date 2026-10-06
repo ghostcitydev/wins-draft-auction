@@ -17,6 +17,10 @@ const teamPctFmt = (n: number) => fmtSignedPct(n, 0);
 // Team EPA scatters fit their data snugly, but each axis always spans at
 // least 30 points (±0.15 EPA/play) so a tight cluster doesn't over-zoom.
 const EPA_MIN_SPAN = 0.3;
+// Avg opponent EPA/play clusters much tighter, so it gets a 10-pt minimum.
+const SCHEDULE_MIN_SPAN = 0.1;
+// MVP Watch: at least 300 passing yards on x, 30 pts of QB EPA/play on y.
+const MVP_MIN_SPAN: [number, number] = [300, 0.3];
 // QB EPA/play as a whole-number percentage (67%, not 67.1% or 0.67).
 const qbEpaFmt = (n: number) => fmtPct(n, 0);
 const passYdsFmt = (n: number) => fmtNum(n, 0);
@@ -169,6 +173,7 @@ export default function StatsPage() {
                 points={schedulePoints}
                 xFmt={teamPctFmt}
                 yFmt={teamPctFmt}
+                fitMinSpan={SCHEDULE_MIN_SPAN}
                 note={
                   scheduleIsPreseason
                     ? "* Season hasn't started - \"past\" uses last season's completed schedule as a stand-in, \"future\" uses this year's full schedule. Switches to real in-season splits after Week 1."
@@ -192,6 +197,7 @@ export default function StatsPage() {
               points={mvpPoints}
               xFmt={passYdsFmt}
               yFmt={qbEpaFmt}
+              fitMinSpan={MVP_MIN_SPAN}
               note="nfelo QB stats, latest logged week."
             />
 
