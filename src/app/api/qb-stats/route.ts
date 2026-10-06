@@ -25,7 +25,12 @@ export async function GET() {
       db.select().from(teams),
     ]);
 
-    const week = allRatings.length ? Math.max(...allRatings.map((r) => r.week)) : null;
+    // Latest week with chartable numbers - a week saved with blank EPA/ANY/A
+    // (e.g. a paste whose columns didn't line up) shouldn't empty the page.
+    const usableWeeks = allRatings
+      .filter((r) => r.epaPlay !== null && r.anyA !== null)
+      .map((r) => r.week);
+    const week = usableWeeks.length ? Math.max(...usableWeeks) : null;
     const teamById = new Map(allTeams.map((t) => [t.id, t]));
 
     const allRows: (QbStatRow & { teamId: string | null })[] = allRatings

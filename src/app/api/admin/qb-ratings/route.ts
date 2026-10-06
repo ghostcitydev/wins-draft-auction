@@ -28,6 +28,21 @@ export async function POST(req: NextRequest) {
 
   const { rows, errors, unmatchedNames } = parseQbEpaPaste(body.rawText);
 
+  // Saving a week where no QB has both chart numbers would make it the
+  // "latest week" and blank out the MVP Watch chart, so reject it instead.
+  const usable = rows.filter((r) => r.epaPlay !== null && r.anyA !== null);
+  if (usable.length === 0) {
+    return NextResponse.json(
+      {
+        error:
+          "Couldn't find EPA/Play and ANY/A numbers in that paste, so nothing was saved. " +
+          "Paste nfelo's QB EPA table including its header row.",
+        parseErrors: errors.slice(0, 5),
+      },
+      { status: 400 }
+    );
+  }
+
   const allTeams = await db.select().from(teams);
   const teamIdByAbbr = new Map(allTeams.map((t) => [t.abbr, t.id]));
 

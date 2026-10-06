@@ -77,15 +77,92 @@ function normalizeAbbr(raw: string): string {
   return ABBR_ALIASES[upper] ?? upper;
 }
 
-function parseNum(raw: string): number | null {
-  const cleaned = raw.trim().replace(/^\+/, "");
+// Strips the formatting a pasted/exported table can carry around a number:
+// surrounding quotes, thousands separators ("1,234" season yards once QBs
+// pass 1,000), a leading "+", and a trailing "%" (scaled back to a decimal).
+function parseNum(raw: string | undefined): number | null {
+  if (raw === undefined) return null;
+  let cleaned = raw.trim().replace(/^"|"$/g, "").replace(/,/g, "").replace(/^\+/, "");
   if (cleaned === "" || cleaned === "-" || cleaned === "--" || cleaned === "—") return null;
+  const isPct = cleaned.endsWith("%");
+  if (isPct) cleaned = cleaned.slice(0, -1).trim();
   const n = Number(cleaned);
-  return Number.isFinite(n) ? n : null;
+  if (!Number.isFinite(n)) return null;
+  return isPct ? n / 100 : n;
+}
+
+// nfelo lists QBs as "F.Last"; a copied web table can also come through as
+// "Josh Allen" or "J. Allen". Normalize all of those to the "F.Last" keys
+// QB_TEAM_ABBR uses.
+function normalizeName(raw: string): string {
+  const name = raw.trim().replace(/^"|"$/g, "").replace(/\s+/g, " ");
+  if (QB_TEAM_ABBR[name]) return name;
+  const dotted = name.match(/^([A-Za-z])[A-Za-z]*\.?\s*([A-Za-z'\-. ]+)$/);
+  if (dotted) {
+    const candidate = `${dotted[1].toUpperCase()}.${dotted[2].trim()}`;
+    if (QB_TEAM_ABBR[candidate]) return candidate;
+  }
+  return name;
+}
+
+// Splits one line on tabs (a copied web table) or on commas outside double
+// quotes (the CSV export, where a value like "1,234" is quoted).
+function splitLine(line: string): string[] {
+  if (line.includes("\t")) return line.split("\t").map((c) => c.trim());
+  const cells: string[] = [];
+  let cur = "";
+  let inQuotes = false;
+  for (const ch of line) {
+    if (ch === '"') {
+      inQuotes = !inQuotes;
+    } else if (ch === "," && !inQuotes) {
+      cells.push(cur.trim());
+      cur = "";
+    } else {
+      cur += ch;
+    }
+  }
+  cells.push(cur.trim());
+  return cells;
+}
+
+interface ColumnMap {
+  name: number;
+  epaPlay: number;
+  anyA: number;
+  totalYds: number;
+  totalTd: number;
+}
+
+// Column order of the week-1 export: QB,Total EPA,EPA/Play,Rating,ANY/A,Total Yds,Total TD,...
+const DEFAULT_COLUMNS: ColumnMap = { name: 0, epaPlay: 2, anyA: 4, totalYds: 5, totalTd: 6 };
+
+function headerKey(cell: string): string {
+  return cell.toLowerCase().replace(/[^a-z0-9]/g, "");
+}
+
+// Reads column positions from a header row, so a paste with an extra rank
+// column, a team column, or reordered columns still lines up. Returns null
+// if the line isn't a header.
+function columnsFromHeader(cells: string[]): ColumnMap | null {
+  const keys = cells.map(headerKey);
+  const find = (...names: string[]) => keys.findIndex((k) => names.includes(k));
+  const name = find("qb", "quarterback", "player", "name");
+  const epaPlay = find("epaplay", "epaperplay", "epap", "epadb", "epadropback");
+  const anyA = find("anya", "anypera");
+  if (name === -1 || epaPlay === -1 || anyA === -1) return null;
+  return {
+    name,
+    epaPlay,
+    anyA,
+    totalYds: find("totalyds", "totalyards", "yds", "yards"),
+    totalTd: find("totaltd", "totaltds", "td", "tds"),
+  };
 }
 
 export function parseQbEpaPaste(raw: string): QbParseResult {
   const lines = raw
+    .replace(/^\uFEFF/, "")
     .split(/\r?\n/)
     .map((l) => l.trim())
     .filter((l) => l.length > 0);
@@ -93,27 +170,37 @@ export function parseQbEpaPaste(raw: string): QbParseResult {
   const rows: ParsedQbRow[] = [];
   const errors: string[] = [];
   const unmatchedNames: string[] = [];
+  const seen = new Set<string>();
+  let columns = DEFAULT_COLUMNS;
 
   for (const line of lines) {
-    if (/^qb\b/i.test(line)) continue; // header row
+    const cells = splitLine(line);
 
-    let cells = line.split(",").map((c) => c.trim());
-    if (cells.length < 7) {
-      cells = line.split("\t").map((c) => c.trim());
+    const header = columnsFromHeader(cells);
+    if (header) {
+      columns = header;
+      continue;
     }
-    if (cells.length < 7) {
+    if (/^qb\b/i.test(line)) continue; // header row we couldn't map - keep last known layout
+
+    const needed = Math.max(columns.name, columns.epaPlay, columns.anyA) + 1;
+    if (cells.length < needed) {
       errors.push(`Couldn't split into enough columns: "${line.slice(0, 80)}"`);
       continue;
     }
 
-    // QB,Total EPA,EPA/Play,Rating,ANY/A,Total Yds,Total TD,...
-    const name = cells[0];
-    if (!name) continue;
+    const name = normalizeName(cells[columns.name] ?? "");
+    if (!name || seen.has(name)) continue; // blank, or a repeated row from a multi-page copy
+    seen.add(name);
 
-    const epaPlay = parseNum(cells[2]);
-    const anyA = parseNum(cells[4]);
-    const totalYds = parseNum(cells[5]);
-    const totalTd = parseNum(cells[6]);
+    const epaPlay = parseNum(cells[columns.epaPlay]);
+    const anyA = parseNum(cells[columns.anyA]);
+    const totalYds = columns.totalYds === -1 ? null : parseNum(cells[columns.totalYds]);
+    const totalTd = columns.totalTd === -1 ? null : parseNum(cells[columns.totalTd]);
+
+    if (epaPlay === null || anyA === null) {
+      errors.push(`No EPA/Play or ANY/A number for "${name}" - check the pasted columns`);
+    }
 
     const mapped = QB_TEAM_ABBR[name];
     if (!mapped) {
