@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { eq } from "drizzle-orm";
+import { and, eq } from "drizzle-orm";
 import { db } from "@/db";
 import { teams, qbRatings, appConfig } from "@/db/schema";
 import { parseQbEpaPaste } from "@/lib/qb-epa-parser";
@@ -42,6 +42,12 @@ export async function POST(req: NextRequest) {
       { status: 400 }
     );
   }
+
+  // Replace the whole week, so rows from an earlier paste of the same week
+  // (e.g. the same QBs under a different name format) don't linger.
+  await db
+    .delete(qbRatings)
+    .where(and(eq(qbRatings.season, body.season), eq(qbRatings.week, body.week)));
 
   const allTeams = await db.select().from(teams);
   const teamIdByAbbr = new Map(allTeams.map((t) => [t.abbr, t.id]));

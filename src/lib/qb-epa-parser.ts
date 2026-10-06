@@ -91,18 +91,22 @@ function parseNum(raw: string | undefined): number | null {
   return isPct ? n / 100 : n;
 }
 
-// nfelo lists QBs as "F.Last"; a copied web table can also come through as
-// "Josh Allen" or "J. Allen". Normalize all of those to the "F.Last" keys
-// QB_TEAM_ABBR uses.
-function normalizeName(raw: string): string {
-  const name = raw.trim().replace(/^"|"$/g, "").replace(/\s+/g, " ");
+function cleanName(raw: string): string {
+  return raw.trim().replace(/^"|"$/g, "").replace(/\s+/g, " ");
+}
+
+// QB_TEAM_ABBR is keyed "F.Last" (the EPA Leaders export's format). nfelo's
+// QB stats table uses full names instead ("Josh Allen", "C.J. Stroud",
+// "Michael Penix Jr."), so reduce those to first initial + last name.
+function qbKey(name: string): string {
   if (QB_TEAM_ABBR[name]) return name;
-  const dotted = name.match(/^([A-Za-z])[A-Za-z]*\.?\s*([A-Za-z'\-. ]+)$/);
-  if (dotted) {
-    const candidate = `${dotted[1].toUpperCase()}.${dotted[2].trim()}`;
-    if (QB_TEAM_ABBR[candidate]) return candidate;
-  }
-  return name;
+  const words = name
+    .replace(/\./g, ". ")
+    .split(" ")
+    .filter((w) => w && !/^(jr|sr|ii|iii|iv|v)\.?$/i.test(w));
+  if (words.length < 2) return name;
+  const last = words[words.length - 1].replace(/\.$/, "");
+  return `${words[0][0].toUpperCase()}.${last}`;
 }
 
 // Splits one line on tabs (a copied web table) or on commas outside double
@@ -130,39 +134,52 @@ interface ColumnMap {
   name: number;
   epaPlay: number;
   anyA: number;
-  totalYds: number;
-  totalTd: number;
+  // Summed when there's more than one (the QB stats table has separate
+  // passing and rushing Yards/TDs columns and no combined total).
+  totalYds: number[];
+  totalTd: number[];
 }
 
-// Column order of the week-1 export: QB,Total EPA,EPA/Play,Rating,ANY/A,Total Yds,Total TD,...
-const DEFAULT_COLUMNS: ColumnMap = { name: 0, epaPlay: 2, anyA: 4, totalYds: 5, totalTd: 6 };
+// Column order of the EPA Leaders export: QB,Total EPA,EPA/Play,Rating,ANY/A,Total Yds,Total TD,...
+const DEFAULT_COLUMNS: ColumnMap = { name: 0, epaPlay: 2, anyA: 4, totalYds: [5], totalTd: [6] };
 
 function headerKey(cell: string): string {
-  return cell.toLowerCase().replace(/[^a-z0-9]/g, "");
+  // Keep "%" distinct so "TD%" isn't mistaken for the "TDs" column.
+  return cell.toLowerCase().replace(/%/g, "pct").replace(/[^a-z0-9]/g, "");
 }
 
-// Reads column positions from a header row, so a paste with an extra rank
-// column, a team column, or reordered columns still lines up. Returns null
+// Reads column positions from a header row, so either nfelo table (EPA
+// Leaders, or the wider QB stats table with "/ DB" for EPA per dropback),
+// extra rank/team columns, or reordered columns all line up. Returns null
 // if the line isn't a header.
 function columnsFromHeader(cells: string[]): ColumnMap | null {
   const keys = cells.map(headerKey);
   const find = (...names: string[]) => keys.findIndex((k) => names.includes(k));
+  const findAll = (...names: string[]) =>
+    keys.flatMap((k, i) => (names.includes(k) ? [i] : []));
   const name = find("qb", "quarterback", "player", "name");
-  const epaPlay = find("epaplay", "epaperplay", "epap", "epadb", "epadropback");
+  const epaPlay = find("epaplay", "epaperplay", "epap", "epadb", "epadropback", "db");
   const anyA = find("anya", "anypera");
   if (name === -1 || epaPlay === -1 || anyA === -1) return null;
+  const totalYds = find("totalyds", "totalyards");
+  const totalTd = find("totaltd", "totaltds");
   return {
     name,
     epaPlay,
     anyA,
-    totalYds: find("totalyds", "totalyards", "yds", "yards"),
-    totalTd: find("totaltd", "totaltds", "td", "tds"),
+    totalYds: totalYds !== -1 ? [totalYds] : findAll("yds", "yards"),
+    totalTd: totalTd !== -1 ? [totalTd] : findAll("td", "tds"),
   };
+}
+
+function sumCols(cells: string[], cols: number[]): number | null {
+  const nums = cols.map((c) => parseNum(cells[c])).filter((n): n is number => n !== null);
+  return nums.length ? nums.reduce((a, b) => a + b, 0) : null;
 }
 
 export function parseQbEpaPaste(raw: string): QbParseResult {
   const lines = raw
-    .replace(/^\uFEFF/, "")
+    .replace(/^﻿/, "")
     .split(/\r?\n/)
     .map((l) => l.trim())
     .filter((l) => l.length > 0);
@@ -181,7 +198,10 @@ export function parseQbEpaPaste(raw: string): QbParseResult {
       columns = header;
       continue;
     }
-    if (/^qb\b/i.test(line)) continue; // header row we couldn't map - keep last known layout
+    if (/^qb\b/i.test(line)) {
+      errors.push(`Didn't recognize the header row - expected QB, EPA/Play (or / DB) and ANY/A columns`);
+      continue;
+    }
 
     const needed = Math.max(columns.name, columns.epaPlay, columns.anyA) + 1;
     if (cells.length < needed) {
@@ -189,20 +209,21 @@ export function parseQbEpaPaste(raw: string): QbParseResult {
       continue;
     }
 
-    const name = normalizeName(cells[columns.name] ?? "");
-    if (!name || seen.has(name)) continue; // blank, or a repeated row from a multi-page copy
-    seen.add(name);
+    const name = cleanName(cells[columns.name] ?? "");
+    const key = qbKey(name);
+    if (!name || seen.has(key)) continue; // blank, or a repeated row from a multi-page copy
+    seen.add(key);
 
     const epaPlay = parseNum(cells[columns.epaPlay]);
     const anyA = parseNum(cells[columns.anyA]);
-    const totalYds = columns.totalYds === -1 ? null : parseNum(cells[columns.totalYds]);
-    const totalTd = columns.totalTd === -1 ? null : parseNum(cells[columns.totalTd]);
+    const totalYds = sumCols(cells, columns.totalYds);
+    const totalTd = sumCols(cells, columns.totalTd);
 
     if (epaPlay === null || anyA === null) {
       errors.push(`No EPA/Play or ANY/A number for "${name}" - check the pasted columns`);
     }
 
-    const mapped = QB_TEAM_ABBR[name];
+    const mapped = QB_TEAM_ABBR[key];
     if (!mapped) {
       unmatchedNames.push(name);
       rows.push({ name, abbr: null, epaPlay, anyA, totalYds, totalTd });
