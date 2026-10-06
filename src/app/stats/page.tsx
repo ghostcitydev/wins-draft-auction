@@ -2,7 +2,7 @@
 
 import { useMemo } from "react";
 import TopBar from "@/components/TopBar";
-import LogoScatterChart, { ScatterPoint } from "@/components/LogoScatterChart";
+import LogoScatterChart, { QuadrantLabels, ScatterPoint } from "@/components/LogoScatterChart";
 import TeamRankingsTable from "@/components/TeamRankingsTable";
 import PlayoffOddsTable from "@/components/PlayoffOddsTable";
 import QBStatsTable from "@/components/QBStatsTable";
@@ -21,6 +21,13 @@ const EPA_MIN_SPAN = 0.3;
 const SCHEDULE_MIN_SPAN = 0.1;
 // MVP Watch: at least 300 passing yards on x, 30 pts of QB EPA/play on y.
 const MVP_MIN_SPAN: [number, number] = [300, 0.3];
+// Schedule axes are flipped (right/up = weaker opponents = easier).
+const SCHEDULE_QUADRANTS: QuadrantLabels = {
+  topLeft: ["Tough past", "Easy future"],
+  topRight: ["Easy past", "Easy future"],
+  bottomLeft: ["Tough past", "Tough future"],
+  bottomRight: ["Easy past", "Tough future"],
+};
 // QB EPA/play as a whole-number percentage (67%, not 67.1% or 0.67).
 const qbEpaFmt = (n: number) => fmtPct(n, 0);
 const passYdsFmt = (n: number) => fmtNum(n, 0);
@@ -176,10 +183,13 @@ export default function StatsPage() {
                 xFmt={teamPctFmt}
                 yFmt={teamPctFmt}
                 fitMinSpan={SCHEDULE_MIN_SPAN}
+                xReversed
+                yReversed
+                quadrantLabels={SCHEDULE_QUADRANTS}
                 note={
                   scheduleIsPreseason
-                    ? "* Season hasn't started - \"past\" uses last season's completed schedule as a stand-in, \"future\" uses this year's full schedule. Switches to real in-season splits after Week 1."
-                    : "Past = opponents already played; future = opponents left to play, both by avg opponent EPA/play. Top-right = tough schedule already, tough schedule ahead too."
+                    ? "* Season hasn't started - \"past\" uses last season's completed schedule as a stand-in, \"future\" uses this year's full schedule. Switches to real in-season splits after Week 1. Both axes are flipped so up/right = easier schedule."
+                    : "Past = opponents already played; future = opponents left to play, both by avg opponent EPA/play. Both axes are flipped so up/right = weaker opponents (easier schedule)."
                 }
               />
             ) : (

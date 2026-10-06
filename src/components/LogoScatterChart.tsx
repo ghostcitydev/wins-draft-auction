@@ -8,6 +8,9 @@ import {
   Scatter,
   ScatterChart,
   Tooltip,
+  usePlotArea,
+  useXAxisScale,
+  useYAxisScale,
   XAxis,
   YAxis,
 } from "recharts";
@@ -26,6 +29,105 @@ export interface DiagonalLine {
   y1: number;
   x2: number;
   y2: number;
+}
+
+/** Faint labels for the four visual quadrants (split at the 0 lines). */
+export interface QuadrantLabels {
+  topLeft: string[];
+  topRight: string[];
+  bottomLeft: string[];
+  bottomRight: string[];
+}
+
+const QUAD_FONT = 9;
+const QUAD_LINE = 10;
+const DOT_CLEARANCE = 13; // logo dot radius (10) + a little breathing room
+
+/**
+ * Draws each quadrant's label in the first spot - scanning inward from the
+ * quadrant's outer corner - whose text box doesn't touch any team's logo.
+ * A label with no free spot is simply left off.
+ */
+function QuadrantLabelLayer({ labels, points }: { labels: QuadrantLabels; points: ScatterPoint[] }) {
+  const plot = usePlotArea();
+  const xScale = useXAxisScale();
+  const yScale = useYAxisScale();
+  if (!plot || !xScale || !yScale) return null;
+
+  const left = plot.x;
+  const right = plot.x + plot.width;
+  const top = plot.y;
+  const bottom = plot.y + plot.height;
+  const clamp = (v: number, lo: number, hi: number) => Math.min(hi, Math.max(lo, v));
+  const zeroX = clamp(Number(xScale(0) ?? (left + right) / 2), left, right);
+  const zeroY = clamp(Number(yScale(0) ?? (top + bottom) / 2), top, bottom);
+  const dots = points
+    .map((p) => ({ x: Number(xScale(p.x)), y: Number(yScale(p.y)) }))
+    .filter((d) => Number.isFinite(d.x) && Number.isFinite(d.y));
+
+  const hitsDot = (bx: number, by: number, bw: number, bh: number) =>
+    dots.some((d) => {
+      const nx = clamp(d.x, bx, bx + bw);
+      const ny = clamp(d.y, by, by + bh);
+      return (d.x - nx) ** 2 + (d.y - ny) ** 2 < DOT_CLEARANCE ** 2;
+    });
+
+  const inset = 4;
+  const quads = [
+    { lines: labels.topLeft, x0: left, x1: zeroX, y0: top, y1: zeroY, alignRight: false, fromTop: true },
+    { lines: labels.topRight, x0: zeroX, x1: right, y0: top, y1: zeroY, alignRight: true, fromTop: true },
+    { lines: labels.bottomLeft, x0: left, x1: zeroX, y0: zeroY, y1: bottom, alignRight: false, fromTop: false },
+    { lines: labels.bottomRight, x0: zeroX, x1: right, y0: zeroY, y1: bottom, alignRight: true, fromTop: false },
+  ];
+
+  return (
+    <g pointerEvents="none">
+      {quads.map((q, qi) => {
+        const w = Math.max(...q.lines.map((l) => l.length)) * QUAD_FONT * 0.55;
+        const h = q.lines.length * QUAD_LINE;
+        const xMin = q.x0 + inset;
+        const xMax = q.x1 - inset - w;
+        const yMin = q.y0 + inset;
+        const yMax = q.y1 - inset - h;
+        if (xMax < xMin || yMax < yMin) return null;
+        // Candidate boxes ordered by distance from the quadrant's outer corner.
+        const candidates: { x: number; y: number; dist: number }[] = [];
+        for (let dx = 0; dx <= xMax - xMin; dx += 6) {
+          for (let dy = 0; dy <= yMax - yMin; dy += 4) {
+            candidates.push({
+              x: q.alignRight ? xMax - dx : xMin + dx,
+              y: q.fromTop ? yMin + dy : yMax - dy,
+              dist: dx * dx + dy * dy,
+            });
+          }
+        }
+        candidates.sort((a, b) => a.dist - b.dist);
+        const spot = candidates.find((c) => !hitsDot(c.x, c.y, w, h));
+        if (!spot) return null;
+        return (
+          <text
+            key={qi}
+            x={q.alignRight ? spot.x + w : spot.x}
+            y={spot.y}
+            textAnchor={q.alignRight ? "end" : "start"}
+            fontSize={QUAD_FONT}
+            fill="var(--muted)"
+            opacity={0.45}
+          >
+            {q.lines.map((line, li) => (
+              <tspan
+                key={li}
+                x={q.alignRight ? spot.x + w : spot.x}
+                dy={li === 0 ? QUAD_FONT : QUAD_LINE}
+              >
+                {line}
+              </tspan>
+            ))}
+          </text>
+        );
+      })}
+    </g>
+  );
 }
 
 interface DotProps {
@@ -156,6 +258,7 @@ export default function LogoScatterChart({
   yReversed = false,
   xReversed = false,
   fitMinSpan,
+  quadrantLabels,
 }: {
   title: string;
   note?: string;
@@ -177,6 +280,7 @@ export default function LogoScatterChart({
   // much span - one number for both axes, or [x, y] when their units differ -
   // instead of Recharts' wide auto-rounded domains.
   fitMinSpan?: number | [number, number];
+  quadrantLabels?: QuadrantLabels;
 }) {
   const [xMinSpan, yMinSpan] =
     typeof fitMinSpan === "number" ? [fitMinSpan, fitMinSpan] : fitMinSpan ?? [];
@@ -245,6 +349,7 @@ export default function LogoScatterChart({
               content={<ChartTooltip xLabel={xLabel} yLabel={yLabel} xFmt={xFmt} yFmt={yFmt} />}
               cursor={{ stroke: "var(--border)" }}
             />
+            {quadrantLabels && <QuadrantLabelLayer labels={quadrantLabels} points={points} />}
             <Scatter data={points} shape={(props: unknown) => <LogoDot {...(props as DotProps)} />} />
           </ScatterChart>
         </ResponsiveContainer>
