@@ -9,7 +9,8 @@
  *   - New VOR        = Wins - MIN(Wins) across all 32 teams
  *   - Current Value  = MIN(maxTeamValue, VOR * (totalBudget / SUM(VOR)))
  *   - Value          = Current Value - Paid
- *   - Projected wins = 3.125 * (preseasonOU - 4.5)   [static, from the O/U line]
+ *   - Projected wins = 3.125 * (preseasonOU - 4.5)   [static, from the O/U line;
+ *                      fallback only - FTN DAVE Mean Wins is used when logged]
  *
  * Pythagorean wins uses the standard Football Outsiders / Pro-Football-Reference
  * NFL exponent (2.37) applied to points for/against pulled live from ESPN.

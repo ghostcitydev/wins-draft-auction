@@ -14,6 +14,9 @@ import { fmtSignedPct, fmtNum, fmtPct } from "@/lib/format";
 // percentage keeps the same digit count as how they're shown elsewhere
 // in the app (e.g. Standings' EPA column).
 const teamPctFmt = (n: number) => fmtSignedPct(n, 0);
+// Team EPA scatters fit their data snugly, but each axis always spans at
+// least 30 points (±0.15 EPA/play) so a tight cluster doesn't over-zoom.
+const EPA_MIN_SPAN = 0.3;
 // QB EPA/play as a whole-number percentage (67%, not 67.1% or 0.67).
 const qbEpaFmt = (n: number) => fmtPct(n, 0);
 const passYdsFmt = (n: number) => fmtNum(n, 0);
@@ -132,6 +135,7 @@ export default function StatsPage() {
               points={totalEpaPoints}
               xFmt={teamPctFmt}
               yFmt={teamPctFmt}
+              fitMinSpan={EPA_MIN_SPAN}
               yReversed
               note="Def EPA/play axis is flipped so up = better defense, same as every other axis - the underlying number is still negative-is-good. Top-right = best teams overall."
             />
@@ -143,6 +147,7 @@ export default function StatsPage() {
               points={offEpaPoints}
               xFmt={teamPctFmt}
               yFmt={teamPctFmt}
+              fitMinSpan={EPA_MIN_SPAN}
             />
 
             <LogoScatterChart
@@ -152,6 +157,7 @@ export default function StatsPage() {
               points={defEpaPoints}
               xFmt={teamPctFmt}
               yFmt={teamPctFmt}
+              fitMinSpan={EPA_MIN_SPAN}
               note="More negative is better on both axes."
             />
 

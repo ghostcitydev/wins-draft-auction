@@ -176,12 +176,15 @@ export async function getTeamRows(season: number): Promise<TeamRow[]> {
       playerName: player?.name ?? null,
       paid: draftPick?.paid ?? null,
       preseasonOU: draftPick?.preseasonOU ?? null,
-      // Prefer a real published projection (e.g. The Athletic's preseason
-      // preview) over the computed OU-based formula - only fall back to the
-      // formula if a team/season doesn't have a real one entered yet.
-      projected: draftPick
-        ? draftPick.athleticProjection ?? projectedWins(draftPick.preseasonOU)
-        : null,
+      // Prefer the latest FTN DAVE/playoff-odds "Mean Wins" (simulated
+      // full-season wins, see /api/admin/team-dvoa). Without one, fall back to
+      // a real published preseason projection (e.g. The Athletic's preview),
+      // then to the computed OU-based formula.
+      projected:
+        playoffOdds?.meanWins ??
+        (draftPick
+          ? draftPick.athleticProjection ?? projectedWins(draftPick.preseasonOU)
+          : null),
       wins,
       losses,
       ties,

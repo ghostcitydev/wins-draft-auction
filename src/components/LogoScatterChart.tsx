@@ -34,6 +34,57 @@ interface DotProps {
   payload?: ScatterPoint;
 }
 
+/**
+ * Snug axis domain + ticks around the data: min/max padded by ~10% of the
+ * span (room for the logo dots), widened to at least `minSpan` around the
+ * data's center so a tight cluster doesn't over-zoom, stretched to include 0
+ * when 0 sits just outside, then snapped outward to nice tick steps.
+ */
+export function snugAxis(
+  values: number[],
+  minSpan: number
+): { domain: [number, number]; ticks: number[] } | undefined {
+  const finite = values.filter(Number.isFinite);
+  if (!finite.length) return undefined;
+  const min = Math.min(...finite);
+  const max = Math.max(...finite);
+  const pad = Math.max((max - min) * 0.1, minSpan * 0.05);
+  let lo = min - pad;
+  let hi = max + pad;
+  if (hi - lo < minSpan) {
+    const center = (min + max) / 2;
+    lo = center - minSpan / 2;
+    hi = center + minSpan / 2;
+  }
+  // Keep the 0 reference line on the chart when it's close to the data.
+  const nearZero = (hi - lo) * 0.25;
+  if (lo > 0 && lo <= nearZero) lo = 0;
+  if (hi < 0 && -hi <= nearZero) hi = 0;
+  // Round away float noise (e.g. 0.30000000000000004) so ticks format cleanly.
+  const snap = (n: number) => Math.round(n * 1e9) / 1e9;
+  // Pick the nice 1/2/2.5/5 x 10^k step whose outward-rounded domain wastes
+  // the least space while keeping a readable 4-7 tick intervals.
+  const mag = Math.pow(10, Math.floor(Math.log10((hi - lo) / 5)));
+  let best: { lo: number; hi: number; step: number } | undefined;
+  for (const m of [mag / 10, mag, mag * 10]) {
+    for (const n of [1, 2, 2.5, 5]) {
+      const step = n * m;
+      const l = snap(Math.floor(snap(lo / step)) * step);
+      const h = snap(Math.ceil(snap(hi / step)) * step);
+      const intervals = Math.round((h - l) / step);
+      if (intervals < 4 || intervals > 7) continue;
+      if (!best || h - l < best.hi - best.lo - 1e-9) best = { lo: l, hi: h, step };
+    }
+  }
+  if (!best) best = { lo, hi, step: (hi - lo) / 5 };
+  const step = best.step;
+  lo = best.lo;
+  hi = best.hi;
+  const ticks: number[] = [];
+  for (let t = lo; t <= hi + step / 2; t += step) ticks.push(snap(t));
+  return { domain: [lo, hi], ticks };
+}
+
 // Logo URLs that failed to load, remembered across re-renders so a missing
 // logo stays a plain circle instead of flashing a broken-image icon.
 const failedLogos = new Set<string>();
@@ -102,6 +153,7 @@ export default function LogoScatterChart({
   height = 260,
   diagonalLines = [],
   yReversed = false,
+  fitMinSpan,
 }: {
   title: string;
   note?: string;
@@ -117,7 +169,14 @@ export default function LogoScatterChart({
   // negative is genuinely better, but "up = better" should still read the
   // same as every other axis in the app.
   yReversed?: boolean;
+  // When set, both axes fit the data snugly (see snugAxis) with at least this
+  // much span each, instead of Recharts' wide auto-rounded domains.
+  fitMinSpan?: number;
 }) {
+  const xFit =
+    fitMinSpan !== undefined ? snugAxis(points.map((p) => p.x), fitMinSpan) : undefined;
+  const yFit =
+    fitMinSpan !== undefined ? snugAxis(points.map((p) => p.y), fitMinSpan) : undefined;
   return (
     <div className="rounded-2xl border border-border bg-surface p-3">
       <p className="px-1 text-sm font-semibold">{title}</p>
@@ -132,6 +191,9 @@ export default function LogoScatterChart({
               type="number"
               dataKey="x"
               name={xLabel}
+              domain={xFit?.domain ?? ["auto", "auto"]}
+              ticks={xFit?.ticks}
+              interval={xFit ? 0 : undefined}
               tick={{ fontSize: 10, fill: "var(--muted)" }}
               tickLine={false}
               axisLine={{ stroke: "var(--border)" }}
@@ -142,6 +204,9 @@ export default function LogoScatterChart({
               dataKey="y"
               name={yLabel}
               reversed={yReversed}
+              domain={yFit?.domain ?? ["auto", "auto"]}
+              ticks={yFit?.ticks}
+              interval={yFit ? 0 : undefined}
               tick={{ fontSize: 10, fill: "var(--muted)" }}
               tickLine={false}
               axisLine={false}
