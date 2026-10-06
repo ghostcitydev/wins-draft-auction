@@ -154,6 +154,7 @@ export default function LogoScatterChart({
   height = 260,
   diagonalLines = [],
   yReversed = false,
+  xReversed = false,
   fitMinSpan,
 }: {
   title: string;
@@ -170,6 +171,8 @@ export default function LogoScatterChart({
   // negative is genuinely better, but "up = better" should still read the
   // same as every other axis in the app.
   yReversed?: boolean;
+  // Same idea for the X axis (right = better).
+  xReversed?: boolean;
   // When set, the axes fit the data snugly (see snugAxis) with at least this
   // much span - one number for both axes, or [x, y] when their units differ -
   // instead of Recharts' wide auto-rounded domains.
@@ -195,6 +198,7 @@ export default function LogoScatterChart({
               type="number"
               dataKey="x"
               name={xLabel}
+              reversed={xReversed}
               domain={xFit?.domain ?? ["auto", "auto"]}
               ticks={xFit?.ticks}
               interval={xFit ? 0 : undefined}

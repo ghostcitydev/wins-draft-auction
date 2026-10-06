@@ -162,7 +162,9 @@ export default function StatsPage() {
               xFmt={teamPctFmt}
               yFmt={teamPctFmt}
               fitMinSpan={EPA_MIN_SPAN}
-              note="More negative is better on both axes."
+              xReversed
+              yReversed
+              note="Both axes are flipped so up/right = better defense - the underlying numbers are still negative-is-good. Top-right = best defenses."
             />
 
             {schedulePoints.length > 0 ? (
