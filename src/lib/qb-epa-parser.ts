@@ -7,9 +7,10 @@
  * flagged in NfeloQbParseResult.errors instead of being silently dropped or
  * guessed at, since a wrong team attribution is worse than a missing row.
  *
- * Update QB_TEAM_ABBR by hand (verify via a current source, don't guess)
- * whenever a new week's export includes a QB who isn't in it yet - e.g. a
- * new starter after an injury/trade.
+ * New QBs mid-season don't need a code change: /admin's "Unmatched QBs"
+ * section saves name -> team assignments to the qb_team_overrides table,
+ * which the paste route passes in as `overrides` (they take precedence over
+ * QB_TEAM_ABBR, so a traded QB can be re-pointed there too).
  */
 import { ABBR_ALIASES } from "./team-aliases";
 
@@ -75,6 +76,11 @@ export const QB_TEAM_ABBR: Record<string, string> = {
   "M.Penix": "ATL",
   "C.Keenum": "CHI",
   "J.Winston": "NYG",
+  // Confirmed by the commissioner on 2026-11-03.
+  "T.Huntley": "BAL",
+  "J.McCarthy": "MIN",
+  "T.Bagent": "CHI",
+  "T.McKee": "PHI",
 };
 
 function normalizeAbbr(raw: string): string {
@@ -103,8 +109,8 @@ function cleanName(raw: string): string {
 // QB_TEAM_ABBR is keyed "F.Last" (the EPA Leaders export's format). nfelo's
 // QB stats table uses full names instead ("Josh Allen", "C.J. Stroud",
 // "Michael Penix Jr."), so reduce those to first initial + last name.
-function qbKey(name: string): string {
-  if (QB_TEAM_ABBR[name]) return name;
+export function qbKey(name: string, known: Record<string, string> = QB_TEAM_ABBR): string {
+  if (known[name]) return name;
   const words = name
     .replace(/\./g, ". ")
     .split(" ")
@@ -183,7 +189,11 @@ function sumCols(cells: string[], cols: number[]): number | null {
   return nums.length ? nums.reduce((a, b) => a + b, 0) : null;
 }
 
-export function parseQbEpaPaste(raw: string): QbParseResult {
+export function parseQbEpaPaste(
+  raw: string,
+  overrides: Record<string, string> = {}
+): QbParseResult {
+  const teamByKey = { ...QB_TEAM_ABBR, ...overrides };
   const lines = raw
     .replace(/^﻿/, "")
     .split(/\r?\n/)
@@ -216,7 +226,7 @@ export function parseQbEpaPaste(raw: string): QbParseResult {
     }
 
     const name = cleanName(cells[columns.name] ?? "");
-    const key = qbKey(name);
+    const key = qbKey(name, teamByKey);
     if (!name || seen.has(key)) continue; // blank, or a repeated row from a multi-page copy
     seen.add(key);
 
@@ -229,7 +239,7 @@ export function parseQbEpaPaste(raw: string): QbParseResult {
       errors.push(`No EPA/Play or ANY/A number for "${name}" - check the pasted columns`);
     }
 
-    const mapped = QB_TEAM_ABBR[key];
+    const mapped = teamByKey[key];
     if (!mapped) {
       unmatchedNames.push(name);
       rows.push({ name, abbr: null, epaPlay, anyA, totalYds, totalTd });

@@ -127,6 +127,18 @@ export const qbRatings = pgTable(
 );
 
 /**
+ * Commissioner-assigned QB -> team mappings, set from /admin's "Unmatched
+ * QBs" section so a new starter/backup can be matched without a code
+ * change. `key` is the "F.Last" form used by QB_TEAM_ABBR in
+ * src/lib/qb-epa-parser.ts; entries here take precedence over that list.
+ */
+export const qbTeamOverrides = pgTable("qb_team_overrides", {
+  key: text("key").primaryKey(),
+  abbr: text("abbr").notNull(),
+  updatedAt: timestamp("updated_at").defaultNow().notNull(),
+});
+
+/**
  * A weekly snapshot of FTN Fantasy's DVOA/playoff-odds report for one team
  * (record, DAVE, mean projected wins, and playoff/seed probabilities from
  * their 25,000-simulation model). No public API - pasted into /admin each

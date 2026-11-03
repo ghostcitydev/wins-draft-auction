@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 import Image from "next/image";
 import TopBar from "@/components/TopBar";
 import WeeklyPasteAdmin from "@/components/admin/WeeklyPasteAdmin";
+import UnmatchedQbsAdmin from "@/components/admin/UnmatchedQbsAdmin";
 
 interface AdminTeam {
   id: string;
@@ -402,11 +403,13 @@ export default function AdminPage() {
               </a>{" "}
               (or copy its table) and paste it below. Feeds the stats page&apos;s QB table and MVP
               Watch chart. The export has no team column - names are matched against a
-              hand-verified list in <code>src/lib/qb-epa-parser.ts</code>; a new starter who isn&apos;t
-              in it yet will show up under &quot;Unmatched&quot; below until that list is updated.
+              hand-verified list plus any teams you&apos;ve assigned below. A QB with no match shows up
+              under &quot;Unmatched QBs&quot;, where you can pick their team.
             </p>
           }
         />
+
+        <UnmatchedQbsAdmin secret={secret} />
 
         <WeeklyPasteAdmin
           title="Weekly DVOA / playoff odds"

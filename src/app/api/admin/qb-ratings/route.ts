@@ -3,6 +3,7 @@ import { and, eq } from "drizzle-orm";
 import { db } from "@/db";
 import { teams, qbRatings, appConfig } from "@/db/schema";
 import { parseQbEpaPaste } from "@/lib/qb-epa-parser";
+import { loadQbTeamOverrides } from "@/lib/qb-team-overrides";
 
 export const dynamic = "force-dynamic";
 
@@ -26,7 +27,10 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({ error: "Expected { season, week, rawText }" }, { status: 400 });
   }
 
-  const { rows, errors, unmatchedNames } = parseQbEpaPaste(body.rawText);
+  const { rows, errors, unmatchedNames } = parseQbEpaPaste(
+    body.rawText,
+    await loadQbTeamOverrides()
+  );
 
   // Saving a week where no QB has both chart numbers would make it the
   // "latest week" and blank out the MVP Watch chart, so reject it instead.
