@@ -58,7 +58,10 @@ function Logo({ team, size = 18 }: { team: PlayoffTeamInfo; size?: number }) {
       width={size}
       height={size}
       unoptimized
-      className="flex-shrink-0"
+      // Logo files have different aspect ratios; pin every one to the same
+      // square box so rows and the record text under them line up.
+      className="flex-shrink-0 object-contain"
+      style={{ width: size, height: size, minWidth: size }}
     />
   );
 }
