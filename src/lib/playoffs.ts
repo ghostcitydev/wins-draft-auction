@@ -26,9 +26,25 @@ const add = (r: Rec, ts: number, os: number) => {
 
 type GameRow = typeof games.$inferSelect;
 
+interface Result {
+  opp: string;
+  ms: number;
+  os: number;
+}
+
+interface TeamLine {
+  overall: Rec;
+  div: Rec;
+  conf: Rec;
+  pf: number;
+  pa: number;
+  results: Result[];
+}
+
 /**
- * Standings as of the end of `week`: overall / division / conference records
- * and point differential, from completed regular-season games only.
+ * Standings as of the end of `week`: overall / division / conference records,
+ * points, and every game result (for head-to-head, common games, strength of
+ * victory / schedule), from completed regular-season games only.
  */
 function buildStandings(
   allTeams: PlayoffTeamInfo[],
@@ -37,20 +53,12 @@ function buildStandings(
 ) {
   const byAbbr = new Map(allTeams.map((t) => [t.abbr, t]));
   const base = () => ({ w: 0, l: 0, t: 0 });
-  const s = new Map(
+  const s = new Map<string, TeamLine>(
     allTeams.map((t) => [
       t.abbr,
-      { overall: base(), div: base(), conf: base(), pf: 0, pa: 0 },
+      { overall: base(), div: base(), conf: base(), pf: 0, pa: 0, results: [] },
     ])
   );
-  // head-to-head results: h2h[a][b] = a's record vs b
-  const h2h = new Map<string, Map<string, Rec>>();
-  const h2hRec = (a: string, b: string) => {
-    if (!h2h.has(a)) h2h.set(a, new Map());
-    const m = h2h.get(a)!;
-    if (!m.has(b)) m.set(b, base());
-    return m.get(b)!;
-  };
 
   for (const g of played) {
     const home = idToAbbr.get(g.homeTeamId);
@@ -66,59 +74,164 @@ function buildStandings(
       add(row.overall, ms, os);
       if (me.division === opp.division) add(row.div, ms, os);
       if (me.conference === opp.conference) add(row.conf, ms, os);
-      add(h2hRec(me.abbr, opp.abbr), ms, os);
       row.pf += ms;
       row.pa += os;
+      row.results.push({ opp: opp.abbr, ms, os });
     }
   }
-  return { s, h2hRec };
+  return { s };
+}
+
+type Standings = ReturnType<typeof buildStandings>;
+type Mode = "division" | "wildcard";
+/** A tiebreak step: returns the surviving (best) subset, or null if it doesn't apply. */
+type Step = (group: string[]) => string[] | null;
+
+const EPS = 1e-9;
+
+/** Keep the teams with the best (highest) value; null if every team is equal. */
+function keepBest(group: string[], value: (a: string) => number): string[] | null {
+  const vals = group.map(value);
+  const best = Math.max(...vals);
+  const kept = group.filter((_, i) => vals[i] >= best - EPS);
+  return kept.length < group.length ? kept : null;
+}
+
+function recordVs(st: Standings, a: string, opps: Set<string>): Rec & { net: number } {
+  const r = { w: 0, l: 0, t: 0, net: 0 };
+  for (const g of st.s.get(a)!.results) {
+    if (!opps.has(g.opp)) continue;
+    add(r, g.ms, g.os);
+    r.net += g.ms - g.os;
+  }
+  return r;
+}
+
+/** Opponents every team in the group has played (excluding the group itself). */
+function commonOpponents(st: Standings, group: string[]): Set<string> {
+  const sets = group.map((a) => new Set(st.s.get(a)!.results.map((g) => g.opp)));
+  const common = new Set<string>();
+  for (const o of sets[0]) if (sets.every((x) => x.has(o)) && !group.includes(o)) common.add(o);
+  return common;
+}
+
+/** Strength of victory (wins only) or schedule (all games): combined record of those opponents. */
+function strength(st: Standings, a: string, winsOnly: boolean): number {
+  const r = { w: 0, l: 0, t: 0 };
+  for (const g of st.s.get(a)!.results) {
+    if (winsOnly && g.ms <= g.os) continue;
+    const o = st.s.get(g.opp)!.overall;
+    r.w += o.w;
+    r.l += o.l;
+    r.t += o.t;
+  }
+  return pct(r);
 }
 
 /**
- * Simplified NFL tiebreakers: win pct, then (within a group still tied on
- * win pct) head-to-head pct among the tied teams, division pct (when they
- * share a division), conference pct, point differential, then abbr.
- * Common games / strength of victory / strength of schedule are skipped.
+ * NFL tiebreaking steps, in order. Division ties: head-to-head, division
+ * record, common games, conference record, strength of victory, strength of
+ * schedule, net points in common games, net points in all games. Wild-card
+ * ties: head-to-head (only a sweep counts with 3+ teams), conference record,
+ * common games (min. 4), SOV, SOS, net points in conference games, net
+ * points in all games. The two "combined ranking in points" steps and net
+ * touchdowns aren't tracked and are skipped; a coin toss is replaced by
+ * alphabetical order.
  */
+function steps(st: Standings, info: Map<string, PlayoffTeamInfo>, mode: Mode): Step[] {
+  const line = (a: string) => st.s.get(a)!;
+
+  const h2h: Step = (group) => {
+    const vsGroup = (a: string) => recordVs(st, a, new Set(group.filter((o) => o !== a)));
+    if (mode === "division" || group.length === 2) {
+      // Only meaningful once they've actually played each other.
+      if (group.every((a) => { const r = vsGroup(a); return r.w + r.l + r.t === 0; })) return null;
+      return keepBest(group, (a) => {
+        const r = vsGroup(a);
+        return r.w + r.l + r.t ? pct(r) : 0.5;
+      });
+    }
+    // Wild card, 3+ teams: applies only if one team beat each of the others
+    // (it advances) or lost to each of the others (it drops out).
+    for (const a of group) {
+      const others = group.filter((o) => o !== a);
+      if (others.every((o) => { const r = recordVs(st, a, new Set([o])); return r.w > 0 && r.l === 0 && r.t === 0; }))
+        return [a];
+    }
+    for (const a of group) {
+      const others = group.filter((o) => o !== a);
+      if (others.every((o) => { const r = recordVs(st, a, new Set([o])); return r.l > 0 && r.w === 0 && r.t === 0; }))
+        return others;
+    }
+    return null;
+  };
+
+  const divRec: Step = (group) => keepBest(group, (a) => pct(line(a).div));
+  const confRec: Step = (group) => keepBest(group, (a) => pct(line(a).conf));
+  const common = (minGames: number): Step => (group) => {
+    const opps = commonOpponents(st, group);
+    const recs = group.map((a) => recordVs(st, a, opps));
+    if (recs.some((r) => r.w + r.l + r.t < minGames) || recs.every((r) => r.w + r.l + r.t === 0))
+      return null;
+    return keepBest(group, (a) => pct(recordVs(st, a, opps)));
+  };
+  const sov: Step = (group) => keepBest(group, (a) => strength(st, a, true));
+  const sos: Step = (group) => keepBest(group, (a) => strength(st, a, false));
+  const netCommon: Step = (group) => {
+    const opps = commonOpponents(st, group);
+    return opps.size ? keepBest(group, (a) => recordVs(st, a, opps).net) : null;
+  };
+  const netConf: Step = (group) =>
+    keepBest(group, (a) => {
+      const conf = info.get(a)!.conference;
+      return line(a)
+        .results.filter((g) => info.get(g.opp)!.conference === conf)
+        .reduce((n, g) => n + g.ms - g.os, 0);
+    });
+  const netAll: Step = (group) => keepBest(group, (a) => line(a).pf - line(a).pa);
+
+  return mode === "division"
+    ? [h2h, divRec, common(0), confRec, sov, sos, netCommon, netAll]
+    : [h2h, confRec, common(4), sov, sos, netConf, netAll];
+}
+
+/** Find the single best team in a tied group, restarting at step 1 whenever the group shrinks. */
+function breakTie(group: string[], stepList: Step[]): string {
+  let g = [...group];
+  outer: while (g.length > 1) {
+    for (const step of stepList) {
+      const kept = step(g);
+      if (kept && kept.length < g.length) {
+        g = kept;
+        continue outer;
+      }
+    }
+    return [...g].sort()[0];
+  }
+  return g[0];
+}
+
+/** Order teams by win pct, breaking ties with the NFL procedure for `mode`. */
 function rank(
   abbrs: string[],
   info: Map<string, PlayoffTeamInfo>,
-  st: ReturnType<typeof buildStandings>
+  st: Standings,
+  mode: Mode
 ): string[] {
-  const { s, h2hRec } = st;
-  const sorted = [...abbrs].sort((a, b) => pct(s.get(b)!.overall) - pct(s.get(a)!.overall));
+  const p = (a: string) => pct(st.s.get(a)!.overall);
+  const sorted = [...abbrs].sort((a, b) => p(b) - p(a));
+  const stepList = steps(st, info, mode);
   const out: string[] = [];
   let i = 0;
   while (i < sorted.length) {
     let j = i + 1;
-    const p = pct(s.get(sorted[i])!.overall);
-    while (j < sorted.length && pct(s.get(sorted[j])!.overall) === p) j++;
+    while (j < sorted.length && Math.abs(p(sorted[j]) - p(sorted[i])) < EPS) j++;
     const group = sorted.slice(i, j);
-    if (group.length > 1) {
-      const h2hPct = (a: string) => {
-        const r = { w: 0, l: 0, t: 0 };
-        for (const o of group) {
-          if (o === a) continue;
-          const x = h2hRec(a, o);
-          r.w += x.w;
-          r.l += x.l;
-          r.t += x.t;
-        }
-        return r.w + r.l + r.t ? pct(r) : 0.5;
-      };
-      const sameDiv = group.every((a) => info.get(a)!.division === info.get(group[0])!.division);
-      const keys = (a: string) => {
-        const row = s.get(a)!;
-        return [h2hPct(a), sameDiv ? pct(row.div) : 0, pct(row.conf), row.pf - row.pa];
-      };
-      group.sort((a, b) => {
-        const ka = keys(a);
-        const kb = keys(b);
-        for (let k = 0; k < ka.length; k++) if (ka[k] !== kb[k]) return kb[k] - ka[k];
-        return a.localeCompare(b);
-      });
+    while (group.length) {
+      const best = breakTie(group, stepList);
+      out.push(best);
+      group.splice(group.indexOf(best), 1);
     }
-    out.push(...group);
     i = j;
   }
   return out;
@@ -196,7 +309,8 @@ export async function getPlayoffs(currentSeason: number): Promise<PlayoffsResult
         const order = rank(
           confTeams.filter((t) => t.division === d).map((t) => t.abbr),
           info,
-          st
+          st,
+          "division"
         );
         divisions[d] = order;
         winners.push(order[0]);
@@ -207,7 +321,7 @@ export async function getPlayoffs(currentSeason: number): Promise<PlayoffsResult
           row.gamesBack = (lead.w - row.w + (row.l - lead.l)) / 2;
         });
       }
-      const rankedWinners = rank(winners, info, st);
+      const rankedWinners = rank(winners, info, st, "wildcard");
       // Wild cards: like the NFL, only the top remaining team from each
       // division is compared at a time, so division order is never broken.
       const remaining = confTeams.map((t) => t.abbr).filter((a) => !winners.includes(a));
@@ -220,7 +334,7 @@ export async function getPlayoffs(currentSeason: number): Promise<PlayoffsResult
               .sort((a, b) => standings[a].divRank - standings[b].divRank)[0]
           )
           .filter((a): a is string => !!a);
-        const pick = rank(candidates, info, st)[0];
+        const pick = rank(candidates, info, st, "wildcard")[0];
         rest.push(pick);
         remaining.splice(remaining.indexOf(pick), 1);
       }

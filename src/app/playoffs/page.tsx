@@ -48,7 +48,6 @@ function usePlayoffs(pollMs = 60000) {
 }
 
 const record = (s: PlayoffStanding) => `${s.w}-${s.l}${s.t ? `-${s.t}` : ""}`;
-const divRecord = (s: PlayoffStanding) => `${s.divW}-${s.divL}${s.divT ? `-${s.divT}` : ""}`;
 const fmtGb = (gb: number) => (gb === 0 ? "-" : gb % 1 ? gb.toFixed(1) : String(gb));
 
 function Logo({ team, size = 18 }: { team: PlayoffTeamInfo; size?: number }) {
@@ -129,19 +128,58 @@ export default function PlayoffsPage() {
             </section>
 
             <section>
-              <SectionTitle>Division races</SectionTitle>
-              <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
+              <SectionTitle>Division races by week</SectionTitle>
+              <div className="space-y-3">
                 {Object.keys(current.divisions)
                   .sort()
                   .map((d) => (
-                    <DivisionCard
+                    <WeekGrid
                       key={d}
-                      name={d}
-                      order={current.divisions[d]}
-                      current={current}
-                      teamByAbbr={teamByAbbr}
+                      title={d}
+                      weeks={data.weeks}
+                      selectedWeek={week}
+                      onPick={setPicked}
+                      rows={[0, 1, 2, 3].map((i) => ({
+                        label: String(i + 1),
+                        cell: (w) => (
+                          <TeamCell abbr={w.divisions[d]?.[i]} w={w} teamByAbbr={teamByAbbr} />
+                        ),
+                      }))}
                     />
                   ))}
+              </div>
+            </section>
+
+            <section>
+              <SectionTitle>Wild card matchups by week</SectionTitle>
+              <div className="space-y-3">
+                {data.conferences.map((conf) => (
+                  <WeekGrid
+                    key={conf}
+                    title={conf}
+                    weeks={data.weeks}
+                    selectedWeek={week}
+                    onPick={setPicked}
+                    rows={(
+                      [
+                        [1, 0],
+                        [2, 7],
+                        [3, 6],
+                        [4, 5],
+                      ] as const
+                    ).map(([hi, lo]) => ({
+                      label: lo ? `${hi} v ${lo}` : `${hi} bye`,
+                      cell: (w) => (
+                        <MatchupCell
+                          home={w.seeds[conf]?.[hi - 1]}
+                          away={lo ? w.seeds[conf]?.[lo - 1] : undefined}
+                          w={w}
+                          teamByAbbr={teamByAbbr}
+                        />
+                      ),
+                    }))}
+                  />
+                ))}
               </div>
             </section>
 
@@ -149,23 +187,33 @@ export default function PlayoffsPage() {
               <SectionTitle>Seeds by week</SectionTitle>
               <div className="space-y-3">
                 {data.conferences.map((conf) => (
-                  <SeedHistory
+                  <WeekGrid
                     key={conf}
-                    conf={conf}
+                    title={conf}
+                    labelHeader="Seed"
                     weeks={data.weeks}
                     selectedWeek={week}
                     onPick={setPicked}
-                    teamByAbbr={teamByAbbr}
+                    rows={Array.from({ length: 7 }, (_, i) => ({
+                      label: String(i + 1),
+                      divider: i === 4,
+                      cell: (w) => (
+                        <TeamCell abbr={w.seeds[conf]?.[i]} w={w} teamByAbbr={teamByAbbr} />
+                      ),
+                    }))}
                   />
                 ))}
               </div>
+              <p className="mt-1.5 px-1 text-[11px] text-muted">
+                Tap any week in a grid to load it in the playoff picture above.
+              </p>
             </section>
 
             <p className="px-1 text-[11px] text-muted">
-              Built from final regular-season scores. Ties use a simplified NFL order: head-to-head,
-              division record, conference record, then point differential (common games, strength of
-              victory and strength of schedule are skipped), so a seed can differ from the official
-              one in a close race.
+              Built from final regular-season scores, with NFL tiebreakers: head-to-head,
+              division/conference record, common games, strength of victory, strength of schedule
+              and net points. The combined points-ranking and net-touchdown steps aren&apos;t
+              tracked, and a coin toss is replaced by alphabetical order.
             </p>
           </div>
         )}
@@ -322,102 +370,37 @@ function Movement({ prev, now, hasPrev }: { prev: number | null; now: number; ha
   );
 }
 
-function DivisionCard({
-  name,
-  order,
-  current,
-  teamByAbbr,
-}: {
-  name: string;
-  order: string[];
-  current: PlayoffWeek;
-  teamByAbbr: Map<string, PlayoffTeamInfo>;
-}) {
-  const anyTies = order.some((a) => current.standings[a]?.t);
-  return (
-    <div className="rounded-2xl border border-border bg-surface p-3">
-      <p className="mb-2 px-1 text-sm font-semibold">{name}</p>
-      <div className="overflow-hidden rounded-xl border border-border">
-        <table className="w-full text-sm">
-          <thead>
-            <tr className="border-b border-border text-[11px] text-muted">
-              <th className="px-2 py-1 text-left font-semibold">Team</th>
-              <th className="px-1 py-1 text-center font-semibold">W</th>
-              <th className="px-1 py-1 text-center font-semibold">L</th>
-              {anyTies && <th className="px-1 py-1 text-center font-semibold">T</th>}
-              <th className="px-1 py-1 text-center font-semibold">GB</th>
-              <th className="px-1 py-1 text-center font-semibold">Div</th>
-              <th className="px-2 py-1 text-right font-semibold">Seed</th>
-            </tr>
-          </thead>
-          <tbody>
-            {order.map((abbr) => {
-              const team = teamByAbbr.get(abbr);
-              const s = current.standings[abbr];
-              if (!team || !s) return null;
-              return (
-                <tr
-                  key={abbr}
-                  className="border-b border-border last:border-b-0 odd:bg-surface even:bg-surface-2"
-                >
-                  <td className="px-2 py-1.5">
-                    <div className="flex min-w-0 items-center gap-1.5">
-                      <Logo team={team} size={18} />
-                      <span className="truncate text-[13px] font-medium">{team.shortName}</span>
-                    </div>
-                  </td>
-                  <td className="px-1 py-1.5 text-center text-xs tabular-nums">{s.w}</td>
-                  <td className="px-1 py-1.5 text-center text-xs tabular-nums">{s.l}</td>
-                  {anyTies && (
-                    <td className="px-1 py-1.5 text-center text-xs tabular-nums">{s.t}</td>
-                  )}
-                  <td className="px-1 py-1.5 text-center text-xs tabular-nums text-muted">
-                    {fmtGb(s.gamesBack)}
-                  </td>
-                  <td className="px-1 py-1.5 text-center text-[11px] tabular-nums text-muted">
-                    {divRecord(s)}
-                  </td>
-                  <td className="px-2 py-1.5 text-right text-[11px] font-semibold tabular-nums">
-                    {s.seed ? (
-                      <span className={s.seed <= 4 ? "text-accent" : "text-accent-2"}>
-                        {s.seed}
-                      </span>
-                    ) : (
-                      <span className="text-muted">-</span>
-                    )}
-                  </td>
-                </tr>
-              );
-            })}
-          </tbody>
-        </table>
-      </div>
-    </div>
-  );
+interface GridRow {
+  label: string;
+  divider?: boolean;
+  cell: (w: PlayoffWeek) => React.ReactNode;
 }
 
-function SeedHistory({
-  conf,
+/** Weeks across, one row per rank/seed/matchup; tap any column to select that week. */
+function WeekGrid({
+  title,
+  rows,
   weeks,
   selectedWeek,
   onPick,
-  teamByAbbr,
+  labelHeader = "",
 }: {
-  conf: string;
+  title: string;
+  rows: GridRow[];
   weeks: PlayoffWeek[];
   selectedWeek: number;
   onPick: (w: number) => void;
-  teamByAbbr: Map<string, PlayoffTeamInfo>;
+  labelHeader?: string;
 }) {
   return (
     <div className="rounded-2xl border border-border bg-surface p-3">
-      <p className="mb-2 px-1 text-xs font-semibold uppercase tracking-wider text-muted">{conf}</p>
+      <p className="mb-2 px-1 text-sm font-semibold">{title}</p>
       <div className="overflow-x-auto rounded-xl border border-border">
         <table className="text-xs">
           <thead>
             <tr className="border-b border-border text-[11px] text-muted">
               <th className="sticky left-0 z-10 bg-surface px-2 py-1 text-left font-semibold">
-                Seed
+                {labelHeader}
               </th>
               {weeks.map((w) => (
                 <th
@@ -434,44 +417,88 @@ function SeedHistory({
             </tr>
           </thead>
           <tbody>
-            {Array.from({ length: 7 }, (_, i) => (
+            {rows.map((row, i) => (
               <tr
                 key={i}
                 className={clsx(
-                  "border-b border-border last:border-b-0 odd:bg-surface even:bg-surface-2",
-                  i === 4 && "border-t-2"
+                  "border-b border-border last:border-b-0",
+                  row.divider && "border-t-2"
                 )}
               >
-                <td className="sticky left-0 z-10 bg-inherit px-2 py-1 text-center font-semibold tabular-nums text-muted">
-                  {i + 1}
+                <td className="sticky left-0 z-10 whitespace-nowrap bg-surface px-2 py-1 text-center text-[11px] font-semibold tabular-nums text-muted">
+                  {row.label}
                 </td>
-                {weeks.map((w) => {
-                  const abbr = w.seeds[conf]?.[i];
-                  const team = abbr ? teamByAbbr.get(abbr) : undefined;
-                  return (
-                    <td
-                      key={w.week}
-                      onClick={() => onPick(w.week)}
-                      className={clsx(
-                        "cursor-pointer px-1 py-1 text-center",
-                        w.week === selectedWeek && "bg-accent/15"
-                      )}
-                      title={team ? `${team.name} (${record(w.standings[team.abbr])})` : undefined}
-                    >
-                      {team && (
-                        <div className="flex justify-center">
-                          <Logo team={team} size={18} />
-                        </div>
-                      )}
-                    </td>
-                  );
-                })}
+                {weeks.map((w) => (
+                  <td
+                    key={w.week}
+                    onClick={() => onPick(w.week)}
+                    className={clsx(
+                      "cursor-pointer px-1 py-1 text-center",
+                      w.week === selectedWeek && "bg-accent/15"
+                    )}
+                  >
+                    {row.cell(w)}
+                  </td>
+                ))}
               </tr>
             ))}
           </tbody>
         </table>
       </div>
-      <p className="mt-1.5 px-1 text-[11px] text-muted">Tap a week to view it above.</p>
+    </div>
+  );
+}
+
+function TeamCell({
+  abbr,
+  w,
+  teamByAbbr,
+}: {
+  abbr: string | undefined;
+  w: PlayoffWeek;
+  teamByAbbr: Map<string, PlayoffTeamInfo>;
+}) {
+  const team = abbr ? teamByAbbr.get(abbr) : undefined;
+  const s = abbr ? w.standings[abbr] : undefined;
+  if (!team || !s) return null;
+  return (
+    <div className="flex flex-col items-center gap-0.5" title={`${team.name} (${record(s)})`}>
+      <Logo team={team} size={18} />
+      <span className="text-[9px] leading-none tabular-nums text-muted">{record(s)}</span>
+    </div>
+  );
+}
+
+function MatchupCell({
+  home,
+  away,
+  w,
+  teamByAbbr,
+}: {
+  home: string | undefined;
+  away: string | undefined;
+  w: PlayoffWeek;
+  teamByAbbr: Map<string, PlayoffTeamInfo>;
+}) {
+  const h = home ? teamByAbbr.get(home) : undefined;
+  const a = away ? teamByAbbr.get(away) : undefined;
+  if (!h) return null;
+  if (!a) {
+    return (
+      <div className="flex flex-col items-center gap-0.5" title={`${h.name} - bye`}>
+        <Logo team={h} size={18} />
+        <span className="text-[9px] leading-none text-muted">bye</span>
+      </div>
+    );
+  }
+  return (
+    <div
+      className="flex items-center justify-center gap-0.5"
+      title={`${a.name} (${record(w.standings[a.abbr])}) at ${h.name} (${record(w.standings[h.abbr])})`}
+    >
+      <Logo team={h} size={16} />
+      <span className="text-[9px] text-muted">v</span>
+      <Logo team={a} size={16} />
     </div>
   );
 }
