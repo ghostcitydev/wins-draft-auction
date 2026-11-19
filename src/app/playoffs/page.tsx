@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import Image from "next/image";
 import clsx from "clsx";
 import TopBar from "@/components/TopBar";
@@ -103,7 +103,7 @@ export default function PlayoffsPage() {
         )}
 
         {!loading && !error && data && current && (
-          <div className="space-y-4">
+          <div className="space-y-3">
             {data.isPreview && (
               <p className="rounded-xl border border-border bg-surface px-3 py-2 text-[11px] text-muted">
                 * Showing the {data.season} season until this season&apos;s first games are final.
@@ -129,7 +129,7 @@ export default function PlayoffsPage() {
 
             <section>
               <SectionTitle>Division races by week</SectionTitle>
-              <div className="space-y-3">
+              <div className="grid grid-cols-2 gap-2">
                 {Object.keys(current.divisions)
                   .sort()
                   .map((d) => (
@@ -152,7 +152,7 @@ export default function PlayoffsPage() {
 
             <section>
               <SectionTitle>Wild card matchups by week</SectionTitle>
-              <div className="space-y-3">
+              <div className="grid grid-cols-2 gap-2">
                 {data.conferences.map((conf) => (
                   <WeekGrid
                     key={conf}
@@ -168,7 +168,7 @@ export default function PlayoffsPage() {
                         [4, 5],
                       ] as const
                     ).map(([hi, lo]) => ({
-                      label: lo ? `${hi} v ${lo}` : `${hi} bye`,
+                      label: lo ? `${hi}v${lo}` : `${hi} bye`,
                       cell: (w) => (
                         <MatchupCell
                           home={w.seeds[conf]?.[hi - 1]}
@@ -185,7 +185,7 @@ export default function PlayoffsPage() {
 
             <section>
               <SectionTitle>Seeds by week</SectionTitle>
-              <div className="space-y-3">
+              <div className="grid grid-cols-2 gap-2">
                 {data.conferences.map((conf) => (
                   <WeekGrid
                     key={conf}
@@ -204,16 +204,12 @@ export default function PlayoffsPage() {
                   />
                 ))}
               </div>
-              <p className="mt-1.5 px-1 text-[11px] text-muted">
-                Tap any week in a grid to load it in the playoff picture above.
-              </p>
             </section>
 
             <p className="px-1 text-[11px] text-muted">
-              Built from final regular-season scores, with NFL tiebreakers: head-to-head,
-              division/conference record, common games, strength of victory, strength of schedule
-              and net points. The combined points-ranking and net-touchdown steps aren&apos;t
-              tracked, and a coin toss is replaced by alphabetical order.
+              Tap any week in a grid to load it above. Hover a logo for its record. NFL tiebreakers
+              (head-to-head, division/conference record, common games, SOV, SOS, net points); the
+              points-ranking and net-TD steps aren&apos;t tracked, and a coin toss is alphabetical.
             </p>
           </div>
         )}
@@ -284,7 +280,7 @@ function SeedCard({
 }) {
   const order = current.seeds[conf] ?? [];
   const field = order.slice(0, 7);
-  const hunt = order.slice(7, 10);
+  const hunt = order.slice(7, 9);
 
   return (
     <div className="rounded-2xl border border-border bg-surface p-3">
@@ -300,7 +296,7 @@ function SeedCard({
             <div
               key={abbr}
               className={clsx(
-                "flex items-center gap-2 px-2 py-1.5 text-sm odd:bg-surface even:bg-surface-2",
+                "flex items-center gap-2 px-2 py-1 text-sm odd:bg-surface even:bg-surface-2",
                 i === 4 && "border-t border-border"
               )}
             >
@@ -392,22 +388,33 @@ function WeekGrid({
   onPick: (w: number) => void;
   labelHeader?: string;
 }) {
+  // Keep the selected (by default the latest) week in view in narrow columns.
+  const scroller = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    const el = scroller.current;
+    const col = el?.querySelector<HTMLElement>(`[data-week="${selectedWeek}"]`);
+    if (!el || !col) return;
+    const left = col.offsetLeft - el.clientWidth / 2 + col.offsetWidth / 2;
+    el.scrollLeft = Math.max(0, left);
+  }, [selectedWeek, weeks.length]);
+
   return (
-    <div className="rounded-2xl border border-border bg-surface p-3">
-      <p className="mb-2 px-1 text-sm font-semibold">{title}</p>
-      <div className="overflow-x-auto rounded-xl border border-border">
+    <div className="min-w-0 rounded-2xl border border-border bg-surface p-2">
+      <p className="mb-1.5 px-1 text-xs font-semibold">{title}</p>
+      <div ref={scroller} className="overflow-x-auto rounded-xl border border-border">
         <table className="text-xs">
           <thead>
             <tr className="border-b border-border text-[11px] text-muted">
-              <th className="sticky left-0 z-10 bg-surface px-2 py-1 text-left font-semibold">
+              <th className="sticky left-0 z-10 bg-surface px-1.5 py-0.5 text-left font-semibold">
                 {labelHeader}
               </th>
               {weeks.map((w) => (
                 <th
                   key={w.week}
+                  data-week={w.week}
                   onClick={() => onPick(w.week)}
                   className={clsx(
-                    "cursor-pointer px-1 py-1 text-center font-semibold tabular-nums",
+                    "cursor-pointer px-0.5 py-0.5 text-center text-[10px] font-semibold tabular-nums",
                     w.week === selectedWeek && "text-accent"
                   )}
                 >
@@ -425,7 +432,7 @@ function WeekGrid({
                   row.divider && "border-t-2"
                 )}
               >
-                <td className="sticky left-0 z-10 whitespace-nowrap bg-surface px-2 py-1 text-center text-[11px] font-semibold tabular-nums text-muted">
+                <td className="sticky left-0 z-10 whitespace-nowrap bg-surface px-1.5 py-0.5 text-center text-[10px] font-semibold tabular-nums text-muted">
                   {row.label}
                 </td>
                 {weeks.map((w) => (
@@ -433,7 +440,7 @@ function WeekGrid({
                     key={w.week}
                     onClick={() => onPick(w.week)}
                     className={clsx(
-                      "cursor-pointer px-1 py-1 text-center",
+                      "cursor-pointer px-0.5 py-0.5 text-center",
                       w.week === selectedWeek && "bg-accent/15"
                     )}
                   >
@@ -462,9 +469,8 @@ function TeamCell({
   const s = abbr ? w.standings[abbr] : undefined;
   if (!team || !s) return null;
   return (
-    <div className="flex flex-col items-center gap-0.5" title={`${team.name} (${record(s)})`}>
-      <Logo team={team} size={18} />
-      <span className="text-[9px] leading-none tabular-nums text-muted">{record(s)}</span>
+    <div className="flex justify-center" title={`${team.name} (${record(s)})`}>
+      <Logo team={team} size={16} />
     </div>
   );
 }
@@ -485,9 +491,8 @@ function MatchupCell({
   if (!h) return null;
   if (!a) {
     return (
-      <div className="flex flex-col items-center gap-0.5" title={`${h.name} - bye`}>
-        <Logo team={h} size={18} />
-        <span className="text-[9px] leading-none text-muted">bye</span>
+      <div className="flex justify-center" title={`${h.name} - bye`}>
+        <Logo team={h} size={16} />
       </div>
     );
   }
@@ -496,9 +501,8 @@ function MatchupCell({
       className="flex items-center justify-center gap-0.5"
       title={`${a.name} (${record(w.standings[a.abbr])}) at ${h.name} (${record(w.standings[h.abbr])})`}
     >
-      <Logo team={h} size={16} />
-      <span className="text-[9px] text-muted">v</span>
-      <Logo team={a} size={16} />
+      <Logo team={h} size={14} />
+      <Logo team={a} size={14} />
     </div>
   );
 }
