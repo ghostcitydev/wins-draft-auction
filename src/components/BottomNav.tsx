@@ -7,6 +7,7 @@ import clsx from "clsx";
 const TABS = [
   { href: "/", label: "Standings", icon: TrophyIcon },
   { href: "/stats", label: "Stats", icon: ChartIcon },
+  { href: "/playoffs", label: "Playoffs", icon: BracketIcon },
   { href: "/archive", label: "Archive", icon: ArchiveIcon },
   { href: "/bets", label: "Bets", icon: DiceIcon },
   { href: "/admin", label: "Setup", icon: GearIcon },
@@ -77,6 +78,20 @@ function ChartIcon({ className }: { className?: string }) {
       <circle cx="13" cy="9" r="2" stroke="currentColor" strokeWidth="1.7" />
       <circle cx="18" cy="13.5" r="2" stroke="currentColor" strokeWidth="1.7" />
       <path d="M3.5 20.5h17" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" />
+    </svg>
+  );
+}
+
+function BracketIcon({ className }: { className?: string }) {
+  return (
+    <svg viewBox="0 0 24 24" fill="none" className={className}>
+      <path
+        d="M3.5 5h5v5h-5M3.5 14h5v5h-5M8.5 7.5h3v9h-3M11.5 12h4M15.5 9h5v6h-5z"
+        stroke="currentColor"
+        strokeWidth="1.7"
+        strokeLinejoin="round"
+        strokeLinecap="round"
+      />
     </svg>
   );
 }
