@@ -298,12 +298,23 @@ export default function BetsPage() {
   }, [betRows, futurePicks]);
 
   const [personaFilter, setPersonaFilter] = useState<string>("All");
+  const [weekFilter, setWeekFilter] = useState<string>("All");
+
+  const weekOptions = useMemo(
+    () => [...new Set((betRows ?? []).map((b) => b.week))].sort((a, b) => a - b),
+    [betRows]
+  );
 
   // Everything below (summary cards, chart, bet list) tracks the selected
-  // persona so each bettor's record can be reviewed independently.
+  // persona + week so each bettor's record can be reviewed independently.
   const filteredRows = useMemo(
-    () => (personaFilter === "All" ? betRows ?? [] : (betRows ?? []).filter((b) => b.persona === personaFilter)),
-    [betRows, personaFilter]
+    () =>
+      (betRows ?? []).filter(
+        (b) =>
+          (personaFilter === "All" || b.persona === personaFilter) &&
+          (weekFilter === "All" || b.week === Number(weekFilter))
+      ),
+    [betRows, personaFilter, weekFilter]
   );
 
   const graded = useMemo(() => filteredRows.filter((b) => b.result !== null), [filteredRows]);
@@ -319,13 +330,15 @@ export default function BetsPage() {
     : null;
 
   const chartData = useMemo(() => {
-    return graded.reduce<{ idx: number; label: string; matchup: string; cumulative: number }[]>(
+    // X axis is the bet's index (1, 2, 3, ...) in game-time order - rows
+    // come back from /api/bets already sorted by kickoff. Using the team
+    // abbreviation as a category key collapsed repeat teams onto one tick.
+    return graded.reduce<{ idx: number; matchup: string; cumulative: number }[]>(
       (acc, b, i) => {
         const prevTotal = acc.length ? acc[acc.length - 1].cumulative : 0;
         acc.push({
           idx: i + 1,
-          label: b.teamAbbr,
-          matchup: `${b.teamAbbr} ${b.home ? "vs" : "@"} ${b.opponentAbbr}`,
+          matchup: `#${i + 1} · Wk ${b.week} · ${b.teamAbbr} ${b.home ? "vs" : "@"} ${b.opponentAbbr}`,
           cumulative: Math.round((prevTotal + (b.unitsResult ?? 0)) * 100) / 100,
         });
         return acc;
@@ -392,6 +405,7 @@ export default function BetsPage() {
 
         {!loading && !error && (
           <div className="space-y-4">
+            <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
             <label className="flex items-center gap-2 text-xs text-muted">
               Persona
               <select
@@ -407,6 +421,22 @@ export default function BetsPage() {
                 ))}
               </select>
             </label>
+            <label className="flex items-center gap-2 text-xs text-muted">
+              Week
+              <select
+                value={weekFilter}
+                onChange={(e) => setWeekFilter(e.target.value)}
+                className="rounded-lg border border-border bg-surface-2 px-2 py-1 text-sm text-foreground outline-none focus:border-accent"
+              >
+                <option value="All">All weeks</option>
+                {weekOptions.map((w) => (
+                  <option key={w} value={String(w)}>
+                    Week {w}
+                  </option>
+                ))}
+              </select>
+            </label>
+            </div>
 
             <div className="grid grid-cols-2 gap-2">
               <SummaryCard
@@ -420,7 +450,7 @@ export default function BetsPage() {
                 value={avgClv !== null ? `${fmtClv(avgClv)} pts` : "—"}
                 sub={`${withClosing.length} w/ closing line`}
               />
-              <SummaryCard label="Total Bets" value={`${filteredRows.length}`} sub="this season" />
+              <SummaryCard label="Total Bets" value={`${filteredRows.length}`} sub={weekFilter === "All" ? "this season" : `week ${weekFilter}`} />
             </div>
 
             <div className="rounded-2xl border border-border bg-surface p-3">
@@ -431,7 +461,10 @@ export default function BetsPage() {
                     <LineChart data={chartData} margin={{ top: 8, right: 8, left: -16, bottom: 0 }}>
                       <CartesianGrid strokeDasharray="3 3" stroke="var(--border)" />
                       <XAxis
-                        dataKey="label"
+                        dataKey="idx"
+                        type="number"
+                        domain={[1, "dataMax"]}
+                        allowDecimals={false}
                         tick={{ fontSize: 10, fill: "var(--muted)" }}
                         tickLine={false}
                         axisLine={{ stroke: "var(--border)" }}
@@ -465,7 +498,8 @@ export default function BetsPage() {
                 </div>
               ) : (
                 <p className="px-1 py-6 text-center text-xs text-muted">
-                  No graded bets yet for {personaFilter === "All" ? "any persona" : personaFilter} - this chart
+                  No graded bets yet for {personaFilter === "All" ? "any persona" : personaFilter}
+                  {weekFilter !== "All" && ` in week ${weekFilter}`} - this chart
                   fills in once games finish.
                 </p>
               )}
@@ -481,7 +515,7 @@ export default function BetsPage() {
 
             {(betRows?.length ?? 0) > 0 && filteredRows.length === 0 && (
               <div className="rounded-2xl border border-border bg-surface p-4 text-center text-sm text-muted">
-                No bets for {personaFilter} yet.
+                No bets match these filters yet.
               </div>
             )}
 
