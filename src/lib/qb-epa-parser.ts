@@ -146,8 +146,9 @@ interface ColumnMap {
   epaPlay: number;
   anyA: number;
   // Summed when there's more than one. The QB stats table has no combined
-  // total, so only its first (passing) Yards/TDs columns are used - the
-  // one-QB-per-team pick goes by passing yards.
+  // total: yards use only its first (passing) Yards column - the
+  // one-QB-per-team pick and MVP Index go by passing yards - while TDs sum
+  // its passing and rushing TDs columns (the first two) into total TDs.
   totalYds: number[];
   totalTd: number[];
 }
@@ -180,7 +181,7 @@ function columnsFromHeader(cells: string[]): ColumnMap | null {
     epaPlay,
     anyA,
     totalYds: totalYds !== -1 ? [totalYds] : findAll("yds", "yards").slice(0, 1),
-    totalTd: totalTd !== -1 ? [totalTd] : findAll("td", "tds").slice(0, 1),
+    totalTd: totalTd !== -1 ? [totalTd] : findAll("td", "tds").slice(0, 2),
   };
 }
 
