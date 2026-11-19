@@ -305,26 +305,28 @@ export default function BetsPage() {
     [betRows]
   );
 
-  // Everything below (summary cards, chart, bet list) tracks the selected
-  // persona + week so each bettor's record can be reviewed independently.
+  // The chart and bet list track the selected persona so each bettor's
+  // record can be reviewed independently.
   const filteredRows = useMemo(
-    () =>
-      (betRows ?? []).filter(
-        (b) =>
-          (personaFilter === "All" || b.persona === personaFilter) &&
-          (weekFilter === "All" || b.week === Number(weekFilter))
-      ),
-    [betRows, personaFilter, weekFilter]
+    () => (betRows ?? []).filter((b) => personaFilter === "All" || b.persona === personaFilter),
+    [betRows, personaFilter]
+  );
+
+  // The summary cards additionally narrow to the selected week.
+  const summaryRows = useMemo(
+    () => (weekFilter === "All" ? filteredRows : filteredRows.filter((b) => b.week === Number(weekFilter))),
+    [filteredRows, weekFilter]
   );
 
   const graded = useMemo(() => filteredRows.filter((b) => b.result !== null), [filteredRows]);
-  const wins = graded.filter((b) => b.result === "win").length;
-  const losses = graded.filter((b) => b.result === "loss").length;
-  const pushes = graded.filter((b) => b.result === "push").length;
+  const summaryGraded = useMemo(() => summaryRows.filter((b) => b.result !== null), [summaryRows]);
+  const wins = summaryGraded.filter((b) => b.result === "win").length;
+  const losses = summaryGraded.filter((b) => b.result === "loss").length;
+  const pushes = summaryGraded.filter((b) => b.result === "push").length;
   const decided = wins + losses;
   const winPct = decided > 0 ? wins / decided : null;
-  const netUnits = graded.reduce((s, b) => s + (b.unitsResult ?? 0), 0);
-  const withClosing = useMemo(() => filteredRows.filter((b) => b.clv !== null), [filteredRows]);
+  const netUnits = summaryGraded.reduce((s, b) => s + (b.unitsResult ?? 0), 0);
+  const withClosing = useMemo(() => summaryRows.filter((b) => b.clv !== null), [summaryRows]);
   const avgClv = withClosing.length
     ? withClosing.reduce((s, b) => s + (b.clv ?? 0), 0) / withClosing.length
     : null;
@@ -405,7 +407,6 @@ export default function BetsPage() {
 
         {!loading && !error && (
           <div className="space-y-4">
-            <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
             <label className="flex items-center gap-2 text-xs text-muted">
               Persona
               <select
@@ -421,6 +422,8 @@ export default function BetsPage() {
                 ))}
               </select>
             </label>
+
+            <div className="space-y-2">
             <label className="flex items-center gap-2 text-xs text-muted">
               Week
               <select
@@ -436,7 +439,6 @@ export default function BetsPage() {
                 ))}
               </select>
             </label>
-            </div>
 
             <div className="grid grid-cols-2 gap-2">
               <SummaryCard
@@ -444,13 +446,14 @@ export default function BetsPage() {
                 value={`${wins}-${losses}${pushes ? `-${pushes}` : ""}`}
                 sub={winPct !== null ? fmtPct(winPct) : "no graded bets yet"}
               />
-              <SummaryCard label="Units" value={fmtUnits(netUnits)} sub={`${graded.length} graded`} />
+              <SummaryCard label="Units" value={fmtUnits(netUnits)} sub={`${summaryGraded.length} graded`} />
               <SummaryCard
                 label="Avg CLV"
                 value={avgClv !== null ? `${fmtClv(avgClv)} pts` : "—"}
                 sub={`${withClosing.length} w/ closing line`}
               />
-              <SummaryCard label="Total Bets" value={`${filteredRows.length}`} sub={weekFilter === "All" ? "this season" : `week ${weekFilter}`} />
+              <SummaryCard label="Total Bets" value={`${summaryRows.length}`} sub={weekFilter === "All" ? "this season" : `week ${weekFilter}`} />
+            </div>
             </div>
 
             <div className="rounded-2xl border border-border bg-surface p-3">
@@ -498,8 +501,7 @@ export default function BetsPage() {
                 </div>
               ) : (
                 <p className="px-1 py-6 text-center text-xs text-muted">
-                  No graded bets yet for {personaFilter === "All" ? "any persona" : personaFilter}
-                  {weekFilter !== "All" && ` in week ${weekFilter}`} - this chart
+                  No graded bets yet for {personaFilter === "All" ? "any persona" : personaFilter} - this chart
                   fills in once games finish.
                 </p>
               )}
@@ -515,7 +517,7 @@ export default function BetsPage() {
 
             {(betRows?.length ?? 0) > 0 && filteredRows.length === 0 && (
               <div className="rounded-2xl border border-border bg-surface p-4 text-center text-sm text-muted">
-                No bets match these filters yet.
+                No bets for {personaFilter} yet.
               </div>
             )}
 
