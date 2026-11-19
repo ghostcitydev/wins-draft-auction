@@ -51,6 +51,23 @@ function resultLabel(bet: BetRow) {
   );
 }
 
+const UNITS_GREEN = "var(--accent)";
+const UNITS_RED = "var(--danger)";
+
+function renderUnitsDot(props: {
+  cx?: number;
+  cy?: number;
+  index?: number;
+  payload?: { cumulative: number };
+}) {
+  const { cx, cy, index, payload } = props;
+  if (cx === undefined || cy === undefined || !payload) {
+    return <g key={`units-dot-${index}`} />;
+  }
+  const color = payload.cumulative >= 0 ? UNITS_GREEN : UNITS_RED;
+  return <circle key={`units-dot-${index}`} cx={cx} cy={cy} r={2} fill={color} stroke={color} />;
+}
+
 function SummaryCard({ label, value, sub }: { label: string; value: string; sub?: string }) {
   return (
     <div className="rounded-2xl border border-border bg-surface p-3">
@@ -313,20 +330,19 @@ export default function BetsPage() {
   );
 
   // The summary cards additionally narrow to the selected week.
-  const summaryRows = useMemo(
+  const logRows = useMemo(
     () => (weekFilter === "All" ? filteredRows : filteredRows.filter((b) => b.week === Number(weekFilter))),
     [filteredRows, weekFilter]
   );
 
   const graded = useMemo(() => filteredRows.filter((b) => b.result !== null), [filteredRows]);
-  const summaryGraded = useMemo(() => summaryRows.filter((b) => b.result !== null), [summaryRows]);
-  const wins = summaryGraded.filter((b) => b.result === "win").length;
-  const losses = summaryGraded.filter((b) => b.result === "loss").length;
-  const pushes = summaryGraded.filter((b) => b.result === "push").length;
+  const wins = graded.filter((b) => b.result === "win").length;
+  const losses = graded.filter((b) => b.result === "loss").length;
+  const pushes = graded.filter((b) => b.result === "push").length;
   const decided = wins + losses;
   const winPct = decided > 0 ? wins / decided : null;
-  const netUnits = summaryGraded.reduce((s, b) => s + (b.unitsResult ?? 0), 0);
-  const withClosing = useMemo(() => summaryRows.filter((b) => b.clv !== null), [summaryRows]);
+  const netUnits = graded.reduce((s, b) => s + (b.unitsResult ?? 0), 0);
+  const withClosing = useMemo(() => filteredRows.filter((b) => b.clv !== null), [filteredRows]);
   const avgClv = withClosing.length
     ? withClosing.reduce((s, b) => s + (b.clv ?? 0), 0) / withClosing.length
     : null;
@@ -348,6 +364,22 @@ export default function BetsPage() {
       []
     );
   }, [graded]);
+
+  // Split the cumulative line at y=0: green above, red below. The gradient
+  // uses the line's bounding box, which has zero height when every value is
+  // equal - fall back to a solid stroke then.
+  const unitsStroke = useMemo(() => {
+    const values = chartData.map((d) => d.cumulative);
+    if (values.length === 0) return { offset: 1, solid: UNITS_GREEN };
+    const dataMax = Math.max(...values);
+    const dataMin = Math.min(...values);
+    if (dataMax === dataMin) {
+      return { offset: 1, solid: dataMax >= 0 ? UNITS_GREEN : UNITS_RED };
+    }
+    const max = Math.max(0, dataMax);
+    const min = Math.min(0, dataMin);
+    return { offset: max - min === 0 ? 1 : max / (max - min), solid: null };
+  }, [chartData]);
 
   const handleDelete = async (id: string) => {
     setDeletingId(id);
@@ -424,21 +456,6 @@ export default function BetsPage() {
             </label>
 
             <div className="space-y-2">
-            <label className="flex items-center gap-2 text-xs text-muted">
-              Week
-              <select
-                value={weekFilter}
-                onChange={(e) => setWeekFilter(e.target.value)}
-                className="rounded-lg border border-border bg-surface-2 px-2 py-1 text-sm text-foreground outline-none focus:border-accent"
-              >
-                <option value="All">All weeks</option>
-                {weekOptions.map((w) => (
-                  <option key={w} value={String(w)}>
-                    Week {w}
-                  </option>
-                ))}
-              </select>
-            </label>
 
             <div className="grid grid-cols-2 gap-2">
               <SummaryCard
@@ -446,13 +463,13 @@ export default function BetsPage() {
                 value={`${wins}-${losses}${pushes ? `-${pushes}` : ""}`}
                 sub={winPct !== null ? fmtPct(winPct) : "no graded bets yet"}
               />
-              <SummaryCard label="Units" value={fmtUnits(netUnits)} sub={`${summaryGraded.length} graded`} />
+              <SummaryCard label="Units" value={fmtUnits(netUnits)} sub={`${graded.length} graded`} />
               <SummaryCard
                 label="Avg CLV"
                 value={avgClv !== null ? `${fmtClv(avgClv)} pts` : "—"}
                 sub={`${withClosing.length} w/ closing line`}
               />
-              <SummaryCard label="Total Bets" value={`${summaryRows.length}`} sub={weekFilter === "All" ? "this season" : `week ${weekFilter}`} />
+              <SummaryCard label="Total Bets" value={`${filteredRows.length}`} sub="this season" />
             </div>
             </div>
 
@@ -489,12 +506,18 @@ export default function BetsPage() {
                         formatter={(value) => [fmtUnits(typeof value === "number" ? value : Number(value)), "Cumulative"]}
                         labelFormatter={(_, payload) => payload?.[0]?.payload?.matchup ?? ""}
                       />
+                      <defs>
+                        <linearGradient id="unitsSplit" x1="0" y1="0" x2="0" y2="1">
+                          <stop offset={unitsStroke.offset} style={{ stopColor: UNITS_GREEN }} />
+                          <stop offset={unitsStroke.offset} style={{ stopColor: UNITS_RED }} />
+                        </linearGradient>
+                      </defs>
                       <Line
                         type="monotone"
                         dataKey="cumulative"
-                        stroke="var(--accent)"
+                        stroke={unitsStroke.solid ?? "url(#unitsSplit)"}
                         strokeWidth={2}
-                        dot={{ r: 2 }}
+                        dot={renderUnitsDot}
                       />
                     </LineChart>
                   </ResponsiveContainer>
@@ -515,14 +538,36 @@ export default function BetsPage() {
               </div>
             )}
 
+            <label className="flex items-center gap-2 text-xs text-muted">
+              Week
+              <select
+                value={weekFilter}
+                onChange={(e) => setWeekFilter(e.target.value)}
+                className="rounded-lg border border-border bg-surface-2 px-2 py-1 text-sm text-foreground outline-none focus:border-accent"
+              >
+                <option value="All">All weeks</option>
+                {weekOptions.map((w) => (
+                  <option key={w} value={String(w)}>
+                    Week {w}
+                  </option>
+                ))}
+              </select>
+            </label>
+
             {(betRows?.length ?? 0) > 0 && filteredRows.length === 0 && (
               <div className="rounded-2xl border border-border bg-surface p-4 text-center text-sm text-muted">
                 No bets for {personaFilter} yet.
               </div>
             )}
 
+            {filteredRows.length > 0 && logRows.length === 0 && weekFilter !== "All" && (
+              <div className="rounded-2xl border border-border bg-surface p-4 text-center text-sm text-muted">
+                No bets in week {weekFilter}.
+              </div>
+            )}
+
             <div className="space-y-2">
-              {filteredRows.map((b) => (
+              {logRows.map((b) => (
                 <div key={b.id} className="rounded-2xl border border-border bg-surface p-3">
                   <div className="flex items-center justify-between">
                     <div className="flex items-center gap-2">
