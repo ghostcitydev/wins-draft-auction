@@ -66,6 +66,8 @@ function Logo({ team, size = 18 }: { team: PlayoffTeamInfo; size?: number }) {
 export default function PlayoffsPage() {
   const { data, loading, error } = usePlayoffs();
   const [picked, setPicked] = useState<number | null>(null);
+  const [divisionPick, setDivision] = useState<string | null>(null);
+  const [conferencePick, setConference] = useState<string | null>(null);
 
   const teamByAbbr = useMemo(
     () => new Map((data?.teams ?? []).map((t) => [t.abbr, t])),
@@ -76,6 +78,16 @@ export default function PlayoffsPage() {
   const week =
     data && picked !== null && picked >= 1 && picked <= data.maxWeek ? picked : data?.maxWeek ?? 0;
   const current: PlayoffWeek | undefined = data?.weeks[week - 1];
+  const divisionNames = useMemo(
+    () => [...new Set((data?.teams ?? []).map((t) => t.division))].sort(),
+    [data]
+  );
+  const division =
+    divisionPick && divisionNames.includes(divisionPick) ? divisionPick : divisionNames[0] ?? "";
+  const conference =
+    conferencePick && data?.conferences.includes(conferencePick)
+      ? conferencePick
+      : data?.conferences[0] ?? "";
   const previous: PlayoffWeek | undefined = data?.weeks[week - 2];
 
   return (
@@ -129,85 +141,73 @@ export default function PlayoffsPage() {
 
             <section>
               <SectionTitle>Division races by week</SectionTitle>
-              <div className="grid grid-cols-2 gap-2">
-                {Object.keys(current.divisions)
-                  .sort()
-                  .map((d) => (
-                    <WeekGrid
-                      key={d}
-                      title={d}
-                      weeks={data.weeks}
-                      selectedWeek={week}
-                      onPick={setPicked}
-                      rows={[0, 1, 2, 3].map((i) => ({
-                        label: String(i + 1),
-                        cell: (w) => (
-                          <TeamCell abbr={w.divisions[d]?.[i]} w={w} teamByAbbr={teamByAbbr} />
-                        ),
-                      }))}
-                    />
-                  ))}
-              </div>
+              <Pills
+                options={divisionNames}
+                value={division}
+                onChange={setDivision}
+              />
+              <WeekGrid
+                weeks={data.weeks}
+                selectedWeek={week}
+                onPick={setPicked}
+                rows={[0, 1, 2, 3].map((i) => ({
+                  label: String(i + 1),
+                  cell: (w) => (
+                    <TeamCell abbr={w.divisions[division]?.[i]} w={w} teamByAbbr={teamByAbbr} />
+                  ),
+                }))}
+              />
             </section>
 
             <section>
-              <SectionTitle>Wild card matchups by week</SectionTitle>
-              <div className="grid grid-cols-2 gap-2">
-                {data.conferences.map((conf) => (
-                  <WeekGrid
-                    key={conf}
-                    title={conf}
-                    weeks={data.weeks}
-                    selectedWeek={week}
-                    onPick={setPicked}
-                    rows={(
-                      [
-                        [1, 0],
-                        [2, 7],
-                        [3, 6],
-                        [4, 5],
-                      ] as const
-                    ).map(([hi, lo]) => ({
-                      label: lo ? `${hi}v${lo}` : `${hi} bye`,
-                      cell: (w) => (
-                        <MatchupCell
-                          home={w.seeds[conf]?.[hi - 1]}
-                          away={lo ? w.seeds[conf]?.[lo - 1] : undefined}
-                          w={w}
-                          teamByAbbr={teamByAbbr}
-                        />
-                      ),
-                    }))}
-                  />
-                ))}
+              <div className="mb-2 flex items-center justify-between gap-2 px-1">
+                <p className="text-sm font-semibold">Seeds &amp; wild card matchups by week</p>
+                <Pills options={data.conferences} value={conference} onChange={setConference} compact />
               </div>
-            </section>
-
-            <section>
-              <SectionTitle>Seeds by week</SectionTitle>
-              <div className="grid grid-cols-2 gap-2">
-                {data.conferences.map((conf) => (
-                  <WeekGrid
-                    key={conf}
-                    title={conf}
-                    labelHeader="Seed"
-                    weeks={data.weeks}
-                    selectedWeek={week}
-                    onPick={setPicked}
-                    rows={Array.from({ length: 7 }, (_, i) => ({
-                      label: String(i + 1),
-                      divider: i === 4,
-                      cell: (w) => (
-                        <TeamCell abbr={w.seeds[conf]?.[i]} w={w} teamByAbbr={teamByAbbr} />
-                      ),
-                    }))}
-                  />
-                ))}
+              <div className="space-y-3">
+                <WeekGrid
+                  title="Wild card matchups"
+                  weeks={data.weeks}
+                  selectedWeek={week}
+                  onPick={setPicked}
+                  rows={(
+                    [
+                      [1, 0],
+                      [2, 7],
+                      [3, 6],
+                      [4, 5],
+                    ] as const
+                  ).map(([hi, lo]) => ({
+                    label: lo ? `${hi} v ${lo}` : `${hi} bye`,
+                    cell: (w) => (
+                      <MatchupCell
+                        home={w.seeds[conference]?.[hi - 1]}
+                        away={lo ? w.seeds[conference]?.[lo - 1] : undefined}
+                        w={w}
+                        teamByAbbr={teamByAbbr}
+                      />
+                    ),
+                  }))}
+                />
+                <WeekGrid
+                  title="Seeds"
+                  labelHeader="Seed"
+                  weeks={data.weeks}
+                  selectedWeek={week}
+                  onPick={setPicked}
+                  rows={Array.from({ length: 7 }, (_, i) => ({
+                    label: String(i + 1),
+                    divider: i === 4,
+                    cell: (w) => (
+                      <TeamCell abbr={w.seeds[conference]?.[i]} w={w} teamByAbbr={teamByAbbr} />
+                    ),
+                  }))}
+                />
               </div>
             </section>
 
             <p className="px-1 text-[11px] text-muted">
-              Tap any week in a grid to load it above. Hover a logo for its record. NFL tiebreakers
+              Tap any week in a grid to load it above. NFL tiebreakers
               (head-to-head, division/conference record, common games, SOV, SOS, net points); the
               points-ranking and net-TD steps aren&apos;t tracked, and a coin toss is alphabetical.
             </p>
@@ -381,7 +381,7 @@ function WeekGrid({
   onPick,
   labelHeader = "",
 }: {
-  title: string;
+  title?: string;
   rows: GridRow[];
   weeks: PlayoffWeek[];
   selectedWeek: number;
@@ -400,9 +400,9 @@ function WeekGrid({
 
   return (
     <div className="min-w-0 rounded-2xl border border-border bg-surface p-2">
-      <p className="mb-1.5 px-1 text-xs font-semibold">{title}</p>
+      {title && <p className="mb-1.5 px-1 text-xs font-semibold text-muted">{title}</p>}
       <div ref={scroller} className="overflow-x-auto rounded-xl border border-border">
-        <table className="text-xs">
+        <table className="w-full text-xs">
           <thead>
             <tr className="border-b border-border text-[11px] text-muted">
               <th className="sticky left-0 z-10 bg-surface px-1.5 py-0.5 text-left font-semibold">
@@ -414,7 +414,7 @@ function WeekGrid({
                   data-week={w.week}
                   onClick={() => onPick(w.week)}
                   className={clsx(
-                    "cursor-pointer px-0.5 py-0.5 text-center text-[10px] font-semibold tabular-nums",
+                    "cursor-pointer px-1 py-1 text-center text-[11px] font-semibold tabular-nums",
                     w.week === selectedWeek && "text-accent"
                   )}
                 >
@@ -440,7 +440,7 @@ function WeekGrid({
                     key={w.week}
                     onClick={() => onPick(w.week)}
                     className={clsx(
-                      "cursor-pointer px-0.5 py-0.5 text-center",
+                      "cursor-pointer px-1 py-1 text-center",
                       w.week === selectedWeek && "bg-accent/15"
                     )}
                   >
@@ -469,8 +469,9 @@ function TeamCell({
   const s = abbr ? w.standings[abbr] : undefined;
   if (!team || !s) return null;
   return (
-    <div className="flex justify-center" title={`${team.name} (${record(s)})`}>
-      <Logo team={team} size={16} />
+    <div className="flex flex-col items-center gap-0.5" title={`${team.name} (${record(s)})`}>
+      <Logo team={team} size={22} />
+      <span className="text-[9px] leading-none tabular-nums text-muted">{record(s)}</span>
     </div>
   );
 }
@@ -492,7 +493,7 @@ function MatchupCell({
   if (!a) {
     return (
       <div className="flex justify-center" title={`${h.name} - bye`}>
-        <Logo team={h} size={16} />
+        <Logo team={h} size={22} />
       </div>
     );
   }
@@ -501,8 +502,44 @@ function MatchupCell({
       className="flex items-center justify-center gap-0.5"
       title={`${a.name} (${record(w.standings[a.abbr])}) at ${h.name} (${record(w.standings[h.abbr])})`}
     >
-      <Logo team={h} size={14} />
-      <Logo team={a} size={14} />
+      <Logo team={h} size={18} />
+      <span className="text-[9px] text-muted">v</span>
+      <Logo team={a} size={18} />
+    </div>
+  );
+}
+
+function Pills({
+  options,
+  value,
+  onChange,
+  compact = false,
+}: {
+  options: string[];
+  value: string;
+  onChange: (v: string) => void;
+  compact?: boolean;
+}) {
+  return (
+    <div
+      className={clsx(
+        "flex gap-1 overflow-x-auto",
+        compact ? "rounded-full border border-border bg-surface p-0.5" : "mb-2 px-1"
+      )}
+    >
+      {options.map((o) => (
+        <button
+          key={o}
+          onClick={() => onChange(o)}
+          className={clsx(
+            "flex-shrink-0 rounded-full px-2.5 py-1 text-xs font-medium transition",
+            o === value ? "bg-accent text-background" : "text-muted",
+            !compact && o !== value && "border border-border bg-surface"
+          )}
+        >
+          {o}
+        </button>
+      ))}
     </div>
   );
 }
