@@ -487,24 +487,17 @@ function MatchupCell({
   w: PlayoffWeek;
   teamByAbbr: Map<string, PlayoffTeamInfo>;
 }) {
-  const h = home ? teamByAbbr.get(home) : undefined;
-  const a = away ? teamByAbbr.get(away) : undefined;
-  if (!h) return null;
-  if (!a) {
-    return (
-      <div className="flex justify-center" title={`${h.name} - bye`}>
-        <Logo team={h} size={22} />
-      </div>
-    );
-  }
+  // Stacked vertically so logos are the same size as every other grid on the page.
+  if (!home || !teamByAbbr.get(home)) return null;
   return (
-    <div
-      className="flex items-center justify-center gap-0.5"
-      title={`${a.name} (${record(w.standings[a.abbr])}) at ${h.name} (${record(w.standings[h.abbr])})`}
-    >
-      <Logo team={h} size={18} />
-      <span className="text-[9px] text-muted">v</span>
-      <Logo team={a} size={18} />
+    <div className="flex flex-col items-center gap-1">
+      <TeamCell abbr={home} w={w} teamByAbbr={teamByAbbr} />
+      {away && (
+        <>
+          <span className="text-[9px] leading-none text-muted">v</span>
+          <TeamCell abbr={away} w={w} teamByAbbr={teamByAbbr} />
+        </>
+      )}
     </div>
   );
 }
