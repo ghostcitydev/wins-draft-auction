@@ -474,7 +474,10 @@ function TeamCell({
   return (
     <div className="flex flex-col items-center gap-0.5" title={`${team.name} (${record(s)})`}>
       <Logo team={team} size={22} />
-      <span className="text-[9px] leading-none tabular-nums text-muted">{record(s)}</span>
+      {/* W-L only (ties left out) so the label never wraps in narrow grid cells. */}
+      <span className="whitespace-nowrap text-[9px] leading-none tabular-nums text-muted">
+        {s.w}-{s.l}
+      </span>
     </div>
   );
 }
